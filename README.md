@@ -1,49 +1,31 @@
 # Интерфейсы
- 
+
 Механизм наследования очень удобен, но он имеет свои ограничения. В частности мы можем наследовать только от одного класса, в отличие, например, от языка С++, где имеется множественное наследование.
 
 В языке Java подобную проблему частично позволяют решить интерфейсы. Интерфейсы определяют некоторый функционал, не имеющий конкретной реализации, который затем реализуют классы, применяющие эти интерфейсы. И один класс может применить множество интерфейсов.
 
-Интерфейс — это ссылочный тип в Java. Он схож с классом. Это совокупность абстрактных методов. Класс реализует интерфейс, таким образом наследуя абстрактные методы интерфейса.
-Интерфейсы Java созданы для поддержки динамического выбора (resolution) методов во время выполнения программы. Интерфейсы похожи на классы, но в отличие от последних у интерфейсов нет переменных представителей, а в объявлениях методов отсутствует реализация. Класс может иметь любое количество интерфейсов. Все, что нужно сделать — это реализовать в классе полный набор методов всех интерфейсов. Сигнатуры таких методов класса должны точно совпадать с сигнатурами методов реализуемого в этом классе интерфейса. Интерфейсы обладают своей собственной иерархией, не пересекающейся с классовой иерархией наследования. Это дает возможность реализовать один и тот же интерфейс в различных классах, никак не связанных по линии иерархии классового наследования. Именно в этом и проявляется главная сила интерфейсов.
-
-Вместе с абстрактными методами интерфейс в Java может содержать константы, обычные методы, статические методы и вложенные типы. Тела методов существуют только для обычных методов и статических методов.
-
-Интерфейс — это структура данных, которая может содержать поля, представленные в виде именованных констант (ключевое слово final тут обычно не указывается, так как поля — это всегда именованные константы) и объявления методов. Интерфейсом могут расширяться многие классы. Интерфейс может сам расширяться несколькими интерфейсами. Заметим, что интерфейс могут использовать сразу несколько классов, независимых друг от друга.
-
-Интерфейс это конструкция языка Java, в рамках которой принято описывать абстрактные публичные (abstract public) методы и статические константы (final static).
-
-С помощью интерфейса можно указать, что именно должен выполнять класс его реализующий, но не как это делать. Способ реализации выбирает сам класс. Интерфейсы не способны сохранять данные состояния. Интерфейсы - это один из механизмов реализации принципа полиморфизма "один интерфейс, несколько методов". 
-
+## Интерфейс — это ссылочный тип в Java. 
+Интерфейс это конструкция языка, в рамках которой принято описывать абстрактные публичные (abstract public) методы и статические константы (final static). Интерфейсы Java созданы для поддержки динамического выбора (resolution) методов во время выполнения программы.
+Интерфейс схож с классом, но в отличие от последних у интерфейсов нет переменных представителей, а в объявлениях методов отсутствует реализация. Класс реализует интерфейс, таким образом наследуя абстрактные методы интерфейса.
 
 ### Интерфейс схож с классом следующим образом:
-
-Интерфейс может содержать любое количество методов.
-Интерфейс записан в файле с расширением .java, и имя интерфейса совпадает с именем файла.
-Байт-код интерфейса находится в .class файле.
-Интерфейсы появляются в пакетах, и их соответствующий файл байт-кода должен быть в структуре каталогов, которая совпадает с именем пакета.
-Чем отличается класс от интерфейса?
+- Интерфейс может содержать любое количество методов.
+- Интерфейс записан в файле с расширением .java, и имя интерфейса совпадает с именем файла.
+- Байт-код интерфейса находится в .class файле.
+- Интерфейсы появляются в пакетах, и их соответствующий файл байт-кода должен быть в структуре каталогов, которая совпадает с именем пакета.
 
 ### Отличие интерфейса от класса в Java:
-
-Вы не можете создать экземпляр интерфейса.
-В интерфейсе не содержатся конструкторы.
-Все методы в интерфейсе абстрактные.
-Интерфейс не может содержать поля экземпляров. Поля, которые могут появиться в интерфейсе, обязаны быть объявлены и статическими, и final.
-Интерфейс не расширяется классом, он реализуется классом.
-Интерфейс может расширить множество интерфейсов.
-
+- Вы не можете создать экземпляр интерфейса.
+- В интерфейсе не содержатся конструкторы.
+- Все методы в интерфейсе абстрактные.
+- Интерфейс не может содержать поля экземпляров. Поля, которые могут появиться в интерфейсе, обязаны быть объявлены и статическими, и final.
+- Интерфейс не расширяется классом, он реализуется классом.
+- Интерфейс может расширить множество интерфейсов.
 
 ## У интерфейса могут быть следующие модификаторы.
 • public (если он есть, то интерфейс доступен отовсюду, если его нет — доступен только в данном пакете).
 • abstract (так как интерфейс всегда абстрактный, то модификатор обычно опускается).
 • strictfp— все позже реализуемые методы должны будут работать с числами с плавающей точкой аналогично на всех машинах Java.
-
-Интерфейсы, как и классы могут быть объявлены с уровнем доступа public или default.
-
-Переменные интерфейса являются public static final по умолчанию и эти модификаторы необязательны при их объявлении. 
-
-Например, в следующем примере объявлены переменные RIGHT, LEFT, UP, DOWN без каких-либо модификаторов. Но они будут public static final.
 
 
 ## Объявление интерфейсов
@@ -62,371 +44,358 @@ public interface NameOfInterface { //создание интерфейса
 
 ```
 
+## Создание иерархий классов
+
+```java
+public abstract class Employee
+{
+    private int id;
+    private String name;
+    private String company;
+    
+    public Employee() {
+    }
+        
+    public Employee(int id, String name, String company ) {
+        this.name=name;
+        this.id = id;
+        this.company = company;
+    }
+    
+    public String getCompany() {
+          return company;
+    }
+    
+    public String getName() { 
+        return name; 
+    }
+
+    public int getId() { 
+        return id; 
+    }
+    
+    //  каждый экземпляп Employee должен иметь метод .calculate_payroll(), 
+    // который возвращает еженедельную зарплату сотруднику. 
+    //  Реализация этого интерфейса отличается в зависимости от типа Employee.
+    
+    public double calculate_payroll() {
+        return 3.14;
+    }
+    
+}
+
+
+/**
+ * производный класс SalaryEmployee, который наследует Person. 
+ * Класс инициализируется с помощью id и name,
+ *  
+ */
+
+public class SalaryEmployee extends Employee {
+
+    double weekly_salary;
+    
+    public SalaryEmployee(int id, String name, String company, double weekly_salary) {
+        super(id, name, company);
+        this.weekly_salary = weekly_salary;
+        
+    }
+
+    /**
+     * административные работники имеют фиксированную зарплату, 
+     * поэтому каждую неделю им платят одну и ту же сумму
+     */
+    
+    public double calculate_payroll() {
+        return this.weekly_salary;
+    }
+
+}
+
+/**
+ * 
+ * В компании также работают рабочие, которые получают почасовую оплату, 
+ * поэтому мы добавим HourlyEmployee в систему управления персоналом:
+ *
+ */
+public class HourlyEmployee extends Employee {
+
+    int hours_worked;
+    double hour_rate;
+    
+    public HourlyEmployee(int id, String name, String company,  int hours_worked, double hour_rate) {
+        super(id, name, company);
+        this.hour_rate = hour_rate;
+        this.hours_worked = hours_worked;
+    }
+    
+    public double calculate_payroll() {
+        return this.hour_rate * hours_worked;
+    }
+}
+
+public class Main {
+
+    public Main() {
+        // TODO Auto-generated constructor stub
+    }
+
+    /**
+     * @param args
+     */
+    public static void main(String[] args) {
+        
+        HourlyEmployee bob = new HourlyEmployee(1, "Bob", "Goolee", 20, 77.88);
+        
+        System.out.printf("Payroll for: %d \t %s \t %s\n", bob.getId(), bob.getName(), bob.getCompany());
+        System.out.printf("Employee  amount:\t %s \n", bob.calculate_payroll());
+        SalaryEmployee mary = new SalaryEmployee(2, "Mary", "Doolee", 444.99);
+        System.out.printf("Payroll for: %d \t %s \t %s\n", mary.getId(), mary.getName(), mary.getCompany());
+        System.out.printf("Employee  amount:\t %s \n", mary.calculate_payroll());
+        
+    }
+}
+
+```
+
 ### Интерфейс Printable:
+Написание интерфейса схоже с написанием класса. Но класс описывает атрибуты и поведения объекта. И интерфейс содержит поведения, которые класс реализует.
+
 ```java
 
-interface Printable{
- 
-    void print();
+public interface IEmployee {
+    
+    public double calculate_payroll();
+
 }
 
 ```
 Интерфейс может определять константы и методы, которые могут иметь, а могут и не иметь реализации. Методы без реализации похожи на абстрактные методы абстрактных классов. Так, в данном случае объявлен один метод, который не имеет реализации.
 
-Написание интерфейса схоже с написанием класса. Но класс описывает атрибуты и поведения объекта. И интерфейс содержит поведения, которые класс реализует.
-
-Если класс, реализующий интерфейс, не является абстрактным, все методы интерфейса должны быть определены в классе.
-
-
 ## Интерфейсы имеют следующие свойства:
-
 - Интерфейс абстрактный косвенно. Вам не нужно использовать ключевое слово abstract во время объявления интерфейса.
-- Каждый метод в интерфейсе косвенно абстрактным, поэтому ключевое слово abstract не нужно.
-- Методы в интерфейсе косвенно публичны. Все методы интерфейса не имеют модификаторов доступа, но фактически по умолчанию доступ public, так как цель интерфейса - определение функционала для реализации его классом. Поэтому весь функционал должен быть открыт для реализации.
+- Каждый метод в интерфейсе косвенно абстрактным. Объявляемые методы не содержат тел, их объявления завершаются точкой с запятой.
+- Методы в интерфейсе косвенно публичны. Все методы интерфейса не имеют модификаторов доступа и являются public abstract. Модификаторы необязательны, так как цель интерфейса - определение функционала для реализации его классом. Поэтому весь функционал должен быть открыт для реализации.
 
-Все методы интерфейса являются public abstract и эти модификаторы тоже необязательны. Объявляемые методы не содержат тел, их объявления завершаются точкой с запятой:
 
-public interface Moveable {
-    int RIGHT = 1;
-    int LEFT = 2;
-    int UP = 3;
-    int DOWN = 4;
-
-    void moveRight();
-
-    void moveLeft();
-}
-
-```java
-
-/* File name : Animal.java */
-interface Animal {
-   public void eat();
-   public void travel();
-}
-
-```
-При переопределении методов в интерфейсе, нужно следовать некоторым правилам:
-
-Проверенные исключения не должны быть объявлены по методам реализации, отличным от тех, которые были объявлены методом интерфейса или подклассами тех, которые были объявлены методом интерфейса.
-Подпись метода интерфейса и того же типа или подтипа возврата должна поддерживаться (сохраняться) при переопределении методов.
-Сам класс реализации может быть абстрактным, а если это так, то методы интерфейса не должны быть реализованы.
+### При переопределении методов в интерфейсе, нужно следовать некоторым правилам:
+- Проверенные исключения не должны быть объявлены по методам реализации, отличным от тех, которые были объявлены методом интерфейса или подклассами тех, которые были объявлены методом интерфейса.
+- Подпись метода интерфейса и того же типа или подтипа возврата должна поддерживаться (сохраняться) при переопределении методов.
+- Сам класс реализации может быть абстрактным, а если это так, то методы интерфейса не должны быть реализованы.
 
 ## Реализация интерфейса
-Когда класс реализует интерфейс, вы можете представить себе, что класс словно подписывает контракт с интерфейсом, соглашаясь совершить конкретные его поведения. Если класс не исполняет все поведения интерфейса, то класс должен объявить себя абстрактным.
+Когда класс реализует интерфейс, вы можете представить себе, что класс словно подписывает контракт с интерфейсом, соглашаясь совершить конкретные его поведения. Если класс не исполняет все поведения интерфейса, то класс должен объявить себя абстрактным. Если класс, реализующий интерфейс, не является абстрактным, все методы интерфейса должны быть определены в классе.
 
-Класс использует ключевое слово implements для реализации интерфейса. Ключевое слово implements появляется при объявлении класса в его расширенной части.
+Ключевое слово implements появляется при объявлении класса в его расширенной части.
 
 ```java
 
-/* File name : MammalInt.java */
-public class MammalInt implements Animal {
+public class SalaryEmployee extends Employee implements IEmployee {
 
-   public void eat() {
-      System.out.println("Млекопитающее кушает");
-   }
+    double weekly_salary;
+    
+    public SalaryEmployee(int id, String name, String company, double weekly_salary) {
+        super(id, name, company);
+        this.weekly_salary = weekly_salary;
+        
+    }
 
-   public void travel() {
-      System.out.println("Млекопитающее путешествует");
-   } 
+    /**
+     * административные работники имеют фиксированную зарплату, 
+     * поэтому каждую неделю им платят одну и ту же сумму
+     */
+    
+    public double calculate_payroll() {
+        return this.weekly_salary;
+    }
 
-   public int noOfLegs() {
-      return 0;
-   }
-
-   public static void main(String args[]) {
-      MammalInt m = new MammalInt();
-      m.eat();
-      m.travel();
-   }
 }
-
- 
-Получим следующее:
-
-Млекопитающее кушает
-Млекопитающее путешествует
 
 ```
 
 ## Класс реализующий интерфейс
-Чтобы указать, что данный класс реализует интерфейс, в строке объявления класса указываем ключевое слово implements и имя интерфейса. Класс реализующий интерфейс должен содержать полный набор методов, определенных в этом интерфейсе. Но в каждом классе могут быть определены и свои методы. Например, следующий класс Transport реализует интерфейс Moveable. В нем реализованы методы moveRight() и moveLeft() интерфейса Moveable, и добавлены свои методы stop(), start():
 
-public class Transport implements Moveable {
-    public void moveRight() {
-        System.out.println("Транспорт поворачивает вправо.");
+Класс реализующий интерфейс должен содержать полный набор методов, определенных в этом интерфейсе. Но в каждом классе могут быть определены и свои методы. 
+
+```java
+public class SalaryEmployee extends Employee implements IEmployee {
+
+    double weekly_salary;
+    
+    public SalaryEmployee(int id, String name, String company, double weekly_salary) {
+        super(id, name, company);
+        this.weekly_salary = weekly_salary;
+        
     }
 
-    public void moveLeft() {
-        System.out.println("Транспорт поворачивает влево.");
+    /**
+     * административные работники имеют фиксированную зарплату, 
+     * поэтому каждую неделю им платят одну и ту же сумму
+     */
+    
+    public double calculate_payroll() {
+        return this.weekly_salary;
+    }
+    
+    public void display(){
+      System.out.printf("Employee Name: %s \t Id: %d \n", super.getName(), getId());
     }
 
-    public void stop() {
-        System.out.println("Транспорт останавливается.");
-    }
-
-    public void start() {
-        System.out.println("Транспорт стартует.");
-    }
 }
 
-Чтобы класс применил интерфейс, надо использовать ключевое слово implements:
-
-public class Program{
-      
-    public static void main(String[] args) {
-             
-        Book b1 = new Book("Java. Complete Referense.", "H. Shildt");
-        b1.print();
-    }
-}
-
-interface Printable{
- 
-    void print();
-}
-
-class Book implements Printable{
-  
-    String name;
-    String author;
-  
-    Book(String name, String author){
-          
-        this.name = name;
-        this.author = author;
-    }
-      
-    public void print() {
-      
-        System.out.printf("%s (%s) \n", name, author);
-    }
-}
-
-В данном случае класс Book реализует интерфейс Printable. При этом надо учитывать, что если класс применяет интерфейс, то он должен реализовать все методы интерфейса, как в случае выше реализован метод print. Потом в методе main мы можем создать объект класса Book и вызвать его метод print. Если класс не реализует какие-то методы интерфейса, то такой класс должен быть определен как абстрактный, а его неабстрактные классы-наследники затем должны будут реализовать эти методы.
+```
 
 В тоже время мы не можем напрямую создавать объекты интерфейсов, поэтому следующий код не будет работать:
+```java
 
-Printable pr = new Printable();
-pr.print();
+IEmployee iemp = new IEmployee();
+iemp.print();
 
-Одним из преимуществ использования интерфейсов является то, что они позволяют добавить в приложение гибкости. Например, в дополнение к классу Book определим еще один класс, который будет реализовывать интерфейс Printable:
+```
+Одним из преимуществ использования интерфейсов является то, что они позволяют добавить в приложение гибкости. Например, в дополнение к классу SalaryEmployee определим еще один класс, который будет реализовывать интерфейс IEmployee:
+```java
+/**
+ * 
+ * В компании также работают рабочие, которые получают почасовую оплату, 
+ * поэтому мы добавим HourlyEmployee в систему управления персоналом:
 
+ * @author janus
+ *
+ */
+public class HourlyEmployee extends Employee implements IEmployee {
 
-class Journal implements Printable {
- 
-    private String name;
-  
-    String getName(){
-        return name;
+    int hours_worked;
+    double hour_rate;
+
+    // String company;
+    
+    public HourlyEmployee(int id, String name, String company,  int hours_worked, double hour_rate) {
+        super(id, name, company);
+        this.hour_rate = hour_rate;
+        this.hours_worked = hours_worked;
     }
-  
-    Journal(String name){
-          
-        this.name = name;
+    
+    public double calculate_payroll() {
+        return this.hour_rate * hours_worked;
     }
-    public void print() {
-        System.out.println(name);
-    }  
 }
-Класс Book и класс Journal связаны тем, что они реализуют интерфейс Printable. Поэтому мы динамически в программе можем создавать объекты Printable как экземпляры обоих классов:
 
+```
 
-public class Program{
-      
+## Множественная реализация интерфейсов
+
+Если нам надо применить в классе несколько интерфейсов, то они все перечисляются через запятую после слова implements:
+```java
+
+public class HourlyEmployee extends Employee implements IEmployee, Employee.NestedIf 
+{
+}
+
+```
+
+## Наследование интерфейсов
+Интерфейс может расширять другой интерфейс так же, как класс другой класс. 
+
+Если класс реализует интерфейс, но не полностью реализует определенные в нем методы, он должен быть объявлен как abstract. Один класс может реализовать любое количество интерфейсов.
+Ключевое слово extends используется для расширения интерфейса, и дочерний интерфейс наследует методы родительского интерфейса.
+```java
+
+public interface ICompany {
+    public String getCompany();
+    public String getName();
+    public int getId()
+}
+// Интерфейсы, как и классы, могут наследоваться:
+
+public interface IEmployee extends ICompany {
+    
+    public double calculate_payroll();
+
+}
+
+```
+Класс HourlyEmployee и класс SalaryEmployee связаны тем, что они реализуют интерфейс IEmployee. Поэтому мы динамически в программе можем создавать объекты IEmployee как экземпляры обоих классов:
+
+```java
+
     public static void main(String[] args) {
-             
-        Printable printable = new Book("Java. Complete Reference", "H. Shildt");
-        printable.print();      //  Java. Complete Reference (H. Shildt)
-        printable = new Journal("Foreign Policy");
-        printable.print();      // Foreign Policy
-    }
-}
-interface Printable{
- 
-    void print();
-}
-class Book implements Printable{
-  
-    String name;
-    String author;
-  
-    Book(String name, String author){
-          
-        this.name = name;
-        this.author = author;
-    }
-      
-    public void print() {
-      
-        System.out.printf("%s (%s) \n", name, author);
-    }
-}
-class Journal implements Printable {
- 
-    private String name;
-  
-    String getName(){
-        return name;
-    }
-  
-    Journal(String name){
-          
-        this.name = name;
-    }
-    public void print() {
-        System.out.println(name);
-    }  
-}
-
-
-При реализации интерфейсов есть некоторые правила:
-
-Класс может реализовать более одного интерфейса за раз.
-Класс может расширить только один класс, но реализовать множество интерфейсов.
-Интерфейс может расширить другой интерфейс таким же образом, как класс расширяет другой класс.
-
-
-
-
-
-## Расширение интерфейсов
-Интерфейс может расширять другой интерфейс так же, как класс другой класс. Ключевое слово extends используется для расширения интерфейса, и дочерний интерфейс наследует методы родительского интерфейса.
-
-Приведённый интерфейс Sports расширен интерфейсами Hockey и Football.
-
-Пример
-// Filename: Sports.java
-public interface Sports {
-   public void setHomeTeam(String name);
-   public void setVisitingTeam(String name);
-}
-
-// Filename: Football.java
-public interface Football extends Sports {
-   public void homeTeamScored(int points);
-   public void visitingTeamScored(int points);
-   public void endOfQuarter(int quarter);
-}
-
-// Filename: Hockey.java
-public interface Hockey extends Sports {
-   public void homeGoalScored();
-   public void visitingGoalScored();
-   public void endOfPeriod(int period);
-   public void overtimePeriod(int ot);
-}
-
- 
-Интерфейс Hockey имеет четыре метода, но он наследует два из Sports; таким образом, класс, который реализует Hockey, должен реализовать все шесть методов. Подобно этому, класс, который реализует Football, должен определить три метода из Football и два метода из Sports.
-
-
-
-
-Один интерфейс может быть реализован любым количеством классов. Например, в следующей схеме добавлены еще два класса Robot и Device, которые тоже реализуют интерфейс Moveable.
-
-Один интерфейс может быть реализован любым количеством классов фото
-
-Класс Robot из вышеуказанной схемы:
-
-public class Robot implements Moveable {
-    public void moveRight() {
-        System.out.println("Робот поворачивает вправо.");
+        
+        IEmployee bob = new HourlyEmployee(1, "Bob", "Goolee", 20, 77.88);
+        System.out.printf("Payroll for: %d \t %s \t %s\n", bob.getId(), bob.getName(), bob.getCompany());
+        System.out.printf("Employee  amount:\t %s \n", bob.calculate_payroll());
+        
+        IEmployee mary = new SalaryEmployee(2, "Mary", "Doolee", 444.99);
+        System.out.printf("Payroll for: %d \t %s \t %s\n", mary.getId(), mary.getName(), mary.getCompany());
+        System.out.printf("Employee  amount:\t %s \n", mary.calculate_payroll());
+        
     }
 
-    public void moveLeft() {
-        System.out.println("Робот поворачивает влево.");
-    }
-}
+```
 
-Если класс реализует интерфейс, но не полностью реализует определенные в нем методы, он должен быть объявлен как abstract. 
+## Класс может иметь любое количество интерфейсов. 
+Все, что нужно сделать — это реализовать в классе полный набор методов всех интерфейсов. Сигнатуры таких методов класса должны точно совпадать с сигнатурами методов реализуемого в этом классе интерфейса. 
 
-Например, класс Device реализует только один метод интерфейса Moveable, поэтому он абстрактный:
+Интерфейсы обладают своей собственной иерархией, не пересекающейся с классовой иерархией наследования. Это дает возможность реализовать один и тот же интерфейс в различных классах, никак не связанных по линии иерархии классового наследования. Именно в этом и проявляется главная сила интерфейсов.
 
-public abstract class Device implements Moveable {
-    public void moveRight() {
-        System.out.println("Девайс поворачивает вправо.");
-    }
-}
-
-Тип интерфейса можно указывать при объявлении переменных, содержащих ссылки на объекты, классы которых реализуют этот интерфейс. Например, в следующем примере переменная moveable имеет тип Moveable, и указывает она на объект Transport. Но на основе интерфейсов нельзя порождать объекты. Например, в строке Moveable moveable1 = new Moveable() будет ошибка компиляции. При использовании переменной типа интерфейс, доступны только те члены класса, которые определены в этом интерфейсе. Например, нельзя вызвать метод start(), используя переменную moveable. А для переменной transport можно:
-
-public class TransportDemo {
-    public static void main(String[] args) {
-        Moveable moveable = new Transport();
-        Transport transport = new Transport();
-        Moveable robot = new Robot();
-        //Moveable moveable1 = new Moveable();
-
-        //  moveable.start();
-        moveable.moveRight();
-        moveable.moveLeft();
-        System.out.println();
-
-        transport.start();
-        transport.moveRight();
-        transport.moveLeft();
-        transport.stop();
-        System.out.println();
-
-        robot.moveLeft();
-        robot.moveRight();
-    }
-}
-
-Один класс может реализовать любое количество интерфейсов. На следующей схеме показан класс Pickup, который реализует два интерфейса CargoAuto и PassengersAuto:
-
-Один класс может реализовать любое количество интерфейсов фото
-
-public interface CargoAuto {
-    void transportCargo();
-}
-public interface PassengersAuto {
-    void transportPassengers();
-}
-
-Для указания того, что класс реализует несколько интерфейсов, после ключевого слова implements через запятую перечисляются нужные интерфейсы. Класс Pickup должен определить все методы реализуемых интерфейсов:
-
-public class Pickup implements CargoAuto, PassengersAuto {
-    public void transportCargo() {
-        System.out.println("Везу груз");
-    }
-
-    public void transportPassengers() {
-        System.out.println("Везу пассажиров");
-    }
-}
-
-
-## Интерфейсы в преобразованиях типов
-
-Все сказанное в отношении преобразования типов характерно и для интерфейсов. Например, так как класс Journal реализует интерфейс Printable, то переменная типа Printable может хранить ссылку на объект типа Journal:
-
-Printable p =new Journal("Foreign Affairs");
-p.print();  
-// Интерфейс не имеет метода getName, необходимо явное приведение
-String name = ((Journal)p).getName();
-System.out.println(name);
-
-И если мы хотим обратиться к методам класса Journal, которые определены не в интерфейсе Printable, а в самом классе Journal, то нам надо явным образом выполнить преобразование типов: ((Journal)p).getName();
+С помощью интерфейса можно указать, что именно должен выполнять класс его реализующий, но не как это делать. Способ реализации выбирает сам класс. Интерфейсы не способны сохранять данные состояния. Интерфейсы - это один из механизмов реализации принципа полиморфизма "один интерфейс, несколько методов". 
 
 
 ## Методы по умолчанию в интерфейсах
 
-В JDK 8 в интерфейсы ввели методы по умолчанию - это методы, у которых есть реализация. Другое их название - методы расширения. Классы, реализующие интерфейсы, не обязаны переопределять такие методы, но могут если это необходимо. Методы по умолчанию определяются с ключевым словом default.
+Методы по умолчанию в интерфейсах - это методы, у которых есть реализация. Другое их название - методы расширения. Классы, реализующие интерфейсы, не обязаны переопределять такие методы, но могут если это необходимо. 
 
-Интерфейс SomeInterface объявляет метод по умолчанию defaultMethod() с базовой реализацией:
+Метод по умолчанию - это обычный метод без модификаторов, который помечается ключевым словом default. Затем в классе нам необязательно этот метод реализовать, хотя мы можем его и переопределить
 
-public interface SomeInterface {
+Интерфейс ICompany объявляет метод по умолчанию defaultMethod() с базовой реализацией:
+
+```java
+
+public interface ICompany {
+    public String getCompany();
+    public String getName();
+    public int getId();
+    
     default String defaultMethod() {
         return "Объект типа String по умолчанию";
     }
 }
-Класс SomeInterfaceImpl1, реализующий этот интерфейс, не переопределяет метод defaultMethod() - так можно. 
 
-public class SomeInterfaceImpl1 implements SomeInterface {
+```
+
+Класс HourlyEmployee, реализующий этот интерфейс, не переопределяет метод defaultMethod(). 
+
+А если класс SalaryEmployee не устраивает реализация по умолчанию, он переопределяет этот метод: 
+```java
+
+public class SalaryEmployee extends Employee implements IEmployee {
+
+    double weekly_salary;
+    
+    public SalaryEmployee(int id, String name, String company, double weekly_salary) {
+        super(id, name, company);
+        this.weekly_salary = weekly_salary;
+        
+    }
+
+    /**
+     * административные работники имеют фиксированную зарплату, 
+     * поэтому каждую неделю им платят одну и ту же сумму
+     */
+    
+    public double calculate_payroll() {
+        return this.weekly_salary;
+    }
+    
+    public void display(){
+      System.out.printf("Employee Name: %s \t Id: %d \n", super.getName(), getId());
+    }
+    
+    @Override
+    public String defaultMethod() {
+        return "Другая символьная строка";
+    }
+
 }
-А если класс SomeInterfaceImpl2 не устраивает реализация по умолчанию, он переопределяет этот метод: 
 
 public class SomeInterfaceImpl2 implements SomeInterface {
     @Override
@@ -434,113 +403,78 @@ public class SomeInterfaceImpl2 implements SomeInterface {
         return "Другая символьная строка";
     }
 }
-Создаем два объекта классов SomeInterfaceImpl1 и SomeInterfaceImpl2, и вызываем для каждого метод defaultMethod(). Для объекта класса SomeInterfaceImpl1 вызовется метод, реализованный в интерфейсе, а для объекта класса SomeInterfaceImpl2 - его собственная реализация:
-
-public class DefaultMethodDemo {
-    public static void main(String[] args) {
-        SomeInterface obj1 = new SomeInterfaceImpl1();
-        SomeInterface obj2 = new SomeInterfaceImpl2();
-
-        System.out.println(obj1.defaultMethod());
-        System.out.println(obj2.defaultMethod());
-    }
-}
-
-Результат выполнения:
-
-Объект типа String по умолчанию
-Другая символьная строка
-
-Методы по умолчанию
-Ранее до JDK 8 при реализации интерфейса мы должны были обязательно реализовать все его методы в классе. А сам интерфейс мог содержать только определения методов без конкретной реализации. В JDK 8 была добавлена такая функциональность как методы по умолчанию. И теперь интерфейсы кроме определения методов могут иметь их реализацию по умолчанию, которая используется, если класс, реализующий данный интерфейс, не реализует метод. Например, создадим метод по умолчанию в интерфейсе Printable:
-
-interface Printable {
-     
-    default void print(){
-         
-        System.out.println("Undefined printable");
-    }
-}
-Метод по умолчанию - это обычный метод без модификаторов, который помечается ключевым словом default. Затем в классе Journal нам необязательно этот метод реализовать, хотя мы можем его и переопределить:
 
 
-class Journal implements Printable {
- 
-    private String name;
-  
-    String getName(){
-        return name;
-    }
-    Journal(String name){
-          
-        this.name = name;
-    }
-}
-
-
-
-
-## Статические методы интерфейса
-В версии JDK 8, в интерфейсы добавлена еще одна возможность - определять в нем статические методы. Статические методы интерфейса, как и класса, можно вызывать независимо от любого объекта. Для вызова статического метода достаточно указать имя интерфейса и через точку имя самого метода.
-
-public interface MyIf {
-    int getNumber();
-
-    static int staticMethod() {
-        return 0;
-    }
-}
-public class StaticMethodDemo {
-    public static void main(String[] args) {
-        MyIf obj1 = new MyIfImp();
-
-        System.out.println(obj1.getNumber());
-        System.out.println(MyIf.staticMethod());
-    }
-}
-
-
-Статические методы
-Начиная с JDK 8 в интерфейсах доступны статические методы - они аналогичны методам класса:
-
-interface Printable {
-     
-    void print();
-     
-    static void read(){
-         
-        System.out.println("Read printable");
-    }
-}
-Чтобы обратиться к статическому методу интерфейса также, как и в случае с классами, пишут название интерфейса и метод:
+```
+Для объекта класса HourlyEmployee вызовется метод, реализованный в интерфейсе, а для объекта класса SalaryEmployee - его собственная реализация:
+```java
 
 public static void main(String[] args) {
-         
-    Printable.read();
+       
+        IEmployee bob = new HourlyEmployee(1, "Bob", "Goolee", 20, 77.88);
+        System.out.printf("Payroll for: %d \t %s \t %s\n", bob.getId(), bob.getName(), bob.getCompany());
+        System.out.printf("Employee  amount:\t %s \n", bob.calculate_payroll());
+        System.out.println(bob.defaultMethod());
+        
+        IEmployee mary = new SalaryEmployee(2, "Mary", "Doolee", 444.99);
+        System.out.printf("Payroll for: %d \t %s \t %s\n", mary.getId(), mary.getName(), mary.getCompany());
+        System.out.printf("Employee  amount:\t %s \n", mary.calculate_payroll());
+        System.out.println(mary.defaultMethod());
+        
+    }
+
+
+```
+## Статические методы интерфейса
+Статические методы интерфейса, как и класса, можно вызывать независимо от любого объекта. Для вызова статического метода достаточно указать имя интерфейса и через точку имя самого метода.
+```java
+
+public interface IEmployee extends ICompany {
+    
+    public double calculate_payroll();
+    
+    static String staticMethod() {
+        return "I'm statis method";
+    }
+
 }
 
+System.out.println(IEmployee.staticMethod());
 
+
+```
 
 ## Приватные методы
-По умолчанию все методы в интерфейсе фактически имеют модификатор public. Однако начиная с Java 9 мы также можем определять в интерфейсе методы с модификатором private. Они могут быть статическими и нестатическими, но они не могут иметь реализации по умолчанию.
+По умолчанию все методы в интерфейсе имеют модификатор public. Однако начиная с Java 9 мы также можем определять в интерфейсе методы с модификатором private. Они могут быть статическими и нестатическими, но они не могут иметь реализации по умолчанию.
 
 Подобные методы могут использоваться только внутри самого интерфейса, в котором они определены. То есть к примеру нам надо выполнять в интерфейсе некоторые повторяющиеся действия, и в этом случае такие действия можно выделить в приватные методы:
 
 
-public class Program{
-      
+```java
+
     public static void main(String[] args) {
           
-        Calculatable c = new Calculation();
-        System.out.println(c.sum(1, 2));
-        System.out.println(c.sum(1, 2, 4));
+        IEmployee bob = new HourlyEmployee(1, "Bob", "Goolee", 20, 77.88);
+        System.out.printf("Payroll for: %d \t %s \t %s\n", bob.getId(), bob.getName(), bob.getCompany());
+        System.out.printf("Employee  amount:\t %s \n", bob.calculate_payroll());
+        System.out.println(bob.defaultMethod());
+        
+        System.out.println(IEmployee.staticMethod());
+        
+        
+        System.out.println(bob.sum(1, 2));
+        System.out.println(bob.sum(1, 2, 4));
     }
-}
-class Calculation implements Calculatable{
-     
-}
-interface Calculatable{
- 
+
+
+public interface IEmployee extends ICompany {
+    
+    public double calculate_payroll();
+    
+    public static String staticMethod() {
+        return "I'm statis method";
+    }
+    
     default int sum(int a, int b){
         return sumAll(a, b);
     }
@@ -555,243 +489,88 @@ interface Calculatable{
          }
          return result;
     }
+
 }
 
 
-Ключевое слово interface используется для создания полностью абстрактных классов. Создатель интерфейса определяет имена методов, списки аргументов и типы возвращаемых значений, но не тела методов.
-
-Наличие слова interface означает, что именно так должны выглядеть все классы, которые реализуют данный интерфейс. Таким образом, любой код, использующий конкретный интерфейс, знает только то, какие методы вызываются для этого интерфейса, но не более того.
-
-Чтобы создать интерфейс, используйте ключевое слово interface вместо class. Как и в случае с классами, вы можете добавить перед словом interface спецификатор доступа public (но только если интерфейс определен в файле, имеющем то же имя) или оставить для него дружественный доступ, если он будет использоваться только в пределах своего пакета. Интерфейс может содержать поля, но они автоматически являются статическими (static) и неизменными (final). Все методы и переменные неявно объявляются как public.
-
-Класс, который собирается использовать определённый интерфейс, использует ключевое слово implements. Оно указывает, что интерфейс лишь определяет форму, а вам нужно наполнить кодом. Методы, которые реализуют интерфейс, должны быть объявлены как public.
-
-Интерфейсов у класса может быть несколько, тогда они перечисляются за ключевым словом implements и разделяются запятыми.
-
-
+```
 
 ## Внутренние интерфейсы
-Интерфейсы объявленные в классах или в других интерфейсах называются внутренние или вложенные. Например, интерфейс NestedIf определен внутри класса A:
 
-public class A {
+Интерфейсы объявленные в классах или в других интерфейсах называются внутренние или вложенные. Например, интерфейс NestedIf определен внутри класса Employee:
+```java
+
+public abstract class Employee implements ICompany
+{
+    private int id;
+    private String name;
+    private String company;
+    
+    public Employee() {
+    }
+        
+    public Employee(int id, String name, String company ) {
+        this.name=name;
+        this.id = id;
+        this.company = company;
+    }
+    
     public interface NestedIf {
         boolean isNotNegative(int x);
     }
 }
-При обращении к интерфейсу NestedIf требуется указывать имя его внешнего класса - A.NestedIf:
 
-public class B implements A.NestedIf {
+```
+При обращении к интерфейсу NestedIf требуется указывать имя его внешнего класса - Employee.NestedIf:
+```java
+
+public class HourlyEmployee extends Employee implements IEmployee, Employee.NestedIf {
+
+    int hours_worked;
+    double hour_rate;
+
+    // String company;
+    
+    public HourlyEmployee(int id, String name, String company,  int hours_worked, double hour_rate) {
+        super(id, name, company);
+        this.hour_rate = hour_rate;
+        this.hours_worked = hours_worked;
+    }
+    
+    public double calculate_payroll() {
+        return this.hour_rate * hours_worked;
+    }
+    
     public boolean isNotNegative(int x) {
         return x >= 0;
     }
 }
-public class NestedIfDemo {
-    public static void main(String[] args) {
-        A.NestedIf nif = new B();
+
+
+        Employee.NestedIf nif = new HourlyEmployee(1, "Nif", "Noolee", 20, 77.88);
         if (nif.isNotNegative(10)) {
             System.out.println("Число 10 не отрицательное.");
         }
         if (nif.isNotNegative(-12)) {
             System.out.println("Этo не будет выведено.");
         }
-    }
-}
 
-
-Интерфейсы как параметры и результаты методов
-И также как и в случае с классами, интерфейсы могут использоваться в качестве типа параметров метода или в качестве возвращаемого типа:
-
-
-public class Program{
-      
-    public static void main(String[] args) {
-          
-        Printable printable = createPrintable("Foreign Affairs",false);
-        printable.print();
-              
-        read(new Book("Java for impatients", "Cay Horstmann"));
-        read(new Journal("Java Dayly News"));
-    }
-          
-    static void read(Printable p){
-              
-        p.print();
-    }
-          
-    static Printable createPrintable(String name, boolean option){
-              
-        if(option)
-            return new Book(name, "Undefined");
-        else
-            return new Journal(name);
-    }
-}
-interface Printable{
- 
-    void print();
-}
-class Book implements Printable{
-  
-    String name;
-    String author;
-  
-    Book(String name, String author){
-          
-        this.name = name;
-        this.author = author;
-    }
-      
-    public void print() {
-      
-        System.out.printf("%s (%s) \n", name, author);
-    }
-}
-class Journal implements Printable {
- 
-    private String name;
-  
-    String getName(){
-        return name;
-    }
-  
-    Journal(String name){
-          
-        this.name = name;
-    }
-    public void print() {
-        System.out.println(name);
-    }  
-}
-Метод read() в качестве параметра принимает объект интерфейса Printable, поэтому в этот метод мы можем передать как объект Book, так и объект Journal.
-
-Метод createPrintable() возвращает объект Printable, поэтому также мы можем возвратить как объект Book, так и Journal.
-
-Консольный вывод:
-
-Foreign Affairs
-Java for impatients (Cay Horstmann)
-Java Dayly News
-
-Вложенные интерфейсы
-Как и классы, интерфейсы могут быть вложенными, то есть могут быть определены в классах или других интерфейсах. Например:
-
-class Printer{
-    interface Printable {
-     
-        void print();
-    }
-}
-При применении такого интерфейса нам надо указывать его полное имя вместе с именем класса:
-
-
-public class Journal implements Printer.Printable {
- 
-    String name;
-  
-    Journal(String name){
-          
-        this.name = name;
-    }
-    public void print() {
-        System.out.println(name);
-    }  
-}
-Использование интерфейса будет аналогично предыдущим случаям:
-
-Printer.Printable p =new Journal("Foreign Affairs");
-p.print();
-
-
-
-
-Интерфейсы могут вкладываться в классы и в другие интерфейсы.
-
-Если класс содержит интерфейс, но не полностью реализует определённые им методы, он должен быть объявлен как abstract.
-
-Интерфейсы — это не классы. С помощью ключевого слова new нельзя создать экземпляр интерфейса:
-
-
-х = new List(...); // Нельзя!
-Но можно объявлять интерфейсные переменные:
-
-
-List<String> catNames; // Можно!
-При этом интерфейсная переменная должна ссылаться на объект класса, реализующего данный интерфейс.
-
-
-List<String> catNames = new ArrayList<>();
-Рассмотрим быстрый пример создания интерфейса. Выберите в меню File | New | Interface и придумайте имя для нового интерфейса. В полученной заготовке добавьте два имени метода (только имена, без кода).
-
-
-package ru.alexanderklimov.quickcourse;
-
-public interface SimpleInterface {
-    String getClassName();
-    int getAge();
-}
-Создайте или откройте какой-нибудь класс, к которому нужно применить интерфейс, и добавьте к нему implements SimpleInterface. Среда разработки подчеркнёт красной линией имя класса и предложит добавить методы, которые требуются интерфейсом. Соглашаемся и получаем результат:
-
-
-package ru.alexanderklimov.quickcourse;
-
-public class Cat extends Animal implements SimpleInterface {
-
-    @Override
-    public String getClassName() {
-        return null;
-    }
-
-    @Override
-    public int getAge() {
-        return 0;
-    }
-}
-
-Среда разработки сгенерировала два метода и использовала в качестве возвращаемых результатов значения по умолчанию. Это могут быть и нулевые значения и null. Осталось подправить шаблоны созданных методов под свои задачи. Например, так:
-
-
-@Override
-public String getClassName() {
-    return "Cat";
-}
-
-@Override
-public int getAge() {
-    return 5;
-}
-Первый метод возвращает имя класса, а второй - возраст кота (странно, что всем котам будет по пять лет, но это лишь пример).
-
-Здесь важно понять роль интерфейса. Мы лишь придумываем имена, а класс уже реализует нужную задачу. Для примера можно создать в интерфейсе метод play() для класса Пианино и класса Гитара, так как играть можно на обеих инструментах. Но код в методах будет отличаться, так как принцип игры на инструментах совершенно разный.
-
-
-
+```
 ## Константы в интерфейсах
 
 Интерфейсы можно использовать для импорта констант в несколько классов. Вы просто объявляете интерфейс, содержащий переменные с нужными значениями. При реализации интерфейса в классе имена переменных будут помещены в область констант. Поля для констант становятся открытыми и являются статическими и конечными (модификаторы public static final). При этом, если интерфейс не будет содержать никаких методов, то класс не будет ничего реализовывать. Хотя данный подход не рекомендуют использовать.
 
-Константы в интерфейсах
-Кроме методов в интерфейсах могут быть определены статические константы:
-
-interface Stateable{
- 
-    int OPEN = 1;
-    int CLOSED = 0;
-     
-    void printState(int n);
-}
 Хотя такие константы также не имеют модификаторов, но по умолчанию они имеют модификатор доступа public static final, и поэтому их значение доступно из любого места программы.
 
 Применение констант:
+```java
 
-
-public class Program{
-      
     public static void main(String[] args) {
           
         WaterPipe pipe = new WaterPipe();
         pipe.printState(1);
     }
-}
+
 class WaterPipe implements Stateable{
      
     public void printState(int n){
@@ -803,6 +582,7 @@ class WaterPipe implements Stateable{
             System.out.println("State is invalid");
     }
 }
+
 interface Stateable{
  
     int OPEN = 1;
@@ -812,694 +592,50 @@ interface Stateable{
 }
 
 
+```
 
-## Множественная реализация интерфейсов
 
-Если нам надо применить в классе несколько интерфейсов, то они все перечисляются через запятую после слова implements:
+## Множественное наследование
+Множественное наследование дает возможность создать класс, наследованный от нескольких суперклассов. В отличии от некоторых других популярных объектно-ориентированных языков программирования, таких как С++ в Java запрещено множественное наследование от классов. Java не поддерживает множественное наследование классов потому, что это может привести к ромбовидной проблеме.  И вместо того, чтобы искать способы решения этой проблемы, есть лучшие варианты, как мы можем добиться того же самого результата как множественное наследование.
 
-interface Printable {
-     
-    // методы интерфейса
-}
- 
-interface Searchable {
-     
-    // методы интерфейса
-}
- 
-class Book implements Printable, Searchable{
- 
-    // реализация класса
-}
+## Композиция
 
+Главное отличие между композицией и наследованием заключается в том, что композиция даёт возможность переиспользовать код без расширения существующего класса, как это происходит в случае с наследованием. Не менее важно и то, что композиция позволяет нам выполнять повторное использование кода даже из final-класса, в то время как унаследоваться от него мы не сможем. Есть и ещё кое-что: при композиции допускается использование кода из нескольких разных классов, а вот с наследованием это не сработает, ведь в языке программирования Java множественное наследование не поддерживается (правда, мы можем это сделать в C++).
 
-## Наследование интерфейсов
-Интерфейсы, как и классы, могут наследоваться:
+Таким образом, в Java рекомендуется использовать преимущественно композицию, а не наследование.
+```java
+/**
+ * 
+ * в компании работают торговые партнеры, которым выплачивается фиксированная зарплата плюс комиссия, 
+ * основанная на их продажах, поэтому мы создадим класс CommissionEmployee
+ * @author janus
+ *
+ */
+public class CommissionEmployee extends Employee implements IEmployee {
 
-interface BookPrintable extends Printable{
-     
-    void paint();
-}
-При применении этого интерфейса класс Book должен будет реализовать как методы интерфейса BookPrintable, так и методы базового интерфейса Printable.
+    /**
+     * 
+     */
 
-
-## Расширение множества интерфейсов
-Класс в Java может расширить только один родительский класс. Множественное наследование невозможно. Однако интерфейсы не классы, и интерфейс может расширить более чем один родительский интерфейс.
-
-Ключевое слово extends используется лишь раз, а родительские интерфейсы объявляются через запятую.
-
-Например, если интерфейс Hockey расширил и Sports, и Event, то объявление выглядело бы так:
-
-public interface Hockey extends Sports, Event
-
-
-Расширение интерфейсов
-Интерфейс может наследоваться от другого интерфейса через ключевое слово extends.
-
-
-
-
-
-
-
-
-
-
-Создание интерфейса очень похоже на создание обычного класса, только вместо слова class мы указываем 
-
-слово interface.
-
-Давай посмотрим на простейший Java-интерфейс, и разберемся, как он работает и для чего нужен:
-
-public interface Swimmable  {
-
-     public void swim();
-}
-
-Мы создали интерфейс Swimmable — «умеющий плавать». Это что-то вроде нашего пульта, у которого есть одна «кнопка»: метод swim()  — «плыть». 
-
-Как же нам этот «пульт» использовать?
-
-Для этого метод, т.е. кнопку нашего пульта, нужно имплементировать. Чтобы использовать интерфейс, его методы должны реализовать какие-то классы нашей программы.
-
-Давай придумаем класс, объекты которого подойдут под описание «умеющий плавать». Например, подойдет класс утки — Duck:
-
-public class Duck implements Swimmable {
-
-    public void swim() {
-        System.out.println("Уточка, плыви!");
-    }
-
-    public static void main(String[] args) {
-
-        Duck duck = new Duck();
-        duck.swim();
-    }
-}
-
-Что же мы здесь видим?
-
-Класс Duck «связывается» с интерфейсом Swimmable при помощи ключевого слова implements. Если помнишь, мы использовали похожий механизм для связи двух классов в наследовании, только там было слово «extends».
-
-«public class Duck implements Swimmable» можно для понятности перевести дословно: «публичный класс Duck реализует интерфейс Swimmable». 
-
-Это значит, что класс, связанный с каким-то интерфейсом, должен реализовать все его методы. Обрати внимание: в нашем классе Duck прямо как в интерфейсе Swimmable есть метод swim(), и внутри него содержится какая-то логика.
-
-Это обязательное требование. Если бы мы просто написали «public class Duck implements Swimmable» и не создали бы метод swim() в классе Duck, компилятор выдал бы нам ошибку:
-
-Duck is not abstract and does not override abstract method swim() in Swimmable
-
-Почему так происходит? 
-
-Если объяснять ошибку на примере с телевизором, получится, что мы даем человеку в руки пульт с кнопкой «переключить канал» от телевизора, который не умеет переключать каналы.
-
-Тут уж нажимай на кнопку сколько влезет, ничего не заработает. Пульт сам по себе не переключает каналы: он только дает сигнал телевизору, внутри которого реализован сложный процесс смены канала.
-
-Так и с нашей уткой: она должна уметь плавать, чтобы к ней можно было обратиться с помощью интерфейса Swimmable.
-
-Если она этого не умеет, интерфейс Swimmable не свяжет две стороны — человека и программу. Человек не сможет использовать метод swim(), чтобы заставить объект Duck внутри программы плыть.
-
-Теперь ты увидел более наглядно, для чего нужны интерфейсы.
-
-Интерфейс описывает поведение, которым должны обладать классы, реализующие этот интерфейс. «Поведение» — это совокупность методов.
-
-Если мы хотим создать несколько мессенджеров, проще всего сделать это, создав интерфейс Messenger. Что должен уметь любой мессенджер? В упрощенном виде, принимать и отправлять сообщения.
-
-public interface Messenger{
-
-     public void sendMessage();
-
-     public void getMessage();
-}
-
-И теперь мы можем просто создавать наши классы-мессенджеры, имплементируя этот интерфейс. Компилятор сам «заставит» нас реализовать их внутри классов.
-
-Telegram:
-
-public class Telegram implements Messenger {
-
-    public void sendMessage() {
-
-        System.out.println("Отправляем сообщение в Telegram!");
-    }
-
-     public void getMessage() {
-         System.out.println("Читаем сообщение в Telegram!");
-     }
-}
-
-WhatsApp:
-
-public class WhatsApp implements Messenger {
-
-    public void sendMessage() {
-
-        System.out.println("Отправляем сообщение в WhatsApp!");
-    }
-
-     public void getMessage() {
-         System.out.println("Читаем сообщение в WhatsApp!");
-     }
-}
-
-Viber:
-
-public class Viber implements Messenger {
-
-    public void sendMessage() {
-
-        System.out.println("Отправляем сообщение в Viber!");
-    }
-
-     public void getMessage() {
-         System.out.println("Читаем сообщение в Viber!");
-     }
-}
-
-Какие преимущества это дает? Самое главное из них — слабая связанность.
-
-Представь, что мы проектируем программу, в которой у нас будут собраны данные клиентов. В классе Client обязательно нужно поле, указывающее, каким именно мессенджером клиент пользуется.
-
-Без интерфейсов это выглядело бы странно:
-
-public class Client {
-
-    private WhatsApp whatsApp;
-    private Telegram telegram;
-    private Viber viber;
-}
-
-Мы создали три поля, но у клиента запросто может быть всего один мессенджер. Просто мы не знаем какой. И чтобы не остаться без связи с клиентом, приходится «заталкивать» в класс все возможные варианты. Получается, один или два из них всегда будут null, и они вообще не нужны для работы программы.
-
-Вместо этого лучше использовать наш интерфейс:
-
-public class Client {
-
-    private Messenger messenger;
-}
-
-Это и есть пример «слабой связанности»! Вместо того, чтобы указывать конкретный класс мессенджера в классе Client, мы просто упоминаем, что у клиента есть мессенджер. Какой именно — определится в ходе работы программы. 
-
-Но зачем нам для этого именно интерфейсы? Зачем их вообще добавили в язык?
-
-Вопрос хороший и правильный! Того же результата можно добиться с помощью обычного наследования, так ведь?
-
-Класс Messenger — родительский, а Viber, Telegram и WhatsApp — наследники. Действительно, можно и так.
-
-Но есть одна загвоздка. Как ты уже знаешь, множественного наследования в Java нет. А вот множественная реализация интерфейсов — есть. Класс может реализовывать сколько угодно интерфейсов.
-
-Представь, что у нас есть класс Smartphone, у которого есть поле Application — установленное на смартфоне приложение. 
-
-public class Smartphone {
-
-    private Application application;
-}
-
-Приложение и мессенджер, конечно, похожи, но все-таки это разные вещи. Мессенджер может быть и мобильным, и десктопным, в то время как Application — это именно мобильное приложение.
-
-Так вот, если бы мы использовали наследование, не смогли бы добавить объект Telegram в класс Smartphone. Ведь класс Telegram не может наследоваться одновременно от Application и от Messenger! А мы уже успели унаследовать его от Messenger, и в таком виде добавить в класс Client.
-
-Но вот реализовать оба интерфейса класс Telegram запросто может!  Поэтому в классе Client мы сможем внедрить объект Telegram как Messenger, а в класс Smartphone — как Application. Вот как это делается:
-
-public class Telegram implements Application, Messenger {
-
-    //...методы
-}
-
-public class Client {
-
-    private Messenger messenger;
-
-    public Client() {
-        this.messenger = new Telegram();
-    }
-}
-
-
-public class Smartphone {
-
-    private Application application;
-
-    public Smartphone() {
-        this.application = new Telegram();
-    }
-}
-
-Теперь мы используем класс Telegram как захотим. Где-то он будет выступать в роли Application, где-то — в роли Messenger.
-
-Наверняка ты уже обратил внимание, что методы в интерфейсах всегда «пустые», то есть они не имеют реализации.
-
-Причина этого проста: интерфейс описывает поведение, а не реализует его.
-
-«Все объекты классов, имплементирующих интерфейс Swimmable, должны уметь плавать»: вот и все, что говорит нам интерфейс. Как там конкретно будет плавать рыба, утка или лошадь — вопрос к классам Fish, Duck и Horse, а не к интерфейсу. Также как переключение канала — задача телевизора. Пульт просто предоставляет тебе кнопку для этого.
-
-Впрочем, в Java8 появилось интересное дополнение — методы по умолчанию (default method).
-
-Например, в твоем интерфейсе есть 10 методов. 9 из них реализованы по-разному в разных классах, но один реализован одинаково у всех. Раньше, до выхода Java8, методы внутри интерфейсов вообще не имели реализации: компилятор сразу выдавал ошибку. Теперь же можно сделать вот так:
-
-public interface Swimmable {
-
-   public default void swim() {
-       System.out.println("Плыви!");
-   }
-
-   public void eat();
-
-   public void run();
-}
-
-Используя ключевое слово default, мы создали в интерфейсе метод с реализацией по умолчанию. Два других метода, eat() и run(), нам необходимо будет реализовать самим во всех классах, которые будут имплементировать Swimmable. С методом swim() этого делать не нужно: реализация будет во всех классах одинаковой.
-
-Кстати, ты уже не раз сталкивался с интерфейсами в прошлых задачах, хоть и не замечал этого сам :) Вот очевидный пример:
-Для чего в Java нужны интерфейсы - 2Ты работал с интерфейсами List и Set! Точнее, с их реализациями — ArrayList, LinkedList, HashSet и прочими.
-
-На этой же схеме видно пример, когда один класс реализует сразу несколько интерфейсов. Например, LinkedList реализует интерфейсы List и Deque (двусторонняя очередь). 
-
-Ты знаком и с интерфейсом Map, а точнее, с его реализаций — HashMap.
-
-Кстати, на этой схеме ты можешь увидеть одну особенность: интерфейсы могут быть унаследованы друг от друга. Интерфейс SortedMap унаследован от Map, а Deque наследуется от очереди Queue. Это нужно, если ты хочешь показать связь интерфейсов между собой, но при этом один интерфейс является расширенной версией другого. 
-
-Давай рассмотрим пример с интерфейсом Queue — очередь. Мы пока не проходили коллекции Queue, но они достаточно простые и устроены как обычная очередь в магазине. 
-Для чего в Java нужны интерфейсы - 3Добавлять элементы можно только в конец очереди, а забирать — только из начала. На определенном этапе разработчикам понадобился расширенный вариант очереди, чтобы добавлять и получать элементы можно было с обеих сторон. Так создали интерфейс Deque — двустороннюю очередь. В нем присутствуют все методы обычной очереди, ведь она является «родителем» двусторонней, но при этом добавлены новые методы.
-
-
-
-
-
-
-
-Интерфейсы
-
-
-Приведем пример простого интерфейса, а также класса, который его наследует (листинг 4.13).
-
-Листинг 4.13.
-Пример простого интерфейса и класса, который его наследует
-
-
-interface Apple {
-    String red = "red";
-    String yellow = "yellow";
-    String green = "green";
-}
-interface Tangerine {
-    String orange = "orange";
-}
-interface Fruits extends Apple, Tangerine {
-    String fruit1 = "Apple";
-    String fruit2 = "Tangerine";
-    void setFruit(int number1, int number2);
-    String getFruit();
-}
-class MyFruits implements Fruits {
-    String color;
-    String name;
-    private String getColor() {
-        return color;
-    }
-    private void setColor(int number) {
-        switch (number) {
-            case 0:
-                this.color = this.red;
-                break;
-            case 1:
-                this.color = this.yellow;
-                break;
-            default:
-                this.color = this.green;
-        }
-    }
- 
-    public String getFruit() {
-        String s = "Fruit: " + this.name + "Color: " + getColor();
-        return s;
-    }
- 
-    public void setFruit(int number1, int number2) {
-        switch (number1) {
-            case 0:
-                this.name = this.fruit1;
-                setColor(number2);
-                break;
-            default:
-                this.name = this.fruit2;
-                this.color = this.orange;
-                break;
-        }
-    }
- 
-    public static void main(String[] args) {
-        MyFruits my1 = new MyFruits();
-        my1.setFruit(0, 2);
-        System.out.println(my1.getFruit());
-        MyFruits my2 = new MyFruits();
-        my2.setFruit(1, 0);
-        System.out.println(my2.getFruit());
-    }
-}
- 
-
-Можно объявить переменную с типом данных, являющимся наименованием интерфейса. Она может ссылаться на объект класса, который реализует интерфейс, и может вызывать методы, которые объявлены в интерфейсе, а реализованы в классе. Чтобы сделать такую ссылку, необходимо в качестве типа данных ссылки указать наименование интерфейса, а после ключевого слова new указать имя конструктора класса (листинг 4.14).
-
-Листинг 4.14.
-Объявление переменной с типом данных, являющимся наименованием интерфейса
-
-interface Fruit {
-    void setName(String s);
-}
-class Apple implements Fruit {
-    String name;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String s) {
-        this.name = s;
-    }
-
-    public static void main(String[] args) {
-        Fruit my1 = new Apple();
-        my1.setName("Apple");
-        System.out.println(my1.getName());
-        // A это ошибка! Нет метода getName() в интерфейсе Fruit. 
-    }
-}
- 
-
-Локальными переменными называются переменные, объявляемые в каких-либо блоках (повторим еще раз: блоком называется участок кода между двумя фигурными скобками; блоками могут быть: тело метода, блок инициализации и др.). Локальные переменные существуют до тех пор, пока не кончится блок. Как только блок закончится, локальная переменная перестанет существовать.
-
-
-## Методы обратного вызова
-Интерфейсы часто используются для создания методов обратного вызова (callback). Рассмотрим такой пример. Создадим новый класс SubClass с интерфейсом MyCallback:
-
-
-package ru.alexanderklimov.quickcourse;
-
-public class SubClass {
-    interface MyCallback{
-        void callBackReturn();
-    }
-
-    MyCallback myCallback;
-
-    void registerCallBack(MyCallback callback){
-        this.myCallback = callback;
-    }
-
-    void doSomething(){
-        // Здесь какой-то длительный код
-        // Например, тянем кота за хвост
-
-        // вызываем метод обратного вызова
-        myCallback.callBackReturn();
-    }
-}
-У интерфейса мы определили один метод callBackReturn(). Далее в классе мы создали объект интерфейса и инициализировали его в конструкторе класса. В классе также был создан метод doSomething(), в котором может содержаться какой-то сложный код. В конце метода вызывается метод интерфейса. В данном случае мы сами создали метод и знаем его код. Но во многих случаях, вы будете использовать готовый метод какого-то класса и вы не будете знать, что именно содержится в этом методе. Вам надо только знать, что такой метод существует, например, из документации и он выполняет конкретную задачу.
-
-Переходим в код активности и подключаем интерфейс через ключевое слово implements:
-
-
-public class MainActivity extends ActionBarActivity implements SubClass.MyCallback {}
-Среда разработки поможет вставить шаблон метода интерфейса.
-
-
-@Override
-public void callBackReturn() {
+    double commission;
     
-}
-Теперь мы можем использовать метод обратного вызова callBackReturn() для решения своих задач. Допустим у нас есть текстовая метка и кнопка. При щелчке выполняется какой-то сложный код из класса SubClass. Когда он закончит работу, то сработает метод обратного вызова callBackReturn(), в котором пропишем нужные действия.
+    SalaryEmployee obj;
 
-
-package ru.alexanderklimov.testapplication;
-
-import ...
-
-public class MainActivity extends ActionBarActivity implements SubClass.MyCallback {
-
-    private TextView mResultTextView;
-    private SubClass mSubClass;
-
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_main);
-
-        mResultTextView = (TextView)findViewById(R.id.textViewResult);
-
-        mSubClass = new SubClass();
-        mSubClass.registerCallBack(this);
+    public CommissionEmployee(SalaryEmployee o, double commission)
+    {
+        this.obj = o;
+        
+        this.commission = commission;
     }
 
-    public void onClick(View v) {
-        mSubClass.doSomething();
+    public double calculate_payroll() {
+        double fixed = obj.calculate_payroll();
+        return fixed + this.commission;
     }
 
-    @Override
-    public void callBackReturn() {
-        mResultTextView.setText("Вызван метод обратного вызова");
-    }
-}    
-
-
-## Слушатели
-Очень часто для интерфейса используют слово Listener, например, у кнопки есть интерфейс OnClickListener.
-
-Мы можем создавать подобные слушатели для собственных классов.
-
-Также интерфейсы часто используются при работе с фрагментами.
-
-Требуется определённая практика и опыт, чтобы быстро разбираться в коде с использованием интерфейсов, так как приходится отслеживать цепочку вызовов из разных классов. Но бояться их не нужно.
-
-3. Расширение интерфейсов
-Интерфейс может наследоваться от другого интерфейса через ключевое слово extends. Один интерфейс, в отличие от классов, может расширять несколько интерфейсов.
-
-Например, интерфейс Football расширяет интерфейсы TVProgram и Sport. Класс FootballImpl, реализующий интерфейс Football, должен переопределить методы всех трех интерфейсов Football, TVProgram и Sport:
-
-Расширение интерфейсов фото
-
-public interface Sport {
-    void setHomeTeam(String name);
-
-    void setVisitingTeam(String name);
-}
-public interface Hockey extends Sport {
-    void homeGoalScored();
-
-    void visitingGoalScored();
-
-    void endOfPeriod(int period);
-
-    void overtimePeriod(int ot);
-}
-public interface TVProgram {
-    void switchToChannel();
-}
-public interface Football extends Sport, TVProgram {
-    void homeTeamScored(int points);
-
-    void visitingTeamScored(int points);
-
-    void endOfQuarter(int quarter);
-}
-public class FootballImpl implements Football {
-    @Override
-    public void setHomeTeam(String name) {
-        System.out.println("Setting Home Team");
-    }
-
-    @Override
-    public void switchToChannel() {
-        System.out.println("Switching to channel");
-    }
-
-    @Override
-    public void homeTeamScored(int points) {
-        System.out.println("Scored");
-    }
-
-    @Override
-    public void setVisitingTeam(String name) {
-        System.out.println("Setting visiting team");
-    }
-
-    @Override
-    public void visitingTeamScored(int points) {
-        System.out.println("Visiting Team Scored");
-    }
-
-    @Override
-    public void endOfQuarter(int quarter) {
-        System.out.println("End of quarter");
-    }
 }
 
 
-## Интерфейсы маркеры
-Интерфейсы маркеры - это интерфейсы, у которых не определены ни методы, ни переменные. Реализация этих интерфейсов придает классу определенные свойства. Например, интерфейсы Cloneable и Serializable, отвечающие за клонирование и сохранение объекта в информационном потоке, являются интерфейсами маркерами. Если класс реализует интерфейс Cloneable, это говорит о том, что объекты этого класса могут быть клонированы.
 
-Интерфейсы тегов
-Самое распространённое использование расширения интерфейсов происходит тогда, когда родительский интерфейс не содержит каких-либо методов. Например, интерфейс MouseListener в пакете java.awt.event расширил java.util.EventListener, который определяется так:
+```
 
-package java.util;
-public interface EventListener
-{}
-Интерфейс без методов в нём называется интерфейсом тегов. Есть две простые дизайнерские цели для интерфейсов тегов:
-
-Создаёт общего родителя – как в случае с интерфейсом EventListener, который расширяется множеством других в Java API, вы можете использовать интерфейс тегов, чтобы создать общего родителя среди группы интерфейсов. Например, когда интерфейс расширяет EventListener, то JVM знает, что этот конкретный интерфейс будет использоваться в сценарии делегирования событий.
-
-Добавляет тип данных в класс – эта ситуация является источником термина «тегирование». Класс, который реализует интерфейс тегов, не должен определять какие-либо методы (т.к. интерфейс не имеет таковых), но класс становится типом интерфейса через полиморфизм.
-Для чего в Java нужны интерфейсы
-Статья из группы Java Developer
-Привет!
-
-
-## Интерфейсы в механизме обратного вызова
- 
-Одним из распространенных способов использования интерфейсов в Java является создание обратного вызова. Суть обратного вызова состоит в том, что мы создаем действия, которые вызываются при других действиях. То есть одни действия вызываются другими действиями. Стандартный пример - нажатие на кнопку. Когда мы нажимаем на кнопку, мы производим действие, но в ответ на это нажатие запускаются другие действия. Например, нажатие на значок принтера запускает печать документа на принтере и т.д.
-
-Рассмотрим следующий пример:
-
-
-public class EventsApp {
- 
-    public static void main(String[] args) {
-         
-        Button button = new Button(new ButtonClickHandler());
-        button.click();
-        button.click();
-        button.click();
-    }
-}
- 
-class ButtonClickHandler implements EventHandler{
-     
-    public void execute(){
-         
-        System.out.println("Кнопка нажата!");
-    }
-}
- 
-interface EventHandler{
-     
-    void execute();
-}
- 
-class Button{
-     
-    EventHandler handler;
-    Button(EventHandler action){
-         
-        this.handler=action;
-    }
-    public void click(){
-         
-        handler.execute();
-    }
-}
-Итак, здесь у нас определен класс Button, который в конструкторе принимает объект интерфейса EventHandler и в методе click (имитация нажатия) вызывает метод execute этого объекта.
-
-Далее определяется реализация EventHandler в виде класса ButtonClickHandler. И в основной программе объект этого класса передается в конструктор Button. Таким образом, через конструктор мы устанавливаем обработчик нажатия кнопки. И при каждом вызове метода button.click() будет вызываться этот обработчик.
-
-В итоге программа выведет на консоль следующий результат:
-
-Кнопка нажата!
-Кнопка нажата!
-Кнопка нажата!
-Но казалось бы, зачем нам выносить все действия в интерфейс, его реализовать, почему бы не написать проще сразу в классе Button:
-
-class Button{
-     
-    public void click(){
-         
-        System.out.println("Кнопка нажата!");
-    }
-}
-Дело в том, что на момент определения класса нам не всегда бывают точно известны те действия, которые должны производиться. Особенно если класс Button и класс основной программы находятся в разных пакетах, библиотеках и могут проектироваться разными разработчиками. К тому же у нас может быть несколько кнопок - объектов Button и для каждого объекта надо определить свое действие. Например, изменим главный класс программы:
-
-
-public class EventsApp {
- 
-    public static void main(String[] args) {
-         
-        Button tvButton = new Button(new EventHandler(){
-               
-            private boolean on = false;
-            public void execute(){
-                 
-                if(on) {
-                    System.out.println("Телевизор выключен..");
-                    on=false;
-                }   
-                else {
-                    System.out.println("Телевизор включен!");
-                    on=true;
-                }
-            }
-        });
-         
-        Button printButton = new Button(new EventHandler(){
-               
-            public void execute(){
-                 
-                System.out.println("Запущена печать на принтере...");
-            }
-        });
-         
-        tvButton.click();
-        printButton.click();
-        tvButton.click();
-    }
-}
-Здесь у нас две кнопки - одна для включения-выключения телевизора, а другая для печати на принтере. Вместо того, чтобы создавать отдельные классы, реализующие интерфейс EventHandler, здесь обработчики задаются в виде анонимных объектов, которые реализуют интерфейс EventHandler. Причем обработчик кнопки телевизора хранит дополнительное состояние в виде логической переменной on.
-
-В итоге консоль выведет нам следующий результат:
-
-Телевизор включен!
-Запущена печать на принтере...
-Телевизор выключен..
-И в завершении надо сказать, что интерфейсы в данном качестве особенно широко используются в различных графических API - AWT, Swing, JavaFX, где обработка событий объектов - элементов графического интерфейса особенно актуальна.
-
-
-Задания
-1. Интерфейс Printable
-Определить интерфейс Printable, содержащий метод void print().
-Определить класс Book, реализующий интерфейс Printable.
-Определить класс Magazine, реализующий интерфейс Printable.
-Создать массив типа Printable, который будет содержать книги и журналы.
-В цикле пройти по массиву и вызвать метод print() для каждого объекта. 
-Создать статический метод printMagazines(Printable[] printable) в классе Magazine, который выводит на консоль названия только журналов. 
-Создать статический метод printBooks(Printable[] printable) в классе Book, который выводит на консоль названия только книг. Используем оператор instanceof. 
-Смотрите решение задачи в видео.
-
-2. Интерфейс Инструмент
-Создать интерфейс Инструмент и реализующие его классы Гитара, Барабан и Труба. 
-Интерфейс Инструмент содержит метод play() и переменную String KEY ="До мажор".
-Гитара содержит переменные класса количествоСтрун,  Барабан - размер, Труба - диаметр. 
-Создать массив типа Инструмент, содержащий инструменты разного типа.
-В цикле вызвать метод play() для каждого инструмента, который должен выводить строку "Играет такой-то инструмент, с такими-то характеристиками".
-3. Времена года
-Создать перечисление, содержащее названия времен года.
-Создать переменную содержащую ваше любимое время года и распечатать всю информацию о нем. 
-Создать метод, который принимает на вход переменную созданного вами enum типа. Если значение равно Лето, выводим на консоль “Я люблю лето” и так далее. Используем оператор switch.
-Перечисление должно содержать переменную, содержащую среднюю температуру в каждом времени года.
-Добавить конструктор принимающий на вход среднюю температуру.
-Создать метод getDescription, возвращающий строку “Холодное время года”. Переопределить метод getDescription - для константы Лето метод должен возвращать “Теплое время года”.
-В цикле распечатать все времена года, среднюю температуру и описание времени года.
-Смотрите решение задачи в видео
-
-4. Одежда
-Создать перечисление, содержащее размеры одежды (XXS, XS, S, M, L). Перечисление содержит метод getDescription, возвращающий строку "Взрослый размер". Переопределить метод getDescription - для константы XXS метод должен возвращать строку “Детский размер”.  Также перечисление должно содержать числовое значение euroSize(32, 34, 36, 38, 40), соответствующее каждому размеру. Создать конструктор, принимающий на вход euroSize.
-Создать интерфейсы "Мужская Одежда" с методом "одетьМужчину" и "Женская Одежда" с методом "одетьЖенщину". 
-Создать абстрактный класс Одежда, содержащий переменные - размер одежды, стоимость, цвет.
-Создать классы наследники Одежды - Футболка (реализует интерфейсы "Мужская Одежда" и "Женская Одежда"), Штаны (реализует интерфейсы "Мужская Одежда" и "Женская Одежда"), Юбка (реализует интерфейсы "Женская Одежда"), Галстук (реализует интерфейсы "Мужская Одежда").   
-Создать массив, содержащий все типы одежды. Создать класс Ателье, содержащий методы одетьЖенщину, одетьМужчину, на вход которых будет поступать массив, содержащий все типы одежды. Метод одетьЖенщину выводит на консоль всю информацию о женской одежде. То же самое для метода одетьМужчину.
-5. Интернет-магазин
-Создаем мини приложение - интернет-магазин.  Должны быть реализованы следующие возможности:
-
-Аутентификация пользователя. Пользователь вводит логин и пароль с клавиатуры.
-Просмотр списка каталогов товаров.
-Просмотр списка товаров определенного каталога.
-Выбор товара в корзину.
-Покупка товаров, находящихся в корзине. 
-Создаем перечисление содержащее значения для перечисленных операций. Можете добавить свои операции или изменить что-то на свой вкус. 
