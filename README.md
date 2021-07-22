@@ -1,139 +1,29 @@
-# Интерфейсы
+# Пакеты
 
-Механизм наследования очень удобен, но он имеет свои ограничения. В частности мы можем наследовать только от одного класса, в отличие, например, от языка С++, где имеется множественное наследование.
+Как правило, в Java классы объединяются в пакеты. Пакеты позволяют организовать классы логически в наборы. По умолчанию java уже имеет ряд встроенных пакетов, например, java.lang, java.util, java.io и т.д.
 
-В языке Java подобную проблему частично позволяют решить интерфейсы. Интерфейсы определяют некоторый функционал, не имеющий конкретной реализации, который затем реализуют классы, применяющие эти интерфейсы. И один класс может применить множество интерфейсов.
+Пакет Java - это группа связанных файлов классов Java, обеспечивающая защиту доступа и управление пространством имен. 
 
-## Интерфейс — это ссылочный тип в Java. 
-Интерфейс это конструкция языка, в рамках которой принято описывать абстрактные публичные (abstract public) методы и статические константы (final static). Интерфейсы Java созданы для поддержки динамического выбора (resolution) методов во время выполнения программы.
-Интерфейс схож с классом, но в отличие от последних у интерфейсов нет переменных представителей, а в объявлениях методов отсутствует реализация. Класс реализует интерфейс, таким образом наследуя абстрактные методы интерфейса.
+Пакет package позволяет логически объединить классы в наборы. Основные классы java входят в пакет java.lang. Различные вспомогательные классы располагаются в пакете в java.util. Классы для ввода и вывода входят в пакет java.io, а классы для работы в сети – в java.net. Некоторые их этих пакетов содержат вложенные пакеты. Так, например, java.lang содержит два специализированных пакета java.lang.reflect и java.lang.ref, а java.util содержит подпакет java.util.zip, который включает классы для работы с ZIPархивами.
 
-### Интерфейс схож с классом следующим образом:
-- Интерфейс может содержать любое количество методов.
-- Интерфейс записан в файле с расширением .java, и имя интерфейса совпадает с именем файла.
-- Байт-код интерфейса находится в .class файле.
-- Интерфейсы появляются в пакетах, и их соответствующий файл байт-кода должен быть в структуре каталогов, которая совпадает с именем пакета.
+Организация классов в виде пакетов позволяет избежать конфликта имен между классами. Ведь нередки ситуации, когда разработчики называют свои классы одинаковыми именами. Принадлежность к пакету позволяет гарантировать однозначность имен.
+Каждый класс имеет как простое имя, данное ему в определении, так и полное имя, включающее имя пакета, в который он входит. Например, класс String является частью пакета java.lang, а его полное имя – java.lang.String.
 
-### Отличие интерфейса от класса в Java:
-- Вы не можете создать экземпляр интерфейса.
-- В интерфейсе не содержатся конструкторы.
-- Все методы в интерфейсе абстрактные.
-- Интерфейс не может содержать поля экземпляров. Поля, которые могут появиться в интерфейсе, обязаны быть объявлены и статическими, и final.
-- Интерфейс не расширяется классом, он реализуется классом.
-- Интерфейс может расширить множество интерфейсов.
+Структура пакетов в точности отображает структуру файловой системы. Все файлы с исходными кодами (java-класс) и байт-кодами (расширением class), образующие один пакет, хранятся в одном каталоге файловой системы. Подпакеты образуют подкаталоги этого каталога. Каждый пакет создает единое пространство имен namespace. Это означает, что все имена классов и интерфейсов в пакете должны быть уникальны. Имена в разных пакетах могут совпадать, но это будут разные программные модули. Организация классов в виде пакетов позволяет избежать конфликта имен между классами. В пакете дублирование имен классов не допускается. Принадлежность класса к пакету позволяет гарантировать однозначность имен.
 
-## У интерфейса могут быть следующие модификаторы.
-• public (если он есть, то интерфейс доступен отовсюду, если его нет — доступен только в данном пакете).
-• abstract (так как интерфейс всегда абстрактный, то модификатор обычно опускается).
-• strictfp— все позже реализуемые методы должны будут работать с числами с плавающей точкой аналогично на всех машинах Java.
-
-
-## Объявление интерфейсов
-
-Ключевое слово interface используется для объявления интерфейса:
+## Директива package
+Чтобы указать, что класс принадлежит определенному пакету, надо использовать директиву package, после которой указывается имя пакета: package название_пакета;
 ```java
-
-/* File name : NameOfInterface.java */
-
-// Любое количество запросов импорта
-
-public interface NameOfInterface { //создание интерфейса
-   // Любое количество полей final и static
-   // Любое количество объявлений абстрактных методов
-}
-
+package com.mycompany;
 ```
+Как правило, названия пакетов соответствуют физической структуре проекта, то есть организации каталогов, в которых находятся файлы с исходным кодом. А путь к файлам внутри проекта соответствует названию пакета этих файлов. 
 
-## Создание иерархий классов
-
+Классы необязательно определять в пакеты. Если для класса пакет не определен, то считается, что данный класс находится в пакете по умолчанию, который не имеет имени? «${project.src}», т.е. класс будет располагаться в корневой директории исходных кодов проекта.
 ```java
-public abstract class Employee
-{
-    private int id;
-    private String name;
-    private String company;
-    
-    public Employee() {
-    }
-        
-    public Employee(int id, String name, String company ) {
-        this.name=name;
-        this.id = id;
-        this.company = company;
-    }
-    
-    public String getCompany() {
-          return company;
-    }
-    
-    public String getName() { 
-        return name; 
-    }
-
-    public int getId() { 
-        return id; 
-    }
-    
-    //  каждый экземпляп Employee должен иметь метод .calculate_payroll(), 
-    // который возвращает еженедельную зарплату сотруднику. 
-    //  Реализация этого интерфейса отличается в зависимости от типа Employee.
-    
-    public double calculate_payroll() {
-        return 3.14;
-    }
-    
-}
-
-
 /**
- * производный класс SalaryEmployee, который наследует Person. 
- * Класс инициализируется с помощью id и name,
- *  
- */
-
-public class SalaryEmployee extends Employee {
-
-    double weekly_salary;
-    
-    public SalaryEmployee(int id, String name, String company, double weekly_salary) {
-        super(id, name, company);
-        this.weekly_salary = weekly_salary;
-        
-    }
-
-    /**
-     * административные работники имеют фиксированную зарплату, 
-     * поэтому каждую неделю им платят одну и ту же сумму
-     */
-    
-    public double calculate_payroll() {
-        return this.weekly_salary;
-    }
-
-}
-
-/**
- * 
- * В компании также работают рабочие, которые получают почасовую оплату, 
- * поэтому мы добавим HourlyEmployee в систему управления персоналом:
+ * @author janus
  *
  */
-public class HourlyEmployee extends Employee {
-
-    int hours_worked;
-    double hour_rate;
-    
-    public HourlyEmployee(int id, String name, String company,  int hours_worked, double hour_rate) {
-        super(id, name, company);
-        this.hour_rate = hour_rate;
-        this.hours_worked = hours_worked;
-    }
-    
-    public double calculate_payroll() {
-        return this.hour_rate * hours_worked;
-    }
-}
-
 public class Main {
 
     public Main() {
@@ -144,213 +34,109 @@ public class Main {
      * @param args
      */
     public static void main(String[] args) {
-        
-        HourlyEmployee bob = new HourlyEmployee(1, "Bob", "Goolee", 20, 77.88);
-        
-        System.out.printf("Payroll for: %d \t %s \t %s\n", bob.getId(), bob.getName(), bob.getCompany());
-        System.out.printf("Employee  amount:\t %s \n", bob.calculate_payroll());
-        SalaryEmployee mary = new SalaryEmployee(2, "Mary", "Doolee", 444.99);
-        System.out.printf("Payroll for: %d \t %s \t %s\n", mary.getId(), mary.getName(), mary.getCompany());
-        System.out.printf("Employee  amount:\t %s \n", mary.calculate_payroll());
-        
-    }
-}
+        // TODO Auto-generated method stub
 
-```
-
-### Интерфейс Printable:
-Написание интерфейса схоже с написанием класса. Но класс описывает атрибуты и поведения объекта. И интерфейс содержит поведения, которые класс реализует.
-
-```java
-
-public interface IEmployee {
-    
-    public double calculate_payroll();
-
-}
-
-```
-Интерфейс может определять константы и методы, которые могут иметь, а могут и не иметь реализации. Методы без реализации похожи на абстрактные методы абстрактных классов. Так, в данном случае объявлен один метод, который не имеет реализации.
-
-## Интерфейсы имеют следующие свойства:
-- Интерфейс абстрактный косвенно. Вам не нужно использовать ключевое слово abstract во время объявления интерфейса.
-- Каждый метод в интерфейсе косвенно абстрактным. Объявляемые методы не содержат тел, их объявления завершаются точкой с запятой.
-- Методы в интерфейсе косвенно публичны. Все методы интерфейса не имеют модификаторов доступа и являются public abstract. Модификаторы необязательны, так как цель интерфейса - определение функционала для реализации его классом. Поэтому весь функционал должен быть открыт для реализации.
-
-
-### При переопределении методов в интерфейсе, нужно следовать некоторым правилам:
-- Проверенные исключения не должны быть объявлены по методам реализации, отличным от тех, которые были объявлены методом интерфейса или подклассами тех, которые были объявлены методом интерфейса.
-- Подпись метода интерфейса и того же типа или подтипа возврата должна поддерживаться (сохраняться) при переопределении методов.
-- Сам класс реализации может быть абстрактным, а если это так, то методы интерфейса не должны быть реализованы.
-
-## Реализация интерфейса
-Когда класс реализует интерфейс, вы можете представить себе, что класс словно подписывает контракт с интерфейсом, соглашаясь совершить конкретные его поведения. Если класс не исполняет все поведения интерфейса, то класс должен объявить себя абстрактным. Если класс, реализующий интерфейс, не является абстрактным, все методы интерфейса должны быть определены в классе.
-
-Ключевое слово implements появляется при объявлении класса в его расширенной части.
-
-```java
-
-public class SalaryEmployee extends Employee implements IEmployee {
-
-    double weekly_salary;
-    
-    public SalaryEmployee(int id, String name, String company, double weekly_salary) {
-        super(id, name, company);
-        this.weekly_salary = weekly_salary;
-        
-    }
-
-    /**
-     * административные работники имеют фиксированную зарплату, 
-     * поэтому каждую неделю им платят одну и ту же сумму
-     */
-    
-    public double calculate_payroll() {
-        return this.weekly_salary;
     }
 
 }
 
 ```
+## Пространства имен
 
-## Класс реализующий интерфейс
+Пространства имен - это логическая организация, а пакеты Java - это физическая реализация пространств имен.
 
-Класс реализующий интерфейс должен содержать полный набор методов, определенных в этом интерфейсе. Но в каждом классе могут быть определены и свои методы. 
+В Java пространства имен предназначены для предотвращения конфликтов между именами в разных частях библиотек классов.
 
-```java
-public class SalaryEmployee extends Employee implements IEmployee {
+Поскольку пространства имен являются иерархическими, нам потребуется аналогичная структура для хранения файлов классов в пакеты. Файловые системы также являются иерархическими. Итак, чтобы сохранить классы, организованные в нашем пространстве имен, мы просто сопоставляем пространство имен с нашей файловой системой.
 
-    double weekly_salary;
-    
-    public SalaryEmployee(int id, String name, String company, double weekly_salary) {
-        super(id, name, company);
-        this.weekly_salary = weekly_salary;
-        
-    }
+## Создание пакета
 
-    /**
-     * административные работники имеют фиксированную зарплату, 
-     * поэтому каждую неделю им платят одну и ту же сумму
-     */
-    
-    public double calculate_payroll() {
-        return this.weekly_salary;
-    }
-    
-    public void display(){
-      System.out.printf("Employee Name: %s \t Id: %d \n", super.getName(), getId());
-    }
+Создать пакет можно, щёлкаем правой кнопкой мыши на папке java или на существующем пакете и выбираем в меню команду New | Package.
 
-}
+Во время создания пакета вы должны выбрать ему имя и включить оператор package вместе с этим именем поверх каждого исходного файла, который содержит классы, интерфейсы, перечисления и типы аннотаций, которые вы хотите включить в пакет.
+ 
+Оператор package должен быть первой строкой в исходном файле. Может быть только один запрос package в каждом исходном файле, и он применяется ко всем типам в этом файле.
 
-```
+Если оператор package не использован, тогда классы, интерфейсы, перечисления и типы аннотаций будут помещены в текущий пакет по умолчанию.
 
-В тоже время мы не можем напрямую создавать объекты интерфейсов, поэтому следующий код не будет работать:
-```java
+Пакеты должны располагаться в соответствующих директориях, т.е. файл пакета (с именем ИмяПакета) должен быть сохранен в папке ИмяПакета.
 
-IEmployee iemp = new IEmployee();
-iemp.print();
-
-```
-Одним из преимуществ использования интерфейсов является то, что они позволяют добавить в приложение гибкости. Например, в дополнение к классу SalaryEmployee определим еще один класс, который будет реализовывать интерфейс IEmployee:
 ```java
 /**
- * 
- * В компании также работают рабочие, которые получают почасовую оплату, 
- * поэтому мы добавим HourlyEmployee в систему управления персоналом:
-
+ * package-info.java
+ */
+/**
  * @author janus
  *
  */
-public class HourlyEmployee extends Employee implements IEmployee {
-
-    int hours_worked;
-    double hour_rate;
-
-    // String company;
-    
-    public HourlyEmployee(int id, String name, String company,  int hours_worked, double hour_rate) {
-        super(id, name, company);
-        this.hour_rate = hour_rate;
-        this.hours_worked = hours_worked;
-    }
-    
-    public double calculate_payroll() {
-        return this.hour_rate * hours_worked;
-    }
-}
+package com.mycompany;
 
 ```
 
-## Множественная реализация интерфейсов
+Наименование пакета может быть любым, но необходимо соблюдать его уникальность в проекте. Соглашение «Code Conventions» рекомендует записывать имена пакетов строчными буквами. Тогда они не будут совпадать с именами классов, которые, по соглашению, начинаются с прописной буквы.
 
-Если нам надо применить в классе несколько интерфейсов, то они все перечисляются через запятую после слова implements:
+Все классы, находящиеся внутри данного файла, будут принадлежать указанному пакету. Если оператор package не указан, то имена классов помещаются в специальный пакет без имени. 
+
+Стандартная библиотека Java API включает сотни классов. Каждый программист в ходе работы создает десятки своих классов. Множество классов быстро увеличивается. 
+
+Директива package должна находиться в первой незакоментированной строке файла.
+
 ```java
 
-public class HourlyEmployee extends Employee implements IEmployee, Employee.NestedIf 
-{
+/**
+ * 
+ */
+package com.mycompany;
+
+/**
+ * @author janus
+ *
+ */
+public class Employee {
+
+    /**
+     * 
+     */
+    public Employee() {
+        // TODO Auto-generated constructor stub
+    }
+
 }
 
 ```
+## Создание уникальных имён пакетов
+Существует общепринятая схема, где первая часть имени пакета должна состоять из перевёрнутого доменного имени разработчика класса. Так как доменные имена в интернете уникальны, соблюдение этого правила обеспечивает уникальность имён пакетов и предотврати конфликты. Если у вас нет собственного доменного имени, то придумайте свою уникальную комбинацию с малой вероятностью повторения.
 
-## Наследование интерфейсов
-Интерфейс может расширять другой интерфейс так же, как класс другой класс. 
+Указывать один и тот же пакет можно в разных файлах, он просто указывает кому принадлежит класс. Поэтому, если три разных класса в трёх разных файлах указывают на один и тот же package, то это нормально.
 
-Если класс реализует интерфейс, но не полностью реализует определенные в нем методы, он должен быть объявлен как abstract. Один класс может реализовать любое количество интерфейсов.
-Ключевое слово extends используется для расширения интерфейса, и дочерний интерфейс наследует методы родительского интерфейса.
+
+пакет com.mycompany содержит интерфейс с названием ICompany.
 ```java
+/**
+ * File name : ICompany.java
+ */
+package com.mycompany;
 
 public interface ICompany {
-    public String getCompany();
-    public String getName();
-    public int getId()
-}
-// Интерфейсы, как и классы, могут наследоваться:
-
-public interface IEmployee extends ICompany {
-    
     public double calculate_payroll();
 
 }
 
 ```
-Класс HourlyEmployee и класс SalaryEmployee связаны тем, что они реализуют интерфейс IEmployee. Поэтому мы динамически в программе можем создавать объекты IEmployee как экземпляры обоих классов:
 
+пакет com.mycompany содержит интерфейс с названием IEmployee.
 ```java
 
-    public static void main(String[] args) {
-        
-        IEmployee bob = new HourlyEmployee(1, "Bob", "Goolee", 20, 77.88);
-        System.out.printf("Payroll for: %d \t %s \t %s\n", bob.getId(), bob.getName(), bob.getCompany());
-        System.out.printf("Employee  amount:\t %s \n", bob.calculate_payroll());
-        
-        IEmployee mary = new SalaryEmployee(2, "Mary", "Doolee", 444.99);
-        System.out.printf("Payroll for: %d \t %s \t %s\n", mary.getId(), mary.getName(), mary.getCompany());
-        System.out.printf("Employee  amount:\t %s \n", mary.calculate_payroll());
-        
-    }
+/**
+ * File name : IEmployee.java
+ */
+package com.mycompany;
 
-```
-
-## Класс может иметь любое количество интерфейсов. 
-Все, что нужно сделать — это реализовать в классе полный набор методов всех интерфейсов. Сигнатуры таких методов класса должны точно совпадать с сигнатурами методов реализуемого в этом классе интерфейса. 
-
-Интерфейсы обладают своей собственной иерархией, не пересекающейся с классовой иерархией наследования. Это дает возможность реализовать один и тот же интерфейс в различных классах, никак не связанных по линии иерархии классового наследования. Именно в этом и проявляется главная сила интерфейсов.
-
-С помощью интерфейса можно указать, что именно должен выполнять класс его реализующий, но не как это делать. Способ реализации выбирает сам класс. Интерфейсы не способны сохранять данные состояния. Интерфейсы - это один из механизмов реализации принципа полиморфизма "один интерфейс, несколько методов". 
-
-
-## Методы по умолчанию в интерфейсах
-
-Методы по умолчанию в интерфейсах - это методы, у которых есть реализация. Другое их название - методы расширения. Классы, реализующие интерфейсы, не обязаны переопределять такие методы, но могут если это необходимо. 
-
-Метод по умолчанию - это обычный метод без модификаторов, который помечается ключевым словом default. Затем в классе нам необязательно этот метод реализовать, хотя мы можем его и переопределить
-
-Интерфейс ICompany объявляет метод по умолчанию defaultMethod() с базовой реализацией:
-
-```java
-
-public interface ICompany {
+/**
+ * @author janus
+ *
+ */
+public interface IEmployee extends ICompany{
     public String getCompany();
     public String getName();
     public int getId();
@@ -358,150 +144,25 @@ public interface ICompany {
     default String defaultMethod() {
         return "Объект типа String по умолчанию";
     }
-}
-
-```
-
-Класс HourlyEmployee, реализующий этот интерфейс, не переопределяет метод defaultMethod(). 
-
-А если класс SalaryEmployee не устраивает реализация по умолчанию, он переопределяет этот метод: 
-```java
-
-public class SalaryEmployee extends Employee implements IEmployee {
-
-    double weekly_salary;
-    
-    public SalaryEmployee(int id, String name, String company, double weekly_salary) {
-        super(id, name, company);
-        this.weekly_salary = weekly_salary;
-        
-    }
-
-    /**
-     * административные работники имеют фиксированную зарплату, 
-     * поэтому каждую неделю им платят одну и ту же сумму
-     */
-    
-    public double calculate_payroll() {
-        return this.weekly_salary;
-    }
-    
-    public void display(){
-      System.out.printf("Employee Name: %s \t Id: %d \n", super.getName(), getId());
-    }
-    
-    @Override
-    public String defaultMethod() {
-        return "Другая символьная строка";
-    }
 
 }
 
-public class SomeInterfaceImpl2 implements SomeInterface {
-    @Override
-    public String defaultMethod() {
-        return "Другая символьная строка";
-    }
-}
-
-
 ```
-Для объекта класса HourlyEmployee вызовется метод, реализованный в интерфейсе, а для объекта класса SalaryEmployee - его собственная реализация:
-```java
-
-public static void main(String[] args) {
-       
-        IEmployee bob = new HourlyEmployee(1, "Bob", "Goolee", 20, 77.88);
-        System.out.printf("Payroll for: %d \t %s \t %s\n", bob.getId(), bob.getName(), bob.getCompany());
-        System.out.printf("Employee  amount:\t %s \n", bob.calculate_payroll());
-        System.out.println(bob.defaultMethod());
-        
-        IEmployee mary = new SalaryEmployee(2, "Mary", "Doolee", 444.99);
-        System.out.printf("Payroll for: %d \t %s \t %s\n", mary.getId(), mary.getName(), mary.getCompany());
-        System.out.printf("Employee  amount:\t %s \n", mary.calculate_payroll());
-        System.out.println(mary.defaultMethod());
-        
-    }
-
-
-```
-## Статические методы интерфейса
-Статические методы интерфейса, как и класса, можно вызывать независимо от любого объекта. Для вызова статического метода достаточно указать имя интерфейса и через точку имя самого метода.
-```java
-
-public interface IEmployee extends ICompany {
-    
-    public double calculate_payroll();
-    
-    static String staticMethod() {
-        return "I'm statis method";
-    }
-
-}
-
-System.out.println(IEmployee.staticMethod());
-
-
-```
-
-## Приватные методы
-По умолчанию все методы в интерфейсе имеют модификатор public. Однако начиная с Java 9 мы также можем определять в интерфейсе методы с модификатором private. Они могут быть статическими и нестатическими, но они не могут иметь реализации по умолчанию.
-
-Подобные методы могут использоваться только внутри самого интерфейса, в котором они определены. То есть к примеру нам надо выполнять в интерфейсе некоторые повторяющиеся действия, и в этом случае такие действия можно выделить в приватные методы:
-
+ 
+реализуем интерфейс IEmployee в пакете com.mycompany:
 
 ```java
+/**
+ /* File name : Employee.java */
+ */
+package com.mycompany;
 
-    public static void main(String[] args) {
-          
-        IEmployee bob = new HourlyEmployee(1, "Bob", "Goolee", 20, 77.88);
-        System.out.printf("Payroll for: %d \t %s \t %s\n", bob.getId(), bob.getName(), bob.getCompany());
-        System.out.printf("Employee  amount:\t %s \n", bob.calculate_payroll());
-        System.out.println(bob.defaultMethod());
-        
-        System.out.println(IEmployee.staticMethod());
-        
-        
-        System.out.println(bob.sum(1, 2));
-        System.out.println(bob.sum(1, 2, 4));
-    }
-
-
-public interface IEmployee extends ICompany {
+/**
+ * @author janus
+ *
+ */
+public abstract class Employee implements IEmployee {
     
-    public double calculate_payroll();
-    
-    public static String staticMethod() {
-        return "I'm statis method";
-    }
-    
-    default int sum(int a, int b){
-        return sumAll(a, b);
-    }
-    default int sum(int a, int b, int c){
-        return sumAll(a, b, c);
-    }
-     
-    private int sumAll(int... values){
-         int result = 0;
-         for(int n : values){
-             result += n;
-         }
-         return result;
-    }
-
-}
-
-
-```
-
-## Внутренние интерфейсы
-
-Интерфейсы объявленные в классах или в других интерфейсах называются внутренние или вложенные. Например, интерфейс NestedIf определен внутри класса Employee:
-```java
-
-public abstract class Employee implements ICompany
-{
     private int id;
     private String name;
     private String company;
@@ -514,128 +175,241 @@ public abstract class Employee implements ICompany
         this.id = id;
         this.company = company;
     }
+
+    public String getCompany() {
+          return company;
+    }
     
-    public interface NestedIf {
-        boolean isNotNegative(int x);
+    public String getName() { 
+        return name; 
+    }
+    
+    public int getId() { 
+        return id; 
     }
 }
 
 ```
-При обращении к интерфейсу NestedIf требуется указывать имя его внешнего класса - Employee.NestedIf:
+Директива package com.mycompany в начале файла указывает, что классы Employee и интерфейс IEmployee принадлежат пакету com.mycompany.
+
+В данном примере класс Employee располагается в пакете com.mycompany. Физически это директория «${project.src}/com/mycompany». При создании класса в среде разработки IDE (например, Eclipse) следует указать наименование пакета, тогда IDE самостоятельно при необходимости создаст каталог на жестком диске и разместит новый класс в этом каталоге.
+
+## Импорт пакетов и классов
+
+Если нам надо использовать классы из других пакетов, то нам надо подключить эти пакеты и классы. Исключение составляют классы из пакета java.lang (например, String), которые подключаются в программу автоматически.
+
+Например, класс Scanner находится в пакете java.util, поэтому мы можем получить к нему доступ следующим способом:
+```java
+java.util.Scanner in = new java.util.Scanner(System.in);
+```
+
+То есть мы указываем полный путь к файлу в пакете при создании его объекта. Однако такое нагромождение имен пакетов не всегда удобно, и в качестве альтернативы мы можем импортировать пакеты и классы в проект с помощью директивы import, которая указывается после директивы package:
+
 ```java
 
-public class HourlyEmployee extends Employee implements IEmployee, Employee.NestedIf {
-
-    int hours_worked;
-    double hour_rate;
-
-    // String company;
-    
-    public HourlyEmployee(int id, String name, String company,  int hours_worked, double hour_rate) {
-        super(id, name, company);
-        this.hour_rate = hour_rate;
-        this.hours_worked = hours_worked;
-    }
-    
-    public double calculate_payroll() {
-        return this.hour_rate * hours_worked;
-    }
-    
-    public boolean isNotNegative(int x) {
-        return x >= 0;
-    }
-}
-
-
-        Employee.NestedIf nif = new HourlyEmployee(1, "Nif", "Noolee", 20, 77.88);
-        if (nif.isNotNegative(10)) {
-            System.out.println("Число 10 не отрицательное.");
-        }
-        if (nif.isNotNegative(-12)) {
-            System.out.println("Этo не будет выведено.");
-        }
+import ИмяПакета.ИмяКласса;
+import ИмяПакета.*;
 
 ```
-## Константы в интерфейсах
+В первом случае мы импортируем только один класс, а во втором — импортируем полный пакет. 
 
-Интерфейсы можно использовать для импорта констант в несколько классов. Вы просто объявляете интерфейс, содержащий переменные с нужными значениями. При реализации интерфейса в классе имена переменных будут помещены в область констант. Поля для констант становятся открытыми и являются статическими и конечными (модификаторы public static final). При этом, если интерфейс не будет содержать никаких методов, то класс не будет ничего реализовывать. Хотя данный подход не рекомендуют использовать.
+Директива import указывается в самом начале кода, после чего идет имя подключаемого класса.
 
-Хотя такие константы также не имеют модификаторов, но по умолчанию они имеют модификатор доступа public static final, и поэтому их значение доступно из любого места программы.
-
-Применение констант:
 ```java
 
-    public static void main(String[] args) {
-          
-        WaterPipe pipe = new WaterPipe();
-        pipe.printState(1);
-    }
-
-class WaterPipe implements Stateable{
-     
-    public void printState(int n){
-        if(n==OPEN)
-            System.out.println("Water is opened");
-        else if(n==CLOSED)
-            System.out.println("Water is closed");
-        else
-            System.out.println("State is invalid");
-    }
-}
-
-interface Stateable{
+package com.mycommon;
  
-    int OPEN = 1;
-    int CLOSED = 0;
-     
-    void printState(int n);
+import java.util.Scanner; // импорт класса Scanner
+ 
+public class HelloWorld{
+    public static void main(String[] args){
+        Scanner in = new Scanner(System.in);
+    } 
 }
-
 
 ```
 
-
-## Множественное наследование
-Множественное наследование дает возможность создать класс, наследованный от нескольких суперклассов. В отличии от некоторых других популярных объектно-ориентированных языков программирования, таких как С++ в Java запрещено множественное наследование от классов. Java не поддерживает множественное наследование классов потому, что это может привести к ромбовидной проблеме.  И вместо того, чтобы искать способы решения этой проблемы, есть лучшие варианты, как мы можем добиться того же самого результата как множественное наследование.
-
-## Композиция
-
-Главное отличие между композицией и наследованием заключается в том, что композиция даёт возможность переиспользовать код без расширения существующего класса, как это происходит в случае с наследованием. Не менее важно и то, что композиция позволяет нам выполнять повторное использование кода даже из final-класса, в то время как унаследоваться от него мы не сможем. Есть и ещё кое-что: при композиции допускается использование кода из нескольких разных классов, а вот с наследованием это не сработает, ведь в языке программирования Java множественное наследование не поддерживается (правда, мы можем это сделать в C++).
-
-Таким образом, в Java рекомендуется использовать преимущественно композицию, а не наследование.
+пакет java.util содержит большое количество разных классов. И чтобы не подключать по отдельности каждый класс, можно сразу подключить весь пакет :
 ```java
-/**
- * 
- * в компании работают торговые партнеры, которым выплачивается фиксированная зарплата плюс комиссия, 
- * основанная на их продажах, поэтому мы создадим класс CommissionEmployee
- * @author janus
- *
- */
-public class CommissionEmployee extends Employee implements IEmployee {
+// имя класса можно указать явно или с помощью символа "звёздочка" (*):
+import java.util.*; // импорт всех классов из пакета java.util
 
-    /**
-     * 
-     */
+import java.io.*;
+```
+Теперь можно использовать любой класс из пакета java.util.
 
-    double commission;
-    
-    SalaryEmployee obj;
+Возможна ситуация, когда используется два класса с одинаковым наименованием, но из разных пакетов. Это относится, например, к классам Date, которые имеются в пакете java.util и в пакете java.sql, или классам List пакетов java.util и java.awt. И если необходимо одновременно использовать оба эти класса, то необходимо указывать полный путь к классам в пакете :
+```java
+java.util.Date udate = new java.util.Date();
+java.sql.Date  sdate = new java.sql.Date();
 
-    public CommissionEmployee(SalaryEmployee o, double commission)
-    {
-        this.obj = o;
-        
-        this.commission = commission;
-    }
+```
+Программисты могут определять их пакеты для связывания групп классов/интерфейсов и т.д. Группировка связанных классов является хорошим практическим решением, т.к. программист сможет легко определить, что классы, интерфейсы, перечисления и аннотации связаны.
 
-    public double calculate_payroll() {
-        double fixed = obj.calculate_payroll();
-        return fixed + this.commission;
-    }
-
-}
+Так как пакет создаёт новое пространство имён, в нём не будет никаких конфликтов с именами в других пактах. Используя пакеты, легче предоставить управление доступом и легче найти связанные классы.
 
 
+## Полное имя класса
+Файлы в компьютере группируются по папкам. Классы в Java (каждый класс лежит в отдельном файле) группируются по пакетам, которые являются папками на диске. 
+
+Полным уникальным именем класса является имя пакета + имя класса:
+
+Полное уникальное имя: java.lang.String
+Имя пакета: java.lang  
+Имя класса: String
+
+Полное имя класса всегда уникально!
+
+В Java принято давать классам и пакетам осмысленные имена. Многие компании выпускают свои библиотеки (набор классов) и, чтобы не было путаницы, называют пакеты этих классов по имени компании/сайта:
+```java
+
+org.apache.common
+org.apache.tomcat
+org.apache.util Проект «Апач»
+com.oracle.jdbc Компания «Oracle»
+java.io
+javax.servlet   Компания Sun, проект Java
+com.ibm.websphere   Компания «IBM», проект WebSphere
+com.jboss   Проект «Jboss»
 
 ```
 
+
+## Статический импорт
+
+В java можно использовать статический импорт. Для этого вместе с директивой import используется модификатор static:
+```java
+
+package com.mycommon;
+ 
+import static java.lang.Math.*;
+import static java.lang.System.*;
+ 
+public class HelloWorld {
+    public static void main(String[] args) {
+        double result = sqrt(20);
+        out.println(result);
+    } 
+}
+
+```
+Здесь определяется статический импорт классов System и Math, которые имеют статические методы. Определение статического импорта позволяет использовать статические методы без названия класса. 
+В примере статическая функция sqrt(20) (можно и Math.sqrt(20)), возвращает квадратный корень числа. 
+То же самое относится и к классу System, в котором определен статический объект out, поэтому можно его использовать без указания класса, если выполнен статический импорт класса System.
+
+То же самое в отношении класса System: в нем определен статический объект out, поэтому мы можем его использовать без указания класса.
+
+Статический импорт импортирует статическую переменную или методы. Тогда в вашем коде вам не нужно ссылаться на включающий класс.
+
+## Пакеты могут быть вложенными
+Пакеты могут быть вложенными (например, java.util, где java— главный пакет, a util — вложенный). Соответственно эти два пакета должны располагаться в каталоге java\util.
+
+Можно создавать иерархию пакетов через точечный оператор:
+
+```java
+
+package pack1[.pack2[.pack3]];
+// например
+package cat.body.tail;
+
+```
+## создавать иерархию пакетов
+
+Рассмотрим проект PackageExample, включающий 3 java-класса. Два java-класса располагаются в одном пакете «ua.com.company», а третий - в другом «ua.com.company.classes». 
+
+## Базовый класс BaseClass.java
+
+Базовый класс включает 2 поля (id, name) и методы get/set. В конструкторе значения полей инициализируется.
+```java
+
+package ua.com.company;
+
+public class BaseClass 
+{
+    private    String id   = null;
+    protected  String name = null;
+
+    public BaseClass()
+    {
+        this.id   = "default";
+        this.name = "Наименование не определено"; 
+    }
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    @Override
+    public String toString() {
+        return this.getClass().getName() + "\n\t{id = '" + 
+                         id + "', name = '" + name + "'}";
+    }
+}
+
+```
+
+Переопределенная функция toString() возвращает наименование класса и значение полей.
+
+## Класс наследника Inheritor.java
+
+Класс Inheritor.java наследует свойства базового класса BaseClass.java. Поскольку классы располаются в разных пакетах, то базовый класс необходимо импортировать.
+```java
+
+package ua.com.company.classes;
+
+import ua.com.company.BaseClass;
+
+public class Inheritor extends BaseClass
+{
+    public Inheritor()
+    {
+        this.name = "Наследник";
+        this.setId("Первый");
+    }
+}
+
+```
+
+## Основной класс MainPackage.java
+Основной класс включает статический метод main. Поскольку данный класс не «видит» наследника, то его приходится импортировать.
+```java
+
+package ua.com.company;
+
+import ua.com.company.classes.Inheritor;
+
+public class MainPackage 
+{
+    public MainPackage()
+    {
+        BaseClass bc = new BaseClass();
+        Inheritor ir = new Inheritor();
+
+        System.out.println (bc.toString());
+        System.out.println (ir.toString());
+    }
+    
+    public static void main(String[] args) 
+    {
+        new MainPackage();
+        System.exit(0);
+    }
+}
+
+```
+Результат выполнения данной программы выводится в консоль в следующем виде :
+```java
+
+ua.com.company.BaseClass:
+    {id = 'default', name = 'Наименование не определено'}
+ua.com.company.classes.Inheritor:
+    {id = 'Первый', name = 'Наследник'}
+
+``` 
