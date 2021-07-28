@@ -1,415 +1,612 @@
-# Пакеты
-
-Как правило, в Java классы объединяются в пакеты. Пакеты позволяют организовать классы логически в наборы. По умолчанию java уже имеет ряд встроенных пакетов, например, java.lang, java.util, java.io и т.д.
-
-Пакет Java - это группа связанных файлов классов Java, обеспечивающая защиту доступа и управление пространством имен. 
-
-Пакет package позволяет логически объединить классы в наборы. Основные классы java входят в пакет java.lang. Различные вспомогательные классы располагаются в пакете в java.util. Классы для ввода и вывода входят в пакет java.io, а классы для работы в сети – в java.net. Некоторые их этих пакетов содержат вложенные пакеты. Так, например, java.lang содержит два специализированных пакета java.lang.reflect и java.lang.ref, а java.util содержит подпакет java.util.zip, который включает классы для работы с ZIPархивами.
-
-Организация классов в виде пакетов позволяет избежать конфликта имен между классами. Ведь нередки ситуации, когда разработчики называют свои классы одинаковыми именами. Принадлежность к пакету позволяет гарантировать однозначность имен.
-Каждый класс имеет как простое имя, данное ему в определении, так и полное имя, включающее имя пакета, в который он входит. Например, класс String является частью пакета java.lang, а его полное имя – java.lang.String.
-
-Структура пакетов в точности отображает структуру файловой системы. Все файлы с исходными кодами (java-класс) и байт-кодами (расширением class), образующие один пакет, хранятся в одном каталоге файловой системы. Подпакеты образуют подкаталоги этого каталога. Каждый пакет создает единое пространство имен namespace. Это означает, что все имена классов и интерфейсов в пакете должны быть уникальны. Имена в разных пакетах могут совпадать, но это будут разные программные модули. Организация классов в виде пакетов позволяет избежать конфликта имен между классами. В пакете дублирование имен классов не допускается. Принадлежность класса к пакету позволяет гарантировать однозначность имен.
-
-## Директива package
-Чтобы указать, что класс принадлежит определенному пакету, надо использовать директиву package, после которой указывается имя пакета: package название_пакета;
+# Перечисления Enum
+Кроме отдельных примитивных типов данных и классов в Java есть тип enum или перечисление. Перечисления представляют набор логически связанных констант. 
+Объявление перечисления происходит с помощью оператора enum, после которого идет название перечисления. Затем идет список элементов перечисления через запятую:
 ```java
-package com.mycompany;
+
+public enum myEnum {
+    WINTER,
+    SUMMER,
+    SPRING,
+    FALL;
+}
+
 ```
-Как правило, названия пакетов соответствуют физической структуре проекта, то есть организации каталогов, в которых находятся файлы с исходным кодом. А путь к файлам внутри проекта соответствует названию пакета этих файлов. 
+Enum - это отдельная структура. Он может находится в отдельном файле, а может быть частью класса. Но при этом enum не обязательно должен лежать в каком-либо классе. 
 
-Классы необязательно определять в пакеты. Если для класса пакет не определен, то считается, что данный класс находится в пакете по умолчанию, который не имеет имени? «${project.src}», т.е. класс будет располагаться в корневой директории исходных кодов проекта.
+Все объекты, которые лежат в enum, принято писать большими буквами, это общепринятая практика. Если написать их маленькими ничего плохого не случится. 
+
+Объекты, которые лежат в enum, пишутся через запятую:
+
+В конце мы написали точку с запятой.
 ```java
-/**
- * @author janus
- *
- */
-public class Main {
 
-    public Main() {
-        // TODO Auto-generated constructor stub
-    }
+enum Day{
+  
+    MONDAY,
+    TUESDAY,
+    WEDNESDAY,
+    THURSDAY,
+    FRIDAY,
+    SATURDAY,
+    SUNDAY;
+}
 
-    /**
-     * @param args
-     */
+```
+При таком подходе мы как бы создаем еще один класс, только вместо слова "class" пишем "enum".
+Перечисление фактически представляет новый тип, поэтому мы можем определить переменную данного типа и использовать ее:
+```java
+
+public class Program{
+      
     public static void main(String[] args) {
-        // TODO Auto-generated method stub
-
-    }
-
-}
-
-```
-## Пространства имен
-
-Пространства имен - это логическая организация, а пакеты Java - это физическая реализация пространств имен.
-
-В Java пространства имен предназначены для предотвращения конфликтов между именами в разных частях библиотек классов.
-
-Поскольку пространства имен являются иерархическими, нам потребуется аналогичная структура для хранения файлов классов в пакеты. Файловые системы также являются иерархическими. Итак, чтобы сохранить классы, организованные в нашем пространстве имен, мы просто сопоставляем пространство имен с нашей файловой системой.
-
-## Создание пакета
-
-Создать пакет можно, щёлкаем правой кнопкой мыши на папке java или на существующем пакете и выбираем в меню команду New | Package.
-
-Во время создания пакета вы должны выбрать ему имя и включить оператор package вместе с этим именем поверх каждого исходного файла, который содержит классы, интерфейсы, перечисления и типы аннотаций, которые вы хотите включить в пакет.
- 
-Оператор package должен быть первой строкой в исходном файле. Может быть только один запрос package в каждом исходном файле, и он применяется ко всем типам в этом файле.
-
-Если оператор package не использован, тогда классы, интерфейсы, перечисления и типы аннотаций будут помещены в текущий пакет по умолчанию.
-
-Пакеты должны располагаться в соответствующих директориях, т.е. файл пакета (с именем ИмяПакета) должен быть сохранен в папке ИмяПакета.
-
-```java
-/**
- * package-info.java
- */
-/**
- * @author janus
- *
- */
-package com.mycompany;
-
-```
-
-Наименование пакета может быть любым, но необходимо соблюдать его уникальность в проекте. Соглашение «Code Conventions» рекомендует записывать имена пакетов строчными буквами. Тогда они не будут совпадать с именами классов, которые, по соглашению, начинаются с прописной буквы.
-
-Все классы, находящиеся внутри данного файла, будут принадлежать указанному пакету. Если оператор package не указан, то имена классов помещаются в специальный пакет без имени. 
-
-Стандартная библиотека Java API включает сотни классов. Каждый программист в ходе работы создает десятки своих классов. Множество классов быстро увеличивается. 
-
-Директива package должна находиться в первой незакоментированной строке файла.
-
-```java
-
-/**
- * 
- */
-package com.mycompany;
-
-/**
- * @author janus
- *
- */
-public class Employee {
-
-    /**
-     * 
-     */
-    public Employee() {
-        // TODO Auto-generated constructor stub
-    }
-
-}
-
-```
-## Создание уникальных имён пакетов
-Существует общепринятая схема, где первая часть имени пакета должна состоять из перевёрнутого доменного имени разработчика класса. Так как доменные имена в интернете уникальны, соблюдение этого правила обеспечивает уникальность имён пакетов и предотврати конфликты. Если у вас нет собственного доменного имени, то придумайте свою уникальную комбинацию с малой вероятностью повторения.
-
-Указывать один и тот же пакет можно в разных файлах, он просто указывает кому принадлежит класс. Поэтому, если три разных класса в трёх разных файлах указывают на один и тот же package, то это нормально.
-
-
-пакет com.mycompany содержит интерфейс с названием ICompany.
-```java
-/**
- * File name : ICompany.java
- */
-package com.mycompany;
-
-public interface ICompany {
-    public double calculate_payroll();
-
-}
-
-```
-
-пакет com.mycompany содержит интерфейс с названием IEmployee.
-```java
-
-/**
- * File name : IEmployee.java
- */
-package com.mycompany;
-
-/**
- * @author janus
- *
- */
-public interface IEmployee extends ICompany{
-    public String getCompany();
-    public String getName();
-    public int getId();
-    
-    default String defaultMethod() {
-        return "Объект типа String по умолчанию";
-    }
-
-}
-
-```
- 
-реализуем интерфейс IEmployee в пакете com.mycompany:
-
-```java
-/**
- /* File name : Employee.java */
- */
-package com.mycompany;
-
-/**
- * @author janus
- *
- */
-public abstract class Employee implements IEmployee {
-    
-    private int id;
-    private String name;
-    private String company;
-    
-    public Employee() {
-    }
-        
-    public Employee(int id, String name, String company ) {
-        this.name=name;
-        this.id = id;
-        this.company = company;
-    }
-
-    public String getCompany() {
-          return company;
-    }
-    
-    public String getName() { 
-        return name; 
-    }
-    
-    public int getId() { 
-        return id; 
+          
+        Day current = Day.MONDAY;
+        System.out.println(current);    // MONDAY
     }
 }
 
 ```
-Директива package com.mycompany в начале файла указывает, что классы Employee и интерфейс IEmployee принадлежат пакету com.mycompany.
+## модификатор доступа
 
-В данном примере класс Employee располагается в пакете com.mycompany. Физически это директория «${project.src}/com/mycompany». При создании класса в среде разработки IDE (например, Eclipse) следует указать наименование пакета, тогда IDE самостоятельно при необходимости создаст каталог на жестком диске и разместит новый класс в этом каталоге.
+У enum есть модификатор доступа. Если Ваш enum не лежит внутри какого-нибудь класса, он должен быть объявлен public. Если сделать его private, Вы получите ошибку:
 
-## Импорт пакетов и классов
-
-Если нам надо использовать классы из других пакетов, то нам надо подключить эти пакеты и классы. Исключение составляют классы из пакета java.lang (например, String), которые подключаются в программу автоматически.
-
-Например, класс Scanner находится в пакете java.util, поэтому мы можем получить к нему доступ следующим способом:
-```java
-java.util.Scanner in = new java.util.Scanner(System.in);
-```
-
-То есть мы указываем полный путь к файлу в пакете при создании его объекта. Однако такое нагромождение имен пакетов не всегда удобно, и в качестве альтернативы мы можем импортировать пакеты и классы в проект с помощью директивы import, которая указывается после директивы package:
+Если же enum будет "внутри" класса, он может быть объявлен private:
 
 ```java
 
-import ИмяПакета.ИмяКласса;
-import ИмяПакета.*;
+// Enum Seasons:
 
-```
-В первом случае мы импортируем только один класс, а во втором — импортируем полный пакет. 
-
-Директива import указывается в самом начале кода, после чего идет имя подключаемого класса.
-
-```java
-
-package com.mycommon;
- 
-import java.util.Scanner; // импорт класса Scanner
- 
-public class HelloWorld{
-    public static void main(String[] args){
-        Scanner in = new Scanner(System.in);
-    } 
+public enum Seasons {
+    WINTER,
+    SUMMER,
+    SPRING,
+    FALL;
 }
 
-```
+// main:
 
-пакет java.util содержит большое количество разных классов. И чтобы не подключать по отдельности каждый класс, можно сразу подключить весь пакет :
-```java
-// имя класса можно указать явно или с помощью символа "звёздочка" (*):
-import java.util.*; // импорт всех классов из пакета java.util
-
-import java.io.*;
-```
-Теперь можно использовать любой класс из пакета java.util.
-
-Возможна ситуация, когда используется два класса с одинаковым наименованием, но из разных пакетов. Это относится, например, к классам Date, которые имеются в пакете java.util и в пакете java.sql, или классам List пакетов java.util и java.awt. И если необходимо одновременно использовать оба эти класса, то необходимо указывать полный путь к классам в пакете :
-```java
-java.util.Date udate = new java.util.Date();
-java.sql.Date  sdate = new java.sql.Date();
-
-```
-Программисты могут определять их пакеты для связывания групп классов/интерфейсов и т.д. Группировка связанных классов является хорошим практическим решением, т.к. программист сможет легко определить, что классы, интерфейсы, перечисления и аннотации связаны.
-
-Так как пакет создаёт новое пространство имён, в нём не будет никаких конфликтов с именами в других пактах. Используя пакеты, легче предоставить управление доступом и легче найти связанные классы.
-
-
-## Полное имя класса
-Файлы в компьютере группируются по папкам. Классы в Java (каждый класс лежит в отдельном файле) группируются по пакетам, которые являются папками на диске. 
-
-Полным уникальным именем класса является имя пакета + имя класса:
-
-Полное уникальное имя: java.lang.String
-Имя пакета: java.lang  
-Имя класса: String
-
-Полное имя класса всегда уникально!
-
-В Java принято давать классам и пакетам осмысленные имена. Многие компании выпускают свои библиотеки (набор классов) и, чтобы не было путаницы, называют пакеты этих классов по имени компании/сайта:
-```java
-
-org.apache.common
-org.apache.tomcat
-org.apache.util Проект «Апач»
-com.oracle.jdbc Компания «Oracle»
-java.io
-javax.servlet   Компания Sun, проект Java
-com.ibm.websphere   Компания «IBM», проект WebSphere
-com.jboss   Проект «Jboss»
-
-```
-
-
-## Статический импорт
-
-В java можно использовать статический импорт. Для этого вместе с директивой import используется модификатор static:
-```java
-
-package com.mycommon;
- 
-import static java.lang.Math.*;
-import static java.lang.System.*;
- 
-public class HelloWorld {
+public class Test {
     public static void main(String[] args) {
-        double result = sqrt(20);
-        out.println(result);
-    } 
+        System.out.println(Seasons.WINTER);
+        System.out.println(Seasons.SUMMER);
+        System.out.println(Seasons.SPRING);
+        System.out.println(Seasons.FALL);
+    }
 }
 
 ```
-Здесь определяется статический импорт классов System и Math, которые имеют статические методы. Определение статического импорта позволяет использовать статические методы без названия класса. 
-В примере статическая функция sqrt(20) (можно и Math.sqrt(20)), возвращает квадратный корень числа. 
-То же самое относится и к классу System, в котором определен статический объект out, поэтому можно его использовать без указания класса, если выполнен статический импорт класса System.
+Когда мы вызываем объекты из enum, мы сначала пишем название самого enum, а потом через точку - название объекта: Seasons.WINTER
 
-То же самое в отношении класса System: в нем определен статический объект out, поэтому мы можем его использовать без указания класса.
-
-Статический импорт импортирует статическую переменную или методы. Тогда в вашем коде вам не нужно ссылаться на включающий класс.
-
-## Пакеты могут быть вложенными
-Пакеты могут быть вложенными (например, java.util, где java— главный пакет, a util — вложенный). Соответственно эти два пакета должны располагаться в каталоге java\util.
-
-Можно создавать иерархию пакетов через точечный оператор:
-
+## enum удобно применять в операторах if или switch-case.
 ```java
 
-package pack1[.pack2[.pack3]];
-// например
-package cat.body.tail;
+public class Test {
+    public static void main(String[] args) {
+        // создали объект типа enum:
+        Seasons arg = Seasons.FALL;
+        // оператор switch, который печатает сообщение в зависимости от времени года
+        // в case мы не должны писать полный путь (Seasons.FALL), а только название объекта - например, FALL: case WINTER:
+        switch (arg)
+        {
+            case WINTER:
+            System.out.println("It's winter! Christmas time!"); break;
+            case SUMMER:
+                System.out.println("It's summer! Let's go to the beach!"); break;
+            case SPRING:
+                System.out.println("It's spring! Easter is coming!"); break;
+            case FALL:
+                System.out.println("It's fall! Helloween is coming!"); break;
+        }
+    }
+}
 
 ```
-## создавать иерархию пакетов
 
-Рассмотрим проект PackageExample, включающий 3 java-класса. Два java-класса располагаются в одном пакете «ua.com.company», а третий - в другом «ua.com.company.classes». 
-
-## Базовый класс BaseClass.java
-
-Базовый класс включает 2 поля (id, name) и методы get/set. В конструкторе значения полей инициализируется.
+## Перечисления могут использоваться в классах для хранения данных:
 ```java
 
-package ua.com.company;
+public class Program{
+      
+    public static void main(String[] args) {
+          
+        Book b1 = new Book("War and Peace", "L. Tolstoy", Type.BELLETRE);
+        System.out.printf("Book '%s' has a type %s", b1.name, b1.bookType);
 
-public class BaseClass 
+        // С помощью конструкции switch..case можно проверить принадлежность значения bookType определенной константе перечисления.
+         
+        switch(b1.bookType){
+            case BELLETRE:
+                System.out.println("Belletre");
+                break;
+            case SCIENCE:
+                System.out.println("Science");
+                break;
+            case SCIENCE_FICTION:
+                System.out.println("Science fiction");
+                break;
+            case PHANTASY:
+                System.out.println("Phantasy");
+                break;
+        }
+    }
+}
+class Book{
+  
+    String name;
+    Type bookType;
+    String author;
+  
+    Book(String name, String author, Type type){
+          
+        bookType = type;
+        this.name = name;
+        this.author = author;
+    }
+}
+
+```
+Само перечисление объявлено вне класса, оно содержит четыре жанра книг. Класс Book кроме обычных переменных содержит также переменную типа перечисления. В конструкторе мы ее также можем присвоить, как и обычные поля класса.
+```java
+
+enum Type
 {
-    private    String id   = null;
-    protected  String name = null;
+    SCIENCE,
+    BELLETRE,
+    PHANTASY,
+    SCIENCE_FICTION
+}
 
-    public BaseClass()
-    {
-        this.id   = "default";
-        this.name = "Наименование не определено"; 
+```
+## Методы перечислений
+### метод values()
+
+Каждое перечисление имеет статический метод values(). Он возвращает массив всех констант перечисления:
+```java
+
+public class Program{
+      
+    public static void main(String[] args) {
+          
+        Type[] types = Type.values();
+        for (Type s : types) { System.out.println(s); }
     }
-    public String getId() {
-        return id;
-    }
-    public void setId(String id) {
-        this.id = id;
-    }
-    public String getName() {
+}
+enum Type
+{
+    SCIENCE,
+    BELLETRE,
+    PHANTASY,
+    SCIENCE_FICTION
+}
+
+```
+
+## реализация метода values() в классе Enum
+```java
+public static E[] values();
+```
+полной реализации метода в классе Enum нет, так как он синтетический (искусственно добавляется во время компиляции). Из документации узнаем, что метод просто возвращает массив всех значений перечисления в порядке их объявления.
+
+## Методы name() и ordinal()
+У каждого enum есть имя и порядковый номер. Получить их можно с помощью методов name() и ordinal()
+
+### Метод ordinal() 
+
+Метод ordinal() возвращает порядковый номер определенной константы (нумерация начинается с 0):
+```java
+System.out.println(Type.BELLETRE.ordinal());    // 1
+
+// enum Color
+enum Color {
+    RED, GREEN, BLUE
+}
+
+System.out.println(Color.RED.name()); //output: RED
+
+System.out.println(Color.RED.ordinal()); //output: 0
+
+```
+## реализация в классе Enum
+```java
+
+public abstract class Enum<E extends java.lang.Enum<E>>
+        implements Comparable<E>, Serializable {
+ 
+    private final String name;
+ 
+    public final String name() {
         return name;
     }
-    public void setName(String name) {
+ 
+    private final int ordinal;
+ 
+    public final int ordinal() {
+        return ordinal;
+    }
+ 
+    protected Enum(String name, int ordinal) {
         this.name = name;
+        this.ordinal = ordinal;
     }
+....
+}
+
+```
+Конструктор невидим для разработчиков, но используется самой Java для корректной работы перечислений.
+ключевое слово enum оно даёт понять программе, что вы хотите не просто класс, а именно перечисление.
+
+## Методы equals(), hashcode(), toString(), finalize() и clone()
+
+Enum переопределяет базовые методы класса Object. Так что их можно использовать сразу же в наших перечислениях.
+
+### equals()
+```java
+
+boolean isEqualToItself = Color.RED.equals(Color.RED);
+boolean isEqualToDifferentColor = Color.RED.equals(Color.GREEN);
+ 
+System.out.println(isEqualToItself); //output: true
+System.out.println(isEqualToDifferentColor);//output: false
+
+```
+###  hashCode()
+```java
+
+int hashOfRed = Color.RED.hashCode();
+int hashOfGreen = Color.GREEN.hashCode();
+ 
+System.out.println(hashOfRed); //output would be different every time: 366712642
+System.out.println(hashOfGreen); //output would be different every time: 1829164700
+
+```
+Поскольку мы использовали hashCode(), каждый раз будет выводиться разное значение, сгенерированное автоматически. Когда мы запускали код, получили числа 366712642 и 1829164700. 
+
+### toString()
+
+```java
+Color[] colors = Color.values();
+System.out.println(Arrays.toString(colors)); //output: [RED, GREEN, BLUE]
+
+String red = Color.RED.toString();
+System.out.println(red); //output: RED
+
+```
+Посмотрим как они реализованы в классе Enum
+```java
+
+public String toString() {
+    return name;
+}
+ 
+public final boolean equals(Object other) {
+    return this==other;
+}
+ 
+public final int hashCode() {
+    return super.hashCode();
+}
+
+```
+- метод toString() возвращает имя значения перечисления. Назвали значение WHITE, это же значение и получим при вызове toString() или name();
+- метод equals() сравнивает значения перечислений по ссылкам. Потому, что значения в перечислениях являются константными (уникальными), существует всего один экземпляр цвета RED, один цвета GREEN и один BLUE, значит ссылка на этот экземпляр будет всего одна, значит их можно сравнивать с помощью ==. Вы можете сами убедиться в этом, написав Color.RED == Color.RED или Color.GREEN == COLOR.BLUE;
+- метод hashCode() использует стандартную реализацию из класса Object.
+
+### clone()
+
+```java 
+protected final Object clone() throws CloneNotSupportedException {
+    throw new CloneNotSupportedException();
+}
+```
+метод clone() мы можем вызвать только внутри самого перечисления т.к. он помечен ключевым словом protected. Но даже если мы попытаемся сделать это, то ничего мы не получим, кроме CloneNotSupportedException. Нужно это для того чтобы нельзя было создать несколько экземпляров одного и того же перечисления. Ведь в реальной жизни у нас нет двух цифр "1", нет двух значений скорости света, так и с перечислениями.
+
+### Метод valueOf()
+Метод valueOf() - позволяет получить значения перечисления по его строковому представлению
+Для получения значение перечисления по его строковому представлению у Enums есть метод valueOf(). 
+```java
+
+System.out.println(Color.valueOf("RED").ordinal()); //output: 0
+
+// Если же такого значения в перечислении нет, то мы получим IllegalStateException
+
+Color.valueOf("BLACK"); //output: java.lang.IllegalArgumentException: No enum constant Color.BLACK
+```
+Посмотрим на реализацию метода valueOf() в классе Enum
+```java
+public static E valueOf(String name);
+```
+как и в случае с values() этот метод тоже синтетический и поэтому полной реализации данного метода в классе Enum нет. В официальной документации написано, что метод просто возвращает значение перечисления по его строковому представлению. Проверка строгая, поэтому никаких пробелов вначале, в конце или между буквами не должно быть.
+
+Есть еще один способ получить значение перечисления
+```java
+System.out.println(Enum.valueOf(Color.class, "BLUE").ordinal()); //output: 2
+// но он является менее распространённым.
+
+```
+## Enum реализовывает интерфейс Comparable
+Сделано это для того, чтобы перечисления можно было сравнивать друг с другом при сортировке. При этом сравнение происходит по ordinal() перечисления. 
+
+## Интерфейсы Comparable и Сортировка
+
+Интерфейс Comparable содержит один единственный метод int compareTo(E item), который сравнивает текущий объект с объектом, переданным в качестве параметра. Если этот метод возвращает отрицательное число, то текущий объект будет располагаться перед тем, который передается через параметр. Если метод вернет положительное число, то, наоборот, после второго объекта. Если метод возвратит ноль, значит, оба объекта равны.
+
+### сравнение элементов перечисления с помощью метода compareTo()
+```java
+System.out.println(Color.GREEN.compareTo(Color.RED)); //output: 1
+System.out.println(Color.GREEN.compareTo(Color.GREEN)); //output: 0
+System.out.println(Color.GREEN.compareTo(Color.BLUE)); //output: -1
+System.out.println(Color.RED.compareTo(Color.BLUE)); //output: -2
+
+// Результат показывает как располагаются значения перечисления относительно друг друга:
+
+// Число 1 означает, что значение GREEN находится правее на одну позицию от значения RED
+// Число 0 означает, что значение GREEN равно само себе
+// Число -1 означает, что значение GREEN находится левее от значения BLUE на одну позицию
+// Число -2 означает, что значение RED находится левее от значения BLUE на две позиции
+
+```
+сравнивать перечисления можно только между своими типами. Нельзя сравнивать перечисления типа Color с перечислением типа Car. Мало того, что компилятор не даст вам это сделать с помощью своих подсказок так еще и в самом методе есть проверка на тип класса перечислений.
+
+
+## Enum реализовывает интерфейс Serializable
+
+Сериализация представляет процесс записи состояния объекта в поток, соответственно процесс извлечения или восстановления состояния объекта из потока называется десериализацией. Сериализация очень удобна, когда идет работа со сложными объектами.
+
+Сериализовать можно только те объекты, которые реализуют интерфейс Serializable. Этот интерфейс не определяет никаких методов, просто он служит указателем системе, что объект, реализующий его, может быть сериализован.
+
+Но как и в случае с clone() воспользоваться мы им не можем
+```java
+
+private void readObject(ObjectInputStream in) throws IOException,
+    ClassNotFoundException {
+    throw new InvalidObjectException("can't deserialize enum");
+}
+ 
+private void readObjectNoData() throws ObjectStreamException {
+    throw new InvalidObjectException("can't deserialize enum");
+}
+
+```
+причина того, что эти методы приватные да и к тому же бросают исключения при их вызове так же, что и в случае с clone(). Если бы эта возможность была открыта, тогда легко можно было бы сохранить перечисление в файл, затем считать его обратно и получить на выходе два экземпляра одного значения перечисления. Этот как два значения числа "1";
+
+
+## Конструкторы и переменные
+
+Перечисления, как и обычные классы, могут определять конструкторы, поля и методы:
+```java
+
+public class Program{
+      
+    public static void main(String[] args) {
+          
+        System.out.println(XColor.RED.getCode());        // #FF0000
+        System.out.println(XColor.GREEN.getCode());      // #00FF00
+        
+    }
+}
+enum XColor{
+    RED("#FF0000"), BLUE("#0000FF"), GREEN("#00FF00");
+    private String code;
+    XColor(String code){
+        this.code = code;
+    }
+    public String getCode(){ return code;}
+}
+
+```
+Перечисление XColor определяет приватное поле code для хранения кода цвета, а с помощью метода getCode оно возвращается. Через конструктор передается для него значение. Следует отметить, что конструктор по умолчанию приватный, то есть имеет модификатор private. Любой другой модификатор будет считаться ошибкой. Поэтому создать константы перечисления с помощью конструктора мы можем только внутри перечисления.
+
+## Также можно определять методы для отдельных констант:
+```java
+
+public class Program{
+      
+    public static void main(String[] args) {
+          
+        Operation op = Operation.SUM;
+        System.out.println(op.action(10, 4));   // 14
+        op = Operation.MULTIPLY;
+        System.out.println(op.action(6, 4));    // 24
+    }
+}
+enum Operation{
+    SUM{
+        public int action(int x, int y){ return x + y;}
+    },
+    SUBTRACT{
+        public int action(int x, int y){ return x - y;}
+    },
+    MULTIPLY{
+        public int action(int x, int y){ return x * y;}
+    };
+    public abstract int action(int x, int y);
+}
+
+```
+
+## enum Country
+У каждой страны есть своя валюта, чтобы её задать необходимо создать конструктор в enum Country и добавить поле currency
+```java
+
+enum Country {
+    CANADA("CAD"), POLAND("PLN"), GERMANY("EUR");
+ 
+    String currency;
+ 
+    Country(String currency) {
+        this.currency = currency;
+    }
+}
+
+```
+Допустим у нас появилась страна, у которой еще нет валюты. В этом случае нам необходимо будет добавить конструктор без параметров, или же конструктор по умолчанию.
+```java
+
+enum Country {
+    CANADA("CAD"),
+    POLAND("PLN"),
+    GERMANY("EUR"),
+    LAOPAPAS,
+    ZIMKABU();
+ 
+    String currency;
+ 
+    Country(String currency) {
+        this.currency = currency;
+    }
+ 
+    Country() {
+    }
+}
+
+Пример использования enum Currency
+
+for (Country country : Country.values()) {
+    System.out.println(country + ", " + country.currency);
+}
+
+```
+
+Поля и методы в перечислениях как и в классах могут иметь модификаторы доступа private, protected, default, public, а вот конструкторы в перечислениях всегда будут иметь модификатор  private. При попытке указать другой модификатор мы получим ошибку компиляции.
+```java
+
+public Country(String currency) { // Modifier 'public' is not allowed here
+    this.currency = currency;
+}
+
+```
+## Методы в перечислениях
+В перечислениях можно использовать как обычные (общие) так и абстрактные методы, чтобы задать уникальную логику каждому значению перечисления.
+
+## Общие методы в перечислениях
+Добавим в перечисление метод hasCurrency(), который будет возвращать true или false в зависимости от того, есть валюта у страны или нет
+```java
+
+...
+    boolean hasCurrency() {
+        return currency != null;
+    }
+
+// И рассмотрим использование
+
+for (Country country : Country.values()) {
+    if (country.hasCurrency()) {
+        System.out.println(country + " has currency, it's " + country.currency);
+    } else {
+        System.out.println(country + " has no currency");
+    }
+}
+// Вывод в консоль
+
+// CANADA has currency, it's CAD
+// POLAND has currency, it's PLN
+// GERMANY has currency, it's EUR
+// LAOPAPAS has no currency
+// ZIMKABU has no currency
+```
+
+## Абстрактные методы в перечислениях
+```java
+
+// добавим абстрактный метод void sayHello()
+
+....
+    abstract void sayHello();
+
+// Теперь нам нужно реализовать этот метод во всех значениях перечисления
+
+
+CANADA("CAD") {
     @Override
-    public String toString() {
-        return this.getClass().getName() + "\n\t{id = '" + 
-                         id + "', name = '" + name + "'}";
+    void sayHello() {
+        System.out.println("Hello");
     }
+},
+POLAND("PLN") {
+    @Override
+    void sayHello() {
+        System.out.println("Cześć");
+    }
+},
+GERMANY("EUR") {
+    @Override
+    void sayHello() {
+        System.out.println("Hallo");
+    }
+},
+LAOPAPAS {
+    @Override
+    void sayHello() {
+        System.out.println("Lapapioooo");
+    }
+},
+ZIMKABU() {
+    @Override
+    void sayHello() {
+        System.out.println("Shakalaka");
+    }
+};
+
+// И посмотрим на использование этого метода.
+
+for (Country country : Country.values()) {
+    System.out.print(country + " ");
+    country.sayHello();
 }
+// Вывод в консоль
+
+// CANADA Hello
+// POLAND Cześć
+// GERMANY Hallo
+// LAOPAPAS Lapapioooo
+// ZIMKABU Shakalaka
+// Если же мы оставим одно значение не переопределённым то получим ошибку компиляции
+// ZIMKABU(); 'Country' is abstract; cannot be instantiated
+```
+## Специальные коллекции для перечислений
+мы знаем значения перечислений, знаем их количество и что новые значения не будут добавляться в перечисление в Runtime т.к. это невозможно. разработчики придумали специальную коллекцию для перечислений. Эта коллекция работает быстрее и эффективнее обычных, используя, особенности перечислений. Эта коллекция называется EnumSet. 
+
+## Примеры создания EnumSet.
+
+Метод allOf() создает EnumSet из всех значений заданого перечисления.
+```java
+import java.util.EnumSet;
+import java.util.Set;
+
+Set<Country> countries = EnumSet.allOf(Country.class);
+System.out.println(countries); //output: [CANADA, POLAND, GERMANY, LAOPAPAS, ZIMKABU]
 
 ```
-
-Переопределенная функция toString() возвращает наименование класса и значение полей.
-
-## Класс наследника Inheritor.java
-
-Класс Inheritor.java наследует свойства базового класса BaseClass.java. Поскольку классы располаются в разных пакетах, то базовый класс необходимо импортировать.
+Метод of() создает EnumSet, который содержит заданные значения. Метод перегружен, принимая от одного значения до 5 и еще раз перегружен методом of(E first, E... rest), который принимает сколько угодно значений. Всё это нужно для оптимизации и быстродействия EnumSet.
 ```java
-
-package ua.com.company.classes;
-
-import ua.com.company.BaseClass;
-
-public class Inheritor extends BaseClass
-{
-    public Inheritor()
-    {
-        this.name = "Наследник";
-        this.setId("Первый");
-    }
-}
+EnumSet.of(Country.GERMANY);
+EnumSet.of(Country.CANADA, Country.GERMANY);
+```
+Метод range() создает EnumSet, который содержит все значения перечисления между указанными значениями.
+```java
+EnumSet<Country> range = EnumSet.range(Country.CANADA, Country.GERMANY);
+System.out.println(range); //output: [CANADA, POLAND, GERMANY]
+```    
+Метод copyOf() возвращает копию указанного EnumSet, либо же копию любой другой коллекции этого перечисления.
+```java
+EnumSet<Country> canadaSet = EnumSet.of(Country.CANADA);
+Set<Country> germanySet = Set.of(Country.GERMANY);
+EnumSet<Country> canadaSetCopy = EnumSet.copyOf(canadaSet);
+EnumSet<Country> germanySetCopy = EnumSet.copyOf(germanySet);
+```
+Изначально, в EnumSet у нас были три страны CANADA, POLAND и GERMANY. Ззатем метод complementOf() создал нам EnumSet который содержит значения LAOPAPAS, ZIMKABU, то есть все значения, которые НЕ содержатся в изначальной коллекции.
+```java
+EnumSet<Country> initialSet = EnumSet.of(Country.CANADA, Country.POLAND, Country.GERMANY);
+EnumSet<Country> complement = EnumSet.complementOf(initialSet);
+System.out.println(complement); //output: [LAOPAPAS, ZIMKABU]
 
 ```
-
-## Основной класс MainPackage.java
-Основной класс включает статический метод main. Поскольку данный класс не «видит» наследника, то его приходится импортировать.
+Метод noneOf() возвращает пустой EnumSet заданного типа.
 ```java
-
-package ua.com.company;
-
-import ua.com.company.classes.Inheritor;
-
-public class MainPackage 
-{
-    public MainPackage()
-    {
-        BaseClass bc = new BaseClass();
-        Inheritor ir = new Inheritor();
-
-        System.out.println (bc.toString());
-        System.out.println (ir.toString());
-    }
-    
-    public static void main(String[] args) 
-    {
-        new MainPackage();
-        System.exit(0);
-    }
-}
+EnumSet<Country> noneOf = EnumSet.noneOf(Country.class);
+System.out.println(noneOf); //output: []
 
 ```
-Результат выполнения данной программы выводится в консоль в следующем виде :
-```java
-
-ua.com.company.BaseClass:
-    {id = 'default', name = 'Наименование не определено'}
-ua.com.company.classes.Inheritor:
-    {id = 'Первый', name = 'Наследник'}
-
-``` 
+На самом деле EnumSet это абстрактный класс у которого 2 реализации - RegularEnumSet и JumboEnumSet. Выбор реализации определяется в методах создания EnumSet. Если количество элементов в перечислении, из которого вы хотите создать EnumSet, не превышает 64 то выбран будет RegularEnumSet, если элементов больше 64 - будет выбран JumboEnumSet.
+Все операции в RegularEnumSet основаны на булевой логике. Все значения перечисления в RegularEnumSet умещаются в одну переменную типа long, максимальное колличество битов в котором равно 64. 
+В JumboEnumSet также используется булевая логика, но вместе с массивом значений.
