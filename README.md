@@ -1,612 +1,713 @@
-# Перечисления Enum
-Кроме отдельных примитивных типов данных и классов в Java есть тип enum или перечисление. Перечисления представляют набор логически связанных констант. 
-Объявление перечисления происходит с помощью оператора enum, после которого идет название перечисления. Затем идет список элементов перечисления через запятую:
+# Обобщения (Generics)
+ 
+Обобщения или generics (обобщенные типы и методы) позволяют уйти от жесткого определения используемых типов.
+
+определяем класс для представления банковского счета:
 ```java
 
-public enum myEnum {
-    WINTER,
-    SUMMER,
-    SPRING,
-    FALL;
+class Account{
+     
+    private int id;
+    private int sum;
+     
+    Account(int id, int sum){
+        this.id = id;
+        this.sum = sum;
+    }
+     
+    public int getId() { return id; }
+    public int getSum() { return sum; }
+    public void setSum(int sum) { this.sum = sum; }
 }
 
 ```
-Enum - это отдельная структура. Он может находится в отдельном файле, а может быть частью класса. Но при этом enum не обязательно должен лежать в каком-либо классе. 
+Класс Account имеет два поля: 
+- id - уникальный идентификатор счета 
+- sum - сумма на счете.
 
-Все объекты, которые лежат в enum, принято писать большими буквами, это общепринятая практика. Если написать их маленькими ничего плохого не случится. 
+идентификатор id задан как целочисленное значение (1, 2, 3, 4 и т.д.). 
+Однако также нередко для идентификатора используются и строковые значения. 
+на момент написания класса мы можем точно не знать, что лучше выбрать для хранения идентификатора - строки или числа. 
 
-Объекты, которые лежат в enum, пишутся через запятую:
-
-В конце мы написали точку с запятой.
-```java
-
-enum Day{
-  
-    MONDAY,
-    TUESDAY,
-    WEDNESDAY,
-    THURSDAY,
-    FRIDAY,
-    SATURDAY,
-    SUNDAY;
-}
-
-```
-При таком подходе мы как бы создаем еще один класс, только вместо слова "class" пишем "enum".
-Перечисление фактически представляет новый тип, поэтому мы можем определить переменную данного типа и использовать ее:
+мы можем решить данную проблему следующим образом: 
+задать id как поле типа Object, который является универсальным и базовым суперклассом для всех остальных типов:
 ```java
 
 public class Program{
       
     public static void main(String[] args) {
           
-        Day current = Day.MONDAY;
-        System.out.println(current);    // MONDAY
-    }
-}
-
-```
-## модификатор доступа
-
-У enum есть модификатор доступа. Если Ваш enum не лежит внутри какого-нибудь класса, он должен быть объявлен public. Если сделать его private, Вы получите ошибку:
-
-Если же enum будет "внутри" класса, он может быть объявлен private:
-
-```java
-
-// Enum Seasons:
-
-public enum Seasons {
-    WINTER,
-    SUMMER,
-    SPRING,
-    FALL;
-}
-
-// main:
-
-public class Test {
-    public static void main(String[] args) {
-        System.out.println(Seasons.WINTER);
-        System.out.println(Seasons.SUMMER);
-        System.out.println(Seasons.SPRING);
-        System.out.println(Seasons.FALL);
-    }
-}
-
-```
-Когда мы вызываем объекты из enum, мы сначала пишем название самого enum, а потом через точку - название объекта: Seasons.WINTER
-
-## enum удобно применять в операторах if или switch-case.
-```java
-
-public class Test {
-    public static void main(String[] args) {
-        // создали объект типа enum:
-        Seasons arg = Seasons.FALL;
-        // оператор switch, который печатает сообщение в зависимости от времени года
-        // в case мы не должны писать полный путь (Seasons.FALL), а только название объекта - например, FALL: case WINTER:
-        switch (arg)
-        {
-            case WINTER:
-            System.out.println("It's winter! Christmas time!"); break;
-            case SUMMER:
-                System.out.println("It's summer! Let's go to the beach!"); break;
-            case SPRING:
-                System.out.println("It's spring! Easter is coming!"); break;
-            case FALL:
-                System.out.println("It's fall! Helloween is coming!"); break;
-        }
-    }
-}
-
-```
-
-## Перечисления могут использоваться в классах для хранения данных:
-```java
-
-public class Program{
-      
-    public static void main(String[] args) {
-          
-        Book b1 = new Book("War and Peace", "L. Tolstoy", Type.BELLETRE);
-        System.out.printf("Book '%s' has a type %s", b1.name, b1.bookType);
-
-        // С помощью конструкции switch..case можно проверить принадлежность значения bookType определенной константе перечисления.
+        Account acc1 = new Account(2334, 5000); // id - число
+        int acc1Id = (int)acc1.getId();
+        System.out.println(acc1Id);
          
-        switch(b1.bookType){
-            case BELLETRE:
-                System.out.println("Belletre");
-                break;
-            case SCIENCE:
-                System.out.println("Science");
-                break;
-            case SCIENCE_FICTION:
-                System.out.println("Science fiction");
-                break;
-            case PHANTASY:
-                System.out.println("Phantasy");
-                break;
+        Account acc2 = new Account("sid5523", 5000);    // id - строка
+        System.out.println(acc2.getId());
+    }
+}
+class Account{
+     
+    private Object id;
+    private int sum;
+     
+    Account(Object id, int sum){
+        this.id = id;
+        this.sum = sum;
+    }
+     
+    public Object getId() { return id; }
+    public int getSum() { return sum; }
+    public void setSum(int sum) { this.sum = sum; }
+}
+
+```
+мы сталкиваемся с проблемой безопасности типов. 
+Например, в следующем случае мы получим ошибку:
+```java
+
+Account acc1 = new Account("2345", 5000);
+int acc1Id = (int)acc1.getId(); // java.lang.ClassCastException
+System.out.println(acc1Id);
+
+```
+в процессе разработки мы можем не знать, какой именно тип представляет значение в id, и при попытке получить число в данном случае мы столкнемся с исключением java.lang.ClassCastException.
+
+Писать для каждого отдельного типа свою версию класса Account тоже не является хорошим решением, так как в этом случае мы вынуждены повторяться.
+
+## Обобщения
+Обобщения или generics позволяют не указывать конкретный тип, который будет использоваться. 
+
+```java
+
+// определим класс Account как обобщенный:
+
+class Account<T>{
+     
+    private T id;
+    private int sum;
+     
+    Account(T id, int sum){
+        this.id = id;
+        this.sum = sum;
+    }
+     
+    public T getId() { return id; }
+    public int getSum() { return sum; }
+    public void setSum(int sum) { this.sum = sum; }
+}
+
+```
+## универсальный параметр
+
+С помощью буквы T в определении класса class Account<T> мы указываем, что данный тип T будет использоваться этим классом. 
+Параметр T в угловых скобках называется универсальным параметром, так как вместо него можно подставить любой тип. При этом пока мы не знаем, какой именно это будет тип: String, int или какой-то другой. Причем буква T выбрана условно, это может и любая другая буква или набор символов.
+
+После объявления класса мы можем применить универсальный параметр T: 
+
+Метод getId() возвращает значение переменной id, но так как данная переменная представляет тип T, то данный метод также возвращает объект типа T: public T getId().
+
+```java
+
+public class Program{
+      
+    public static void main(String[] args) {
+          
+        Account<String> acc1 = new Account<String>("2345", 5000);
+        String acc1Id = acc1.getId();
+        System.out.println(acc1Id);
+         
+        Account<Integer> acc2 = new Account<Integer>(2345, 5000);
+        Integer acc2Id = acc2.getId();
+        System.out.println(acc2Id);
+    }
+}
+class Account<T>{
+     
+    private T id;
+    private int sum;
+     
+    Account(T id, int sum){
+        this.id = id;
+        this.sum = sum;
+    }
+     
+    public T getId() { return id; }
+    public int getSum() { return sum; }
+    public void setSum(int sum) { this.sum = sum; }
+}
+
+```
+При определении переменной даннного класса и создании объекта после имени класса в угловых скобках нужно указать, какой именно тип будет использоваться вместо универсального параметра. При этом надо учитывать, что они работают только с объектами, но не работают с примитивными типами. То есть мы можем написать Account<Integer>, но не можем использовать тип int или double, например, Account<int>. Вместо примитивных типов надо использовать классы-обертки: 
+    - Integer вместо int, 
+    - Double вместо double и т.д.
+
+Например, первый объект будет использовать тип String, то есть вместо T будет подставляться String:
+```java
+
+Account<String> acc1 = new Account<String>("2345", 5000);
+
+```
+В этом случае в качестве первого параметра в конструктор передается строка.
+
+А второй объект использует тип int (Integer):
+```java
+
+Account<Integer> acc2 = new Account<Integer>(2345, 5000);
+
+```
+## Обобщенные интерфейсы
+Интерфейсы, как и классы, также могут быть обобщенными. 
+Создадим обобщенный интерфейс Accountable и используем его в программе:
+```java
+
+public class Program{
+      
+    public static void main(String[] args) {
+          
+        Accountable<String> acc1 = new Account("1235rwr", 5000);
+        Account acc2 = new Account("2373", 4300);
+        System.out.println(acc1.getId());
+        System.out.println(acc2.getId());
+    }
+}
+interface Accountable<T>{
+    T getId();
+    int getSum();
+    void setSum(int sum);
+}
+class Account implements Accountable<String>{
+     
+    private String id;
+    private int sum;
+     
+    Account(String id, int sum){
+        this.id = id;
+        this.sum = sum;
+    }
+     
+    public String getId() { return id; }
+    public int getSum() { return sum; }
+    public void setSum(int sum) { this.sum = sum; }
+}
+
+```
+При реализации подобного интерфейса есть две стратегии. 
+
+1. Первая стратегия, когда при реализации для универсального параметра интерфейса задается конкретный тип, например, тип String. Тогда класс, реализующий интерфейс, жестко привязан к этому типу.
+
+2. Вторая стратегия представляет определение обобщенного класса, который также использует тот же универсальный параметр:
+```java
+
+public class Program{
+      
+    public static void main(String[] args) {
+          
+        Account<String> acc1 = new Account<String>("1235rwr", 5000);
+        Account<String> acc2 = new Account<String>("2373", 4300);
+        System.out.println(acc1.getId());
+        System.out.println(acc2.getId());
+    }
+}
+interface Accountable<T>{
+    T getId();
+    int getSum();
+    void setSum(int sum);
+}
+class Account<T> implements Accountable<T>{
+     
+    private T id;
+    private int sum;
+     
+    Account(T id, int sum){
+        this.id = id;
+        this.sum = sum;
+    }
+     
+    public T getId() { return id; }
+    public int getSum() { return sum; }
+    public void setSum(int sum) { this.sum = sum; }
+}
+
+```
+## Обобщенные методы
+Кроме обобщенных типов можно также создавать обобщенные методы, которые будут использовать универсальные параметры:
+```java
+
+public class Program{
+      
+    public static void main(String[] args) {
+          
+        Printer printer = new Printer();
+        String[] people = {"Tom", "Alice", "Sam", "Kate", "Bob", "Helen"};
+        Integer[] numbers = {23, 4, 5, 2, 13, 456, 4};
+        printer.<String>print(people);
+        printer.<Integer>print(numbers);
+    }
+}
+ 
+class Printer{
+     
+    public <T> void print(T[] items){
+        for(T item: items){
+            System.out.println(item);
         }
     }
 }
-class Book{
-  
-    String name;
-    Type bookType;
-    String author;
-  
-    Book(String name, String author, Type type){
+
+```
+Особенностью обобщенного метода является использование универсального параметра в объявлении метода после всех модификаторов и перед типом возвращаемого значения.
+```java
+public <T> void print(T[] items)
+```
+Затем внутри метода все значения типа T будут представлять данный универсальный параметр.
+
+При вызове подобного метода перед его именем в угловых скобках указывается, какой тип будет передаваться на место универсального параметра:
+```java
+printer.<String>print(people);
+printer.<Integer>print(numbers);
+
+```
+
+## Использование нескольких универсальных параметров
+Мы можем также задать сразу несколько универсальных параметров:
+
+```java
+
+public class Program{
+      
+    public static void main(String[] args) {
           
-        bookType = type;
-        this.name = name;
-        this.author = author;
+        Account<String, Double> acc1 = new Account<String, Double>("354", 5000.87);
+        String id = acc1.getId();
+        Double sum = acc1.getSum();
+        System.out.printf("Id: %s  Sum: %f \n", id, sum);
+    }
+}
+class Account<T, S>{
+     
+    private T id;
+    private S sum;
+     
+    Account(T id, S sum){
+        this.id = id;
+        this.sum = sum;
+    }
+     
+    public T getId() { return id; }
+    public S getSum() { return sum; }
+    public void setSum(S sum) { this.sum = sum; }
+}
+
+```
+В данном случае тип String будет передаваться на место параметра T, а тип Double - на место параметра S.
+
+## Обобщенные конструкторы
+Конструкторы как и методы также могут быть обобщенными. В этом случае перед конструктором также указываются в угловых скобках универсальные параметры:
+```java
+
+
+public class Program{
+      
+    public static void main(String[] args) {
+          
+        Account acc1 = new Account("cid2373", 5000);
+        Account acc2 = new Account(53757, 4000);
+        System.out.println(acc1.getId());
+        System.out.println(acc2.getId());
+    }
+}
+ 
+class Account{
+     
+    private String id;
+    private int sum;
+     
+    <T>Account(T id, int sum){
+        this.id = id.toString();
+        this.sum = sum;
+    }
+     
+    public String getId() { return id; }
+    public int getSum() { return sum; }
+    public void setSum(int sum) { this.sum = sum; }
+}
+
+```
+В данном случае конструктор принимает параметр id, который представляет тип T. В конструкторе его значение превращается в строку и сохраняется в локальную переменную.
+
+
+## Ограничения обобщений
+   
+Когда мы указываем универсальный параметр у обобщений, то по умолчанию он может представлять любой тип. Однако иногда необходимо, чтобы параметр соответствовал только некоторому ограниченному набору типов. В этом случае применяются ограничения, которые позволяют указать базовый класс, которому должен соответствовать параметр.
+
+Для установки ограничения после универсального параметра ставится слово extends, после которого указывается базовый класс ограничения:
+```java
+
+class Account{ }
+class Transaction<T extends Account>{ }
+
+```
+в данном случае для параметра T в Transaction ограничением является класс Account. То есть на место параметра T мы можем передать либо класс Account, либо один из его классов-наследников.
+
+класс Transaction, который представляет операцию перевода средств между двумя счетами, типизирован параметром T, у которого в качестве ограничения установлен класс Account.:
+
+```java
+
+public class Program{
+      
+    public static void main(String[] args) {
+          
+        Account acc1 = new Account("1876", 4500);
+        Account acc2 = new Account("3476", 1500);
+              
+        Transaction<Account> tran1 = new Transaction<Account>(acc1,acc2, 4000);
+        tran1.execute();
+        tran1 = new Transaction<Account>(acc1,acc2, 4000);
+        tran1.execute();
+    }
+}
+class Transaction<T extends Account>{
+     
+    private T from;     // с какого счета перевод
+    private T to;       // на какой счет перевод
+    private int sum;    // сумма перевода
+     
+    Transaction(T from, T to, int sum){
+        this.from = from;
+        this.to = to;
+        this.sum = sum;
+    }
+    public void execute(){
+         
+        if (from.getSum() > sum)
+        {
+            from.setSum(from.getSum() - sum);
+            to.setSum(to.getSum() + sum);
+            System.out.printf("Account %s: %d \nAccount %s: %d \n", 
+                from.getId(), from.getSum(),to.getId(), to.getSum());
+        }
+        else{
+            System.out.printf("Operation is invalid");
+        }
+    }
+}
+class Account{
+     
+    private String id;
+    private int sum;
+     
+    Account(String id, int sum){
+        this.id = id;
+        this.sum = sum;
+    }
+     
+    public String getId() { return id; }
+    public int getSum() { return sum; }
+    public void setSum(int sum) { this.sum = sum; }
+}
+
+```
+При создании объекта Transaction в его конструктор передаются два объекта Account - два счета, между которыми надо осуществить перевод, и сумма перевода.
+
+поскольку мы установили подобное ограничение, то компилятор будет распознавать объекты типа T как объекты типа Account. 
+в этом случае мы можем вызывать у объектов типа T методы класса Account. И мы бы не смогли бы это сделать, если бы мы не задали подобного ограничения:
+```java
+
+class Transaction<T>{
+    // остальное содержимое
+}
+
+```
+В этом случае была бы ошибка.
+
+## Обобщенные типы в качестве ограничений
+В качестве ограничений могут выступать и другие обобщения, которые сами могут иметь ограничения:
+```java
+
+public class Program{
+      
+    public static void main(String[] args) {
+          
+        Account<String> acc1 = new Account<String>("1876", 4500);
+        Account<String> acc2 = new Account<String>("3476", 1500);
+              
+        Transaction<Account<String>> tran1 = new Transaction<Account<String>>(acc1,acc2, 4000);
+        tran1.execute();
+        tran1 = new Transaction<Account<String>>(acc1,acc2, 4000);
+        tran1.execute();
+    }
+}
+class Transaction<T extends Account<String>>{
+     
+    private T from;     // с какого счета перевод
+    private T to;       // на какой счет перевод
+    private int sum;    // сумма перевода
+     
+    Transaction(T from, T to, int sum){
+        this.from = from;
+        this.to = to;
+        this.sum = sum;
+    }
+    public void execute(){
+         
+        if (from.getSum() > sum)
+        {
+            from.setSum(from.getSum() - sum);
+            to.setSum(to.getSum() + sum);
+            System.out.printf("Account %s: %d \nAccount %s: %d \n", 
+                from.getId(), from.getSum(),to.getId(), to.getSum());
+        }
+        else{
+            System.out.printf("Operation is invalid");
+        }
+    }
+}
+class Account<T>{
+     
+    private T id;
+    private int sum;
+     
+    Account(T id, int sum){
+        this.id = id;
+        this.sum = sum;
+    }
+     
+    public T getId() { return id; }
+    public int getSum() { return sum; }
+    public void setSum(int sum) { this.sum = sum; }
+}
+
+```
+В данном случае ограничением для Transaction является тип Account, который типизирован типом String.
+
+## Интерфейсы в качестве оганичений
+В качестве ограничений могут выступать также интерфейсы. В этом случае передаваемый на место универсального параметра тип должен реализовать данный интерфейс:
+```java
+
+public class Program{
+      
+    public static void main(String[] args) {
+          
+        Account acc1 = new Account("1235rwr", 5000);
+        Account acc2 = new Account("2373", 4300);
+        Transaction<Account> tran1 = new Transaction<Account>(acc1, acc2, 1560);
+        tran1.execute();
+    }
+}
+interface Accountable{
+    String getId();
+    int getSum();
+    void setSum(int sum);
+}
+class Account implements Accountable{
+     
+    private String id;
+    private int sum;
+     
+    Account(String id, int sum){
+        this.id = id;
+        this.sum = sum;
+    }
+     
+    public String getId() { return id; }
+    public int getSum() { return sum; }
+    public void setSum(int sum) { this.sum = sum; }
+}
+class Transaction<T extends Accountable>{
+     
+    private T from;     // с какого счета перевод
+    private T to;       // на какой счет перевод
+    private int sum;    // сумма перевода
+     
+    Transaction(T from, T to, int sum){
+        this.from = from;
+        this.to = to;
+        this.sum = sum;
+    }
+    public void execute(){
+         
+        if (from.getSum() > sum)
+        {
+            from.setSum(from.getSum() - sum);
+            to.setSum(to.getSum() + sum);
+            System.out.printf("Account %s: %d \nAccount %s: %d \n", 
+                from.getId(), from.getSum(),to.getId(), to.getSum());
+        }
+        else{
+            System.out.printf("Operation is invalid");
+        }
     }
 }
 
 ```
-Само перечисление объявлено вне класса, оно содержит четыре жанра книг. Класс Book кроме обычных переменных содержит также переменную типа перечисления. В конструкторе мы ее также можем присвоить, как и обычные поля класса.
+## Множественные ограничения
+Также можно установить сразу несколько ограничений. Например, пусть класс Transaction может работать только с объектами, которые одновременно реализуют интерфейс Accountable и являются наследниками класса Person:
 ```java
 
-enum Type
+class Person{}
+interface Accountable{}
+ 
+class Transaction<T extends Person & Accountable>{}
+
+```
+## Наследование и обобщения
+ 
+Обобщенные классы могут участвовать в иерархии наследования: могут наследоваться от других, либо выполнять роль базовых классов. Рассмотрим различные ситуации.
+
+## Базовый обобщенный класс
+При наследовании от обобщенного класса класс-наследник должен передавать данные о типе в конструкции базового класса:
+```java
+
+class Account<T>
 {
-    SCIENCE,
-    BELLETRE,
-    PHANTASY,
-    SCIENCE_FICTION
+    private T _id;
+    T getId(){return _id;}
+    Account(T id)
+    {
+        _id = id;
+    }
+}
+ 
+class DepositAccount<T> extends Account<T>{
+ 
+    DepositAccount(T id){
+        super(id);
+    }
 }
 
 ```
-## Методы перечислений
-### метод values()
+В конструкторе DepositAccount идет обращение к конструктору базового класса, в который передаются данные о типе.
 
-Каждое перечисление имеет статический метод values(). Он возвращает массив всех констант перечисления:
+### Варианты использования классов:
 ```java
 
-public class Program{
-      
-    public static void main(String[] args) {
-          
-        Type[] types = Type.values();
-        for (Type s : types) { System.out.println(s); }
-    }
-}
-enum Type
+DepositAccount dAccount1 = new DepositAccount(20);
+System.out.println(dAccount1.getId());
+         
+DepositAccount dAccount2 = new DepositAccount("12345");
+System.out.println(dAccount2.getId());
+
+// При этом класс-наследник может добавлять и использовать какие-то свои параметры типов:
+
+
+class Account<T>
 {
-    SCIENCE,
-    BELLETRE,
-    PHANTASY,
-    SCIENCE_FICTION
-}
-
-```
-
-## реализация метода values() в классе Enum
-```java
-public static E[] values();
-```
-полной реализации метода в классе Enum нет, так как он синтетический (искусственно добавляется во время компиляции). Из документации узнаем, что метод просто возвращает массив всех значений перечисления в порядке их объявления.
-
-## Методы name() и ordinal()
-У каждого enum есть имя и порядковый номер. Получить их можно с помощью методов name() и ordinal()
-
-### Метод ordinal() 
-
-Метод ordinal() возвращает порядковый номер определенной константы (нумерация начинается с 0):
-```java
-System.out.println(Type.BELLETRE.ordinal());    // 1
-
-// enum Color
-enum Color {
-    RED, GREEN, BLUE
-}
-
-System.out.println(Color.RED.name()); //output: RED
-
-System.out.println(Color.RED.ordinal()); //output: 0
-
-```
-## реализация в классе Enum
-```java
-
-public abstract class Enum<E extends java.lang.Enum<E>>
-        implements Comparable<E>, Serializable {
- 
-    private final String name;
- 
-    public final String name() {
-        return name;
+    private T _id;
+    T getId(){return _id;}
+    Account(T id)
+    {
+        _id = id;
     }
- 
-    private final int ordinal;
- 
-    public final int ordinal() {
-        return ordinal;
-    }
- 
-    protected Enum(String name, int ordinal) {
-        this.name = name;
-        this.ordinal = ordinal;
-    }
-....
-}
-
-```
-Конструктор невидим для разработчиков, но используется самой Java для корректной работы перечислений.
-ключевое слово enum оно даёт понять программе, что вы хотите не просто класс, а именно перечисление.
-
-## Методы equals(), hashcode(), toString(), finalize() и clone()
-
-Enum переопределяет базовые методы класса Object. Так что их можно использовать сразу же в наших перечислениях.
-
-### equals()
-```java
-
-boolean isEqualToItself = Color.RED.equals(Color.RED);
-boolean isEqualToDifferentColor = Color.RED.equals(Color.GREEN);
- 
-System.out.println(isEqualToItself); //output: true
-System.out.println(isEqualToDifferentColor);//output: false
-
-```
-###  hashCode()
-```java
-
-int hashOfRed = Color.RED.hashCode();
-int hashOfGreen = Color.GREEN.hashCode();
- 
-System.out.println(hashOfRed); //output would be different every time: 366712642
-System.out.println(hashOfGreen); //output would be different every time: 1829164700
-
-```
-Поскольку мы использовали hashCode(), каждый раз будет выводиться разное значение, сгенерированное автоматически. Когда мы запускали код, получили числа 366712642 и 1829164700. 
-
-### toString()
-
-```java
-Color[] colors = Color.values();
-System.out.println(Arrays.toString(colors)); //output: [RED, GREEN, BLUE]
-
-String red = Color.RED.toString();
-System.out.println(red); //output: RED
-
-```
-Посмотрим как они реализованы в классе Enum
-```java
-
-public String toString() {
-    return name;
 }
  
-public final boolean equals(Object other) {
-    return this==other;
+class DepositAccount<T, S> extends Account<T>{
+ 
+    private S _name;
+    S getName(){return _name;}
+    DepositAccount(T id, S name){
+        super(id);
+        this._name=name;
+    }
+}
+// Варианты использования:
+
+DepositAccount<Integer, String> dAccount1 = new DepositAccount(20, "Tom");
+System.out.println(dAccount1.getId() + " : " + dAccount1.getName());
+         
+DepositAccount<String, Integer> dAccount2 = new DepositAccount("12345", 23456);
+System.out.println(dAccount2.getId() + " : " + dAccount2.getName());
+
+// И еще одна ситуация - класс-наследник вообще может не быть обобщенным:
+
+class Account<T>
+{
+    private T _id;
+    T getId(){return _id;}
+    Account(T id)
+    {
+        _id = id;
+    }
 }
  
-public final int hashCode() {
-    return super.hashCode();
+class DepositAccount extends Account<Integer>{
+ 
+    DepositAccount(){
+        super(5);
+    }
 }
+// Здесь при наследовании явным образом указывается тип, который будет использоваться конструкциями базового класса, то есть тип Integer. Затем в конструктор базового класса передается значение именно этого типа - в данном случае число 5.
+
+// Вариант использования:
+
+DepositAccount dAccount1 = new DepositAccount();
+System.out.println(dAccount1.getId());
 
 ```
-- метод toString() возвращает имя значения перечисления. Назвали значение WHITE, это же значение и получим при вызове toString() или name();
-- метод equals() сравнивает значения перечислений по ссылкам. Потому, что значения в перечислениях являются константными (уникальными), существует всего один экземпляр цвета RED, один цвета GREEN и один BLUE, значит ссылка на этот экземпляр будет всего одна, значит их можно сравнивать с помощью ==. Вы можете сами убедиться в этом, написав Color.RED == Color.RED или Color.GREEN == COLOR.BLUE;
-- метод hashCode() использует стандартную реализацию из класса Object.
+## Обобщенный класс-наследник
 
-### clone()
 
-```java 
-protected final Object clone() throws CloneNotSupportedException {
-    throw new CloneNotSupportedException();
-}
-```
-метод clone() мы можем вызвать только внутри самого перечисления т.к. он помечен ключевым словом protected. Но даже если мы попытаемся сделать это, то ничего мы не получим, кроме CloneNotSupportedException. Нужно это для того чтобы нельзя было создать несколько экземпляров одного и того же перечисления. Ведь в реальной жизни у нас нет двух цифр "1", нет двух значений скорости света, так и с перечислениями.
+Также может быть ситуация, когда базовый класс является обычным необобщенным классом. Например:
 
-### Метод valueOf()
-Метод valueOf() - позволяет получить значения перечисления по его строковому представлению
-Для получения значение перечисления по его строковому представлению у Enums есть метод valueOf(). 
 ```java
 
-System.out.println(Color.valueOf("RED").ordinal()); //output: 0
-
-// Если же такого значения в перечислении нет, то мы получим IllegalStateException
-
-Color.valueOf("BLACK"); //output: java.lang.IllegalArgumentException: No enum constant Color.BLACK
-```
-Посмотрим на реализацию метода valueOf() в классе Enum
-```java
-public static E valueOf(String name);
-```
-как и в случае с values() этот метод тоже синтетический и поэтому полной реализации данного метода в классе Enum нет. В официальной документации написано, что метод просто возвращает значение перечисления по его строковому представлению. Проверка строгая, поэтому никаких пробелов вначале, в конце или между буквами не должно быть.
-
-Есть еще один способ получить значение перечисления
-```java
-System.out.println(Enum.valueOf(Color.class, "BLUE").ordinal()); //output: 2
-// но он является менее распространённым.
-
-```
-## Enum реализовывает интерфейс Comparable
-Сделано это для того, чтобы перечисления можно было сравнивать друг с другом при сортировке. При этом сравнение происходит по ordinal() перечисления. 
-
-## Интерфейсы Comparable и Сортировка
-
-Интерфейс Comparable содержит один единственный метод int compareTo(E item), который сравнивает текущий объект с объектом, переданным в качестве параметра. Если этот метод возвращает отрицательное число, то текущий объект будет располагаться перед тем, который передается через параметр. Если метод вернет положительное число, то, наоборот, после второго объекта. Если метод возвратит ноль, значит, оба объекта равны.
-
-### сравнение элементов перечисления с помощью метода compareTo()
-```java
-System.out.println(Color.GREEN.compareTo(Color.RED)); //output: 1
-System.out.println(Color.GREEN.compareTo(Color.GREEN)); //output: 0
-System.out.println(Color.GREEN.compareTo(Color.BLUE)); //output: -1
-System.out.println(Color.RED.compareTo(Color.BLUE)); //output: -2
-
-// Результат показывает как располагаются значения перечисления относительно друг друга:
-
-// Число 1 означает, что значение GREEN находится правее на одну позицию от значения RED
-// Число 0 означает, что значение GREEN равно само себе
-// Число -1 означает, что значение GREEN находится левее от значения BLUE на одну позицию
-// Число -2 означает, что значение RED находится левее от значения BLUE на две позиции
-
-```
-сравнивать перечисления можно только между своими типами. Нельзя сравнивать перечисления типа Color с перечислением типа Car. Мало того, что компилятор не даст вам это сделать с помощью своих подсказок так еще и в самом методе есть проверка на тип класса перечислений.
-
-
-## Enum реализовывает интерфейс Serializable
-
-Сериализация представляет процесс записи состояния объекта в поток, соответственно процесс извлечения или восстановления состояния объекта из потока называется десериализацией. Сериализация очень удобна, когда идет работа со сложными объектами.
-
-Сериализовать можно только те объекты, которые реализуют интерфейс Serializable. Этот интерфейс не определяет никаких методов, просто он служит указателем системе, что объект, реализующий его, может быть сериализован.
-
-Но как и в случае с clone() воспользоваться мы им не можем
-```java
-
-private void readObject(ObjectInputStream in) throws IOException,
-    ClassNotFoundException {
-    throw new InvalidObjectException("can't deserialize enum");
+class Account
+{
+    private String _name;
+    String getName(){return _name;}
+    Account(String name)
+    {
+        _name=name;
+    }
 }
  
-private void readObjectNoData() throws ObjectStreamException {
-    throw new InvalidObjectException("can't deserialize enum");
-}
-
-```
-причина того, что эти методы приватные да и к тому же бросают исключения при их вызове так же, что и в случае с clone(). Если бы эта возможность была открыта, тогда легко можно было бы сохранить перечисление в файл, затем считать его обратно и получить на выходе два экземпляра одного значения перечисления. Этот как два значения числа "1";
-
-
-## Конструкторы и переменные
-
-Перечисления, как и обычные классы, могут определять конструкторы, поля и методы:
-```java
-
-public class Program{
-      
-    public static void main(String[] args) {
-          
-        System.out.println(XColor.RED.getCode());        // #FF0000
-        System.out.println(XColor.GREEN.getCode());      // #00FF00
-        
-    }
-}
-enum XColor{
-    RED("#FF0000"), BLUE("#0000FF"), GREEN("#00FF00");
-    private String code;
-    XColor(String code){
-        this.code = code;
-    }
-    public String getCode(){ return code;}
-}
-
-```
-Перечисление XColor определяет приватное поле code для хранения кода цвета, а с помощью метода getCode оно возвращается. Через конструктор передается для него значение. Следует отметить, что конструктор по умолчанию приватный, то есть имеет модификатор private. Любой другой модификатор будет считаться ошибкой. Поэтому создать константы перечисления с помощью конструктора мы можем только внутри перечисления.
-
-## Также можно определять методы для отдельных констант:
-```java
-
-public class Program{
-      
-    public static void main(String[] args) {
-          
-        Operation op = Operation.SUM;
-        System.out.println(op.action(10, 4));   // 14
-        op = Operation.MULTIPLY;
-        System.out.println(op.action(6, 4));    // 24
-    }
-}
-enum Operation{
-    SUM{
-        public int action(int x, int y){ return x + y;}
-    },
-    SUBTRACT{
-        public int action(int x, int y){ return x - y;}
-    },
-    MULTIPLY{
-        public int action(int x, int y){ return x * y;}
-    };
-    public abstract int action(int x, int y);
-}
-
-```
-
-## enum Country
-У каждой страны есть своя валюта, чтобы её задать необходимо создать конструктор в enum Country и добавить поле currency
-```java
-
-enum Country {
-    CANADA("CAD"), POLAND("PLN"), GERMANY("EUR");
+class DepositAccount<T> extends Account{
  
-    String currency;
+    private T _id;
+    T getId(){return _id;}
+    DepositAccount(String name, T id){
+        super(name);
+        _id = id;
+    }
+}
+// В этом случае использование конструкций базового класса в наследнике происходит как обычно.
+
+```
+
+## Преобразование обобщенных типов
+Объект одного обобщенного типа можно привести к другому типу, если они используют один и тот же тип. Рассмотрим преобразование типов на примере следующих двух обобщенных классов:
+
+```java
+
+class Account<T>
+{
+    private T _id;
+    T getId(){return _id;}
+    Account(T id)
+    {
+        _id = id;
+    }
+}
  
-    Country(String currency) {
-        this.currency = currency;
-    }
-}
-
-```
-Допустим у нас появилась страна, у которой еще нет валюты. В этом случае нам необходимо будет добавить конструктор без параметров, или же конструктор по умолчанию.
-```java
-
-enum Country {
-    CANADA("CAD"),
-    POLAND("PLN"),
-    GERMANY("EUR"),
-    LAOPAPAS,
-    ZIMKABU();
+class DepositAccount<T> extends Account<T>{
  
-    String currency;
- 
-    Country(String currency) {
-        this.currency = currency;
-    }
- 
-    Country() {
+    DepositAccount(T id){
+        super(id);
     }
 }
 
-Пример использования enum Currency
+```
+Мы можем привести объект DepositAccount<Integer> к Account<Integer> или DepositAccount<String> к Account<String>:
+```java
 
-for (Country country : Country.values()) {
-    System.out.println(country + ", " + country.currency);
-}
+DepositAccount<Integer> depAccount = new DepositAccount(10);
+Account<Integer> account = (Account<Integer>)depAccount;
+System.out.println(account.getId());
+
+// Но сделать то же самое с разнотипными объектами мы не можем. 
+// Например, следующий код не будет работать:
+
+DepositAccount<Integer> depAccount = new DepositAccount(10);
+Account<String> account = (Account<String>)depAccount;
 
 ```
 
-Поля и методы в перечислениях как и в классах могут иметь модификаторы доступа private, protected, default, public, а вот конструкторы в перечислениях всегда будут иметь модификатор  private. При попытке указать другой модификатор мы получим ошибку компиляции.
-```java
-
-public Country(String currency) { // Modifier 'public' is not allowed here
-    this.currency = currency;
-}
-
-```
-## Методы в перечислениях
-В перечислениях можно использовать как обычные (общие) так и абстрактные методы, чтобы задать уникальную логику каждому значению перечисления.
-
-## Общие методы в перечислениях
-Добавим в перечисление метод hasCurrency(), который будет возвращать true или false в зависимости от того, есть валюта у страны или нет
-```java
-
-...
-    boolean hasCurrency() {
-        return currency != null;
-    }
-
-// И рассмотрим использование
-
-for (Country country : Country.values()) {
-    if (country.hasCurrency()) {
-        System.out.println(country + " has currency, it's " + country.currency);
-    } else {
-        System.out.println(country + " has no currency");
-    }
-}
-// Вывод в консоль
-
-// CANADA has currency, it's CAD
-// POLAND has currency, it's PLN
-// GERMANY has currency, it's EUR
-// LAOPAPAS has no currency
-// ZIMKABU has no currency
-```
-
-## Абстрактные методы в перечислениях
-```java
-
-// добавим абстрактный метод void sayHello()
-
-....
-    abstract void sayHello();
-
-// Теперь нам нужно реализовать этот метод во всех значениях перечисления
-
-
-CANADA("CAD") {
-    @Override
-    void sayHello() {
-        System.out.println("Hello");
-    }
-},
-POLAND("PLN") {
-    @Override
-    void sayHello() {
-        System.out.println("Cześć");
-    }
-},
-GERMANY("EUR") {
-    @Override
-    void sayHello() {
-        System.out.println("Hallo");
-    }
-},
-LAOPAPAS {
-    @Override
-    void sayHello() {
-        System.out.println("Lapapioooo");
-    }
-},
-ZIMKABU() {
-    @Override
-    void sayHello() {
-        System.out.println("Shakalaka");
-    }
-};
-
-// И посмотрим на использование этого метода.
-
-for (Country country : Country.values()) {
-    System.out.print(country + " ");
-    country.sayHello();
-}
-// Вывод в консоль
-
-// CANADA Hello
-// POLAND Cześć
-// GERMANY Hallo
-// LAOPAPAS Lapapioooo
-// ZIMKABU Shakalaka
-// Если же мы оставим одно значение не переопределённым то получим ошибку компиляции
-// ZIMKABU(); 'Country' is abstract; cannot be instantiated
-```
-## Специальные коллекции для перечислений
-мы знаем значения перечислений, знаем их количество и что новые значения не будут добавляться в перечисление в Runtime т.к. это невозможно. разработчики придумали специальную коллекцию для перечислений. Эта коллекция работает быстрее и эффективнее обычных, используя, особенности перечислений. Эта коллекция называется EnumSet. 
-
-## Примеры создания EnumSet.
-
-Метод allOf() создает EnumSet из всех значений заданого перечисления.
-```java
-import java.util.EnumSet;
-import java.util.Set;
-
-Set<Country> countries = EnumSet.allOf(Country.class);
-System.out.println(countries); //output: [CANADA, POLAND, GERMANY, LAOPAPAS, ZIMKABU]
-
-```
-Метод of() создает EnumSet, который содержит заданные значения. Метод перегружен, принимая от одного значения до 5 и еще раз перегружен методом of(E first, E... rest), который принимает сколько угодно значений. Всё это нужно для оптимизации и быстродействия EnumSet.
-```java
-EnumSet.of(Country.GERMANY);
-EnumSet.of(Country.CANADA, Country.GERMANY);
-```
-Метод range() создает EnumSet, который содержит все значения перечисления между указанными значениями.
-```java
-EnumSet<Country> range = EnumSet.range(Country.CANADA, Country.GERMANY);
-System.out.println(range); //output: [CANADA, POLAND, GERMANY]
-```    
-Метод copyOf() возвращает копию указанного EnumSet, либо же копию любой другой коллекции этого перечисления.
-```java
-EnumSet<Country> canadaSet = EnumSet.of(Country.CANADA);
-Set<Country> germanySet = Set.of(Country.GERMANY);
-EnumSet<Country> canadaSetCopy = EnumSet.copyOf(canadaSet);
-EnumSet<Country> germanySetCopy = EnumSet.copyOf(germanySet);
-```
-Изначально, в EnumSet у нас были три страны CANADA, POLAND и GERMANY. Ззатем метод complementOf() создал нам EnumSet который содержит значения LAOPAPAS, ZIMKABU, то есть все значения, которые НЕ содержатся в изначальной коллекции.
-```java
-EnumSet<Country> initialSet = EnumSet.of(Country.CANADA, Country.POLAND, Country.GERMANY);
-EnumSet<Country> complement = EnumSet.complementOf(initialSet);
-System.out.println(complement); //output: [LAOPAPAS, ZIMKABU]
-
-```
-Метод noneOf() возвращает пустой EnumSet заданного типа.
-```java
-EnumSet<Country> noneOf = EnumSet.noneOf(Country.class);
-System.out.println(noneOf); //output: []
-
-```
-На самом деле EnumSet это абстрактный класс у которого 2 реализации - RegularEnumSet и JumboEnumSet. Выбор реализации определяется в методах создания EnumSet. Если количество элементов в перечислении, из которого вы хотите создать EnumSet, не превышает 64 то выбран будет RegularEnumSet, если элементов больше 64 - будет выбран JumboEnumSet.
-Все операции в RegularEnumSet основаны на булевой логике. Все значения перечисления в RegularEnumSet умещаются в одну переменную типа long, максимальное колличество битов в котором равно 64. 
-В JumboEnumSet также используется булевая логика, но вместе с массивом значений.
