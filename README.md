@@ -1,713 +1,751 @@
-# Обобщения (Generics)
+# Обработка исключений
+
+Исключениями или исключительными ситуациями (состояниями) называются ошибки, возникшие в программе во время её работы.
+Все исключения в Java являются объектами. Поэтому они могут порождаться не только автоматически при возникновении исключительной ситуации, но и создаваться самим разработчиком.
+
+К механизму обработки исключений в Java имеют отношение 5 ключевых слов: — try, catch, throw, throws и finally. Схема работы этого механизма следующая. Вы пытаетесь (try) выполнить блок кода, и если при этом возникает ошибка, система возбуждает (throw) исключение, которое в зависимости от его типа вы можете перехватить (catch) или передать умалчиваемому (finally) обработчику.
+
+## общая форма блока обработки исключений.
+```java
+
+try {
+
+// блок кода }
+
+catch (ТипИсключения1 е) {
+
+// обработчик исключений типа ТипИсключения1 }
+
+catch (ТипИсключения2 е) {
+
+// обработчик исключений типа ТипИсключения2
+
+ throw(e)   // повторное возбуждение исключения }
+
+finally {
+
+}
+```
+
+## конструкция try...catch...finally. 
+
+При возникновении исключения в блоке try управление переходит в блок catch, который может обработать данное исключение. Если такого блока не найдено, то пользователю отображается сообщение о необработанном исключении, а дальнейшее выполнение программы останавливается. И чтобы подобной остановки не произошло, и надо использовать блок try..catch:
+```java
+
+int[] numbers = new int[3];
+numbers[4]=45;
+System.out.println(numbers[4]);
+
+// Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index 4 out of bounds for length 3 at ua.mycom.Main.main(Main.java:14)
+```
+
+Так как у нас массив numbers может содержать только 3 элемента, то при выполнении инструкции numbers[4]=45 консоль отобразит исключение, и выполнение программы будет завершено. 
+
+Теперь попробуем обработать это исключение:
+```java
+
+try{
+    int[] numbers = new int[3];
+    numbers[4]=45;
+    System.out.println(numbers[4]);
+}
+catch(Exception ex){
+     
+    ex.printStackTrace();
+}
+System.out.println("Программа завершена");
+
+```
+При использовании блока try...catch вначале выполняются все инструкции между операторами try и catch. Если в блоке try вдруг возникает исключение, то обычный порядок выполнения останавливается и переходит к инструкции сatch. Поэтому когда выполнение программы дойдет до строки numbers[4]=45;, программа остановится и перейдет к блоку catch
+
+## Выражение catch
+Выражение catch имеет следующий синтаксис: catch (тип_исключения имя_переменной). 
+В данном случае объявляется переменная ex, которая имеет тип Exception. Но если возникшее исключение не является исключением типа, указанного в инструкции сatch, то оно не обрабатывается, а программа просто зависает или выбрасывает сообщение об ошибке.
+
+Но так как тип Exception является базовым классом для всех исключений, то выражение catch (Exception ex) будет обрабатывать практически все исключения. 
+
+## стек трассировки ошибки
+Обработка исключения в данном случае сводится к выводу на консоль стека трассировки ошибки с помощью метода printStackTrace(), определенного в классе Exception.
+
+После завершения выполнения блока catch программа продолжает свою работу, выполняя все остальные инструкции после блока catch.
+
+Конструкция try..catch также может иметь блок finally. Однако этот блок необязательный, и его можно при обработке исключений опускать. Блок finally выполняется в любом случае, возникло ли исключение в блоке try или нет:
+
+```java
+
+try{
+    int[] numbers = new int[3];
+    numbers[4]=45;
+    System.out.println(numbers[4]);
+}
+catch(Exception ex){
+     
+    ex.printStackTrace();
+}
+finally{
+    System.out.println("Блок finally");
+}
+System.out.println("Программа завершена");
+
+```
+
+## Неперехваченные исключения
+
+Объекты-исключения автоматически создаются исполняющей средой Java в результате возникновения определенных исключительных состояний. Например, очередная наша программа содержит выражение, при вычислении которого возникает деление на нуль.
+```java
+
+public static void main(string args[]) {
+
+int d = 0;
+int a = 42 / d;
+
+}
+
+```
+## ArithmeticException
+Обратите внимание на тот факт что типом возбужденного исключения был не Exception и не Throwable. Это подкласс класса Exception, а именно: ArithmeticException, поясняющий, какая ошибка возникла при выполнении программы. 
+
+Сразу же после try-блока помещается блок catch, задающий тип исключения которое вы хотите обрабатывать.
+```java
+
+    public static void main(String args[]) {
+
+        try {
+            int d = 0;
+             int a = 42 / d;
+            }
+
+        catch (ArithmeticException e) {
+            System.out.println("division by zero");
+        }
+    } 
+
+```
+
+Целью большинства хорошо сконструированных catch-разделов должна быть обработка возникшей исключительной ситуации и приведение переменных программы в некоторое разумное состояние — такое, чтобы программу можно было продолжить так, будто никакой ошибки и не было (в нашем примере выводится предупреждение – division by zero).
+
+
+Вот другая версия того же класса, в которой возникает та же исключительная ситуация, но на этот раз не в программном коде метода main.
+```java
+
+class Exc1 {
+
+    static void subroutine() {
+
+    int d = 0;
+
+    int a = 10 / d;
+
+}
+
+public static void main(String args[]) {
+
+    Exc1.subroutine();
+
+}
+
+// Вывод этой программы показывает, как обработчик исключений исполняющей системы Java выводит содержимое всего стека вызовов.
+
+// java.lang.ArithmeticException: / by zero
+// at Exc1.subroutine(Exc1.java:4)
+// at Exc1.main(Exc1.java:7)
+
+```
+
+## Несколько разделов catch
+
+В некоторых случаях один и тот же блок программного кода может возбуждать исключения различных типов. Для того, чтобы обрабатывать подобные ситуации, Java позволяет использовать любое количество catch-разделов для try-блока. Наиболее специализированные классы исключений должны идти первыми, поскольку ни один подкласс не будет достигнут, если поставить его после суперкласса. Следующая программа перехватывает два различных типа исключений, причем за этими двумя специализированными обработчиками следует раздел catch общего назначения, перехватывающий все подклассы класса Throwable.
+
+```java
+
+public static void main(String args[]) {
+
+    try {
+         int a = args.length;
+         System.out.println("a = " + a);
+         int b = 42 / a;
+         int c[] = { 1 };
+         c[42] = 99;
+    }
+
+    catch (ArithmeticException e) {
+        System.out.println("div by 0: " + e);
+    }
+
+    catch(ArrayIndexOutOfBoundsException e) {
+        System.out.println("array index oob: " + e);
+    }
+
+} 
+
+// Этот пример, запущенный без параметров, вызывает возбуждение исключительной ситуации деления на нуль. Если же мы зададим в командной строке один или несколько параметров, тем самым установив а в значение больше нуля, наш пример переживет оператор деления, но в следующем операторе будет возбуждено исключение выхода индекса за границы массива ArrayIndexOutOf Bounds. 
+
+// а = 0
+// div by 0: java.lang.ArithmeticException: / by zero
+
+// a = 1
+// array index oob: java.lang.ArrayIndexOutOfBoundsException: 42
+
+```
+
+## Обработка нескольких исключений
+В Java имеется множество различных типов исключений, и мы можем разграничить их обработку, включив дополнительные блоки catch:
+```java
+
+int[] numbers = new int[3];
+
+try{
+    numbers[6]=45;
+    numbers[6]=Integer.parseInt("gfd");
+}
+catch(ArrayIndexOutOfBoundsException ex){
+             
+    System.out.println("Выход за пределы массива");
+}
+catch(NumberFormatException ex){
+             
+    System.out.println("Ошибка преобразования из строки в число");
+}
+
+```
+Если у нас возникает исключение определенного типа, то оно переходит к соответствующему блоку catch.
+
+## несколько блоков catch
+Одному try может соответствовать сразу несколько блоков catch с разными классами исключений.
+```java
+
+import java.util.Scanner; 
+class Main { 
+    public static void main(String[] args) { 
+     int[] m = {-1,0,1}; 
+        Scanner sc = new Scanner(System.in); 
+        try { 
+            int a = sc.nextInt();     
+            m[a] = 4/a; 
+            System.out.println(m[a]); 
+        } catch (ArithmeticException e) { 
+            System.out.println("Произошла недопустимая арифметическая операция"); 
+        } catch (ArrayIndexOutOfBoundsException e) { 
+            System.out.println("Обращение по недопустимому индексу массива"); 
+        } 
+    } 
+}
+
+```
+Если запустив представленную программу, пользователь введётся с клавиатуры 1 или 2, то программа отработает без создания каких-либо исключений.
+
+Если пользователь введёт 0, то возникнет исключение класса ArithmeticException, и оно будет обработано первым блоком catch.
+
+Если пользователь введёт 3, то возникнет исключение класса ArrayIndexOutOfBoundsException (выход за приделы массива), и оно будет обработано вторым блоком catch.
+
+Если пользователь введёт нецелое число, например, 3.14, то возникнет исключение класса InputMismatchException (несоответствие типа вводимого значение), и оно будет выброшено в формате стандартной ошибки, поскольку его мы никак не обрабатывали.
+
+Можно добавить обработчик для класса Exception, поскольку этот класс родительский для всех остальных контролируемых исключений, то он будет перехватывать любые из них (в том числе, и InputMismatchException).
+```java
+
+import java.util.Scanner; 
+class Main { 
+    public static void main(String[] args) { 
+        int[] m = {-1,0,1}; 
+        int a = 1; 
+        Scanner sc = new Scanner(System.in);        
+        try { 
+            a = sc.nextInt();     
+            m[a-1] = 4/a;
+            System.out.println(m[a]); 
+        } catch (ArithmeticException e) { 
+            System.out.println("Произошла недопустимая арифметическая операция"); 
+        } catch (ArrayIndexOutOfBoundsException e) { 
+            System.out.println("Обращение по недопустимому индексу массива");       
+        } catch (Exception e) { 
+            System.out.println("Произошло ещё какое-то исключение"); 
+        } 
+    } 
+}
+
+```
+Поскольку исключения построены на иерархии классов и подклассов, то сначала надо пытаться обработать более частные исключения и лишь затем более общие. То есть поставив первым (а не третьим) блок с обработкой исключения класса Exception, мы бы никогда не увидели никаких сообщений об ошибке, кроме «Произошло ещё какое-то исключение» (все исключения перехватились бы сразу этим блоком и не доходили бы до остальных).
+
+Необязательным добавлением к блокам try…catch может быть блок finally. Помещенные в него команды будут выполняться в любом случае, вне зависимости от того, произошло ли исключение или нет. При том, что при возникновении необработанного исключения оставшаяся после генерации этого исключения часть программы — не выполняется. Например, если исключение возникло в процессе каких-то длительных вычислений, в блоке finally можно показать или сохранить промежуточные результаты.
+
+
+## Вложенные операторы try
+Операторы try можно вкладывать друг в друга аналогично тому, как можно создавать вложенные области видимости переменных. Если у оператора try низкого уровня нет раздела catch, соответствующего возбужденному исключению, стек будет развернут на одну ступень выше, и в поисках подходящего обработчика будут проверены разделы catch внешнего оператора try. 
+
+
+пример, в котором два оператора try вложены друг в друга посредством вызова метода.
  
-Обобщения или generics (обобщенные типы и методы) позволяют уйти от жесткого определения используемых типов.
-
-определяем класс для представления банковского счета:
 ```java
 
-class Account{
-     
-    private int id;
-    private int sum;
-     
-    Account(int id, int sum){
-        this.id = id;
-        this.sum = sum;
+class Main {
+
+    static void procedure() {
+        try {
+             int c[] = { 1 };
+             c[42] = 99;
+        }
+        catch(ArrayIndexOutOfBoundsException e) {
+            System.out.println("array index oob: " + e);
+        } 
     }
-     
-    public int getId() { return id; }
-    public int getSum() { return sum; }
-    public void setSum(int sum) { this.sum = sum; }
+
+public static void main(String args[]) {
+
+     try {
+            int len = args.length;
+            System.out.println("a = " + len);
+            int b = 42 / len;
+            procedure();
+       }
+       catch (ArithmeticException e) {
+           System.out.println("div by 0: " + e);
+       }
+
+    } 
 }
 
 ```
-Класс Account имеет два поля: 
-- id - уникальный идентификатор счета 
-- sum - сумма на счете.
 
-идентификатор id задан как целочисленное значение (1, 2, 3, 4 и т.д.). 
-Однако также нередко для идентификатора используются и строковые значения. 
-на момент написания класса мы можем точно не знать, что лучше выбрать для хранения идентификатора - строки или числа. 
+## Оператор throw
 
-мы можем решить данную проблему следующим образом: 
-задать id как поле типа Object, который является универсальным и базовым суперклассом для всех остальных типов:
+Оператор throw используется для возбуждения исключения вручную. Для того, чтобы сделать это, нужно иметь объект подкласса класса Throwable, который можно либо получить как параметр оператора catch, либо создать с помощью оператора new. 
 ```java
 
-public class Program{
-      
+// общая форма оператора throw.
+
+throw ОбъектТипаThrowable;
+
+``` 
+с помощью этого оператора мы сами можем создать исключение и вызвать его в процессе выполнения. Например, в нашей программе происходит ввод числа, и мы хотим, чтобы, если число больше 30, то возникало исключение:
+```java 
+import java.util.Scanner;
+
+public class Main {
+ 
     public static void main(String[] args) {
-          
-        Account acc1 = new Account(2334, 5000); // id - число
-        int acc1Id = (int)acc1.getId();
-        System.out.println(acc1Id);
+        
+        try{
+            Scanner in = new Scanner(System.in);
+            int x = in.nextInt();
+            if(x>=30){
+               throw new Exception("Число х должно быть меньше 30");
+           }
+        }
+        catch(Exception ex){
+             
+            System.out.println(ex.getMessage());
+        }
+        System.out.println("Программа завершена");
+    }   
+}
+```
+Здесь для создания объекта исключения используется конструктор класса Exception, в который передается сообщение об исключении. И если число х окажется больше 29, то будет выброшено исключение и управление перейдет к блоку catch.
+
+В блоке catch мы можем получить сообщение об исключении с помощью метода getMessage().
+
+При достижении этого оператора нормальное выполнение кода немедленно прекращается, так что следующий за ним оператор не выполняется. Ближайший окружающий блок try проверяется на наличие соответствующего возбужденному исключению обработчика catch. Если такой отыщется, управление передается ему. Если нет, проверяется следующий из вложенных операторов try, и так до тех пор пока либо не будет найден подходящий раздел catch, либо обработчик исключений исполняющей системы Java не остановит программу, выведя при этом состояние стека вызовов. 
+
+```java
+
+// метод вычисления факториала, и нам надо обработать ситуацию, если в метод передается число меньше 1:
+
+public static int getFactorial(int num) throws Exception{
+     
+    if(num<1) throw new Exception("The number is less than 1");
+    int result=1;
+    for(int i=1; i<=num;i++){
+             
+        result*=i;
+    }
+    return result;
+}
+
+```
+С помощью оператора throw по условию выбрасывается исключение. В то же время метод сам это исключение не обрабатывает с помощью try..catch, поэтому в определении метода используется выражение throws Exception.
+
+Теперь при вызове этого метода нам обязательно надо обработать выбрасываемое исключение:
+```java
+
+public static void main(String[] args){
          
-        Account acc2 = new Account("sid5523", 5000);    // id - строка
-        System.out.println(acc2.getId());
-    }
-}
-class Account{
-     
-    private Object id;
-    private int sum;
-     
-    Account(Object id, int sum){
-        this.id = id;
-        this.sum = sum;
-    }
-     
-    public Object getId() { return id; }
-    public int getSum() { return sum; }
-    public void setSum(int sum) { this.sum = sum; }
-}
-
-```
-мы сталкиваемся с проблемой безопасности типов. 
-Например, в следующем случае мы получим ошибку:
-```java
-
-Account acc1 = new Account("2345", 5000);
-int acc1Id = (int)acc1.getId(); // java.lang.ClassCastException
-System.out.println(acc1Id);
-
-```
-в процессе разработки мы можем не знать, какой именно тип представляет значение в id, и при попытке получить число в данном случае мы столкнемся с исключением java.lang.ClassCastException.
-
-Писать для каждого отдельного типа свою версию класса Account тоже не является хорошим решением, так как в этом случае мы вынуждены повторяться.
-
-## Обобщения
-Обобщения или generics позволяют не указывать конкретный тип, который будет использоваться. 
-
-```java
-
-// определим класс Account как обобщенный:
-
-class Account<T>{
-     
-    private T id;
-    private int sum;
-     
-    Account(T id, int sum){
-        this.id = id;
-        this.sum = sum;
-    }
-     
-    public T getId() { return id; }
-    public int getSum() { return sum; }
-    public void setSum(int sum) { this.sum = sum; }
-}
-
-```
-## универсальный параметр
-
-С помощью буквы T в определении класса class Account<T> мы указываем, что данный тип T будет использоваться этим классом. 
-Параметр T в угловых скобках называется универсальным параметром, так как вместо него можно подставить любой тип. При этом пока мы не знаем, какой именно это будет тип: String, int или какой-то другой. Причем буква T выбрана условно, это может и любая другая буква или набор символов.
-
-После объявления класса мы можем применить универсальный параметр T: 
-
-Метод getId() возвращает значение переменной id, но так как данная переменная представляет тип T, то данный метод также возвращает объект типа T: public T getId().
-
-```java
-
-public class Program{
-      
-    public static void main(String[] args) {
-          
-        Account<String> acc1 = new Account<String>("2345", 5000);
-        String acc1Id = acc1.getId();
-        System.out.println(acc1Id);
+    try{
+        int result = getFactorial(-6);
          
-        Account<Integer> acc2 = new Account<Integer>(2345, 5000);
-        Integer acc2Id = acc2.getId();
-        System.out.println(acc2Id);
+        System.out.println(result);
     }
-}
-class Account<T>{
-     
-    private T id;
-    private int sum;
-     
-    Account(T id, int sum){
-        this.id = id;
-        this.sum = sum;
+    catch(Exception ex){
+         
+        System.out.println(ex.getMessage());
     }
+} 
+
+```
+Без обработки исключение у нас возникнет ошибка компиляции, и мы не сможем скомпилировать программу.
+
+В качестве альтернативы мы могли бы и не использовать оператор throws, а обработать исключение прямо в методе:
+```java
+
+public static int getFactorial(int num){
      
-    public T getId() { return id; }
-    public int getSum() { return sum; }
-    public void setSum(int sum) { this.sum = sum; }
+    int result=1;
+    try{
+        if(num<1) throw new Exception("The number is less than 1");
+         
+        for(int i=1; i<=num;i++){
+             
+            result*=i;
+        }
+    }
+    catch(Exception ex){
+         
+        System.out.println(ex.getMessage());
+        result=num;
+    }
+    return result;
 }
 
 ```
-При определении переменной даннного класса и создании объекта после имени класса в угловых скобках нужно указать, какой именно тип будет использоваться вместо универсального параметра. При этом надо учитывать, что они работают только с объектами, но не работают с примитивными типами. То есть мы можем написать Account<Integer>, но не можем использовать тип int или double, например, Account<int>. Вместо примитивных типов надо использовать классы-обертки: 
-    - Integer вместо int, 
-    - Double вместо double и т.д.
 
-Например, первый объект будет использовать тип String, то есть вместо T будет подставляться String:
+Если метод способен возбуждать исключения, которые он сам не обрабатывает, он должен объявить о таком поведении, чтобы вызывающие методы могли защитить себя от этих исключений. Для задания списка исключений, которые могут возбуждаться методом, используется ключевое слово throws. 
+
+Если метод в явном виде (т.е. с помощью оператора throw) возбуждает исключение соответствующего класса, тип класса исключений должен быть указан в операторе throws в объявлении этого метода. С учетом этого наш прежний синтаксис определения метода должен быть расширен следующим образом:
 ```java
-
-Account<String> acc1 = new Account<String>("2345", 5000);
-
+тип имя_метода(список аргументов) throws список_исключений {}
 ```
-В этом случае в качестве первого параметра в конструктор передается строка.
 
-А второй объект использует тип int (Integer):
+пример программы, в которой метод procedure пытается возбудить исключение, не обеспечивая ни программного кода для его перехвата, ни объявления этого исключения в заголовке метода. 
 ```java
 
-Account<Integer> acc2 = new Account<Integer>(2345, 5000);
+// Такой программный код не будет оттранслирован.
 
-```
-## Обобщенные интерфейсы
-Интерфейсы, как и классы, также могут быть обобщенными. 
-Создадим обобщенный интерфейс Accountable и используем его в программе:
-```java
-
-public class Program{
-      
+public class Main {
+    
     public static void main(String[] args) {
-          
-        Accountable<String> acc1 = new Account("1235rwr", 5000);
-        Account acc2 = new Account("2373", 4300);
-        System.out.println(acc1.getId());
-        System.out.println(acc2.getId());
+        procedure();
     }
-}
-interface Accountable<T>{
-    T getId();
-    int getSum();
-    void setSum(int sum);
-}
-class Account implements Accountable<String>{
-     
-    private String id;
-    private int sum;
-     
-    Account(String id, int sum){
-        this.id = id;
-        this.sum = sum;
+
+    static void procedure() {
+        System.out.println("inside procedure");
+        throw new IllegalAccessException("demo");
     }
-     
-    public String getId() { return id; }
-    public int getSum() { return sum; }
-    public void setSum(int sum) { this.sum = sum; }
 }
 
 ```
-При реализации подобного интерфейса есть две стратегии. 
 
-1. Первая стратегия, когда при реализации для универсального параметра интерфейса задается конкретный тип, например, тип String. Тогда класс, реализующий интерфейс, жестко привязан к этому типу.
+## исключения типа IllegalAccessException
+Для того, чтобы мы смогли оттранслировать этот пример, нам придется сообщить транслятору, что procedure может возбуждать исключения типа IllegalAccessException и в методе main добавить код для обработки этого типа исключений :
 
-2. Вторая стратегия представляет определение обобщенного класса, который также использует тот же универсальный параметр:
 ```java
 
-public class Program{
-      
-    public static void main(String[] args) {
-          
-        Account<String> acc1 = new Account<String>("1235rwr", 5000);
-        Account<String> acc2 = new Account<String>("2373", 4300);
-        System.out.println(acc1.getId());
-        System.out.println(acc2.getId());
+public class Main {
+    
+    static void procedure() throws IllegalAccessException {
+        System.out.println(" inside procedure");
+        throw new IllegalAccessException("demo");
     }
-}
-interface Accountable<T>{
-    T getId();
-    int getSum();
-    void setSum(int sum);
-}
-class Account<T> implements Accountable<T>{
-     
-    private T id;
-    private int sum;
-     
-    Account(T id, int sum){
-        this.id = id;
-        this.sum = sum;
+
+    public static void main(String args[]) {
+        try {
+        procedure();
+        }
+        catch (IllegalAccessException e) {
+            System.out.println("caught " + e);
+        }
     }
-     
-    public T getId() { return id; }
-    public int getSum() { return sum; }
-    public void setSum(int sum) { this.sum = sum; }
 }
 
 ```
-## Обобщенные методы
-Кроме обобщенных типов можно также создавать обобщенные методы, которые будут использовать универсальные параметры:
+
+## исключение java.lang.NullPointerException
+В Java исключение java.lang.NullPointerException генерируется, когда осуществляется доступ к ссылочной переменной (или отменяется ссылка на нее) и она не указывает на какой-либо объект. Эту ошибку можно устранить, используя блок try-catch или условие if-else, чтобы проверить, является ли ссылочная переменная нулевой, прежде чем разыменовать ее.
+
+В некоторых случаях компилятор предотвращает это исключение с помощью ошибки времени компиляции Возможно, переменная не была инициализирована, когда в качестве аргумента метода передается пустая ссылочная переменная:
 ```java
 
-public class Program{
-      
+String s;
+foo (s); // Компилятор выдает ошибку.
+
+```
+Однако компилятор не выдает эту ошибку, когда значение null передается функции напрямую; 
+Однако вероятность того, что это вызовет исключение NullPointerException, выше:
+
+foo (ноль); // Более высокая вероятность исключения
+```java
+public class Main {
+    
     public static void main(String[] args) {
-          
-        Printer printer = new Printer();
-        String[] people = {"Tom", "Alice", "Sam", "Kate", "Bob", "Helen"};
-        Integer[] numbers = {23, 4, 5, 2, 13, 456, 4};
-        printer.<String>print(people);
-        printer.<Integer>print(numbers);
+        String s = "abcd";
+
+        foo(null);
+        bar(null);
     }
+
+    // Using a try-catch block:
+    static void foo(String x){
+        try {
+            System.out.println("First character: " + x.charAt(0));
+        }
+        catch(NullPointerException e) {
+            System.out.println("NullPointerException thrown!");
+        }
+    }
+
+    // Using if-else condition:
+    static void bar(String x){
+        if(x != null)
+            System.out.println("First character: " + x.charAt(0));
+        else
+            System.out.println("NullPointerException thrown!");
+    }
+}
+```
+
+## Блок finally
+
+Иногда требуется гарантировать, что определенный участок кода будет выполняться независимо от того, какие исключения были возбуждены и перехвачены. Для создания такого участка кода используется ключевое слово finally. Даже в тех случаях, когда в методе нет соответствующего возбужденному исключению раздела catch, блок finally будет выполнен до того, как управление перейдет к операторам, следующим за разделом try. У каждого раздела try должен быть по крайней мере или один раздел catch или блок finally. Блок finally очень удобен для закрытия файлов и освобождения любых других ресурсов, захваченных для временного использования в начале выполнения метода. Ниже приведен пример класса с двумя методами, завершение которых происходит по разным причинам, но в обоих перед выходом выполняется код раздела finally.
+
+```java
+package ua.mycom;
+
+public class Main {
+    
+    static void procA() {
+        try {
+            System.out.println("inside procA");
+            throw new RuntimeException("demo");
+        }
+        finally {
+            System.out.println("procA's finally");
+        } 
+    }
+
+    static void procB() {
+        try {
+            System.out.println("inside procB");
+            return;
+        }
+        finally {
+            System.out.println("procB's finally");
+        } 
+    }
+
+    public static void main(String args[]) {
+
+        try {
+            procA();
+        }
+        catch (Exception e) {}
+    
+        procB();
+
+    }
+}
+
+```
+
+В этом примере в методе procA из-за возбуждения исключения происходит преждевременный выход из блока try, но по пути наружу выполняется раздел finally. Другой метод procB завершает работу выполнением стоящего в try-блоке оператора return, но и при этом перед выходом из метода выполняется программный код блока finally. Ниже приведен результат, полученный при выполнении этой программы.
+
+## Классы исключений
+ 
+Базовым классом для всех исключений является класс Throwable. От него уже наследуются два класса: Error и Exception. Все остальные классы являются производными от этих двух классов.
+
+Исключения (Exceptions) являются результатом проблем в программе, которые в принципе решаемы и предсказуемы. Например, произошло деление на ноль в целых числах.
+
+Класс Error описывает внутренние ошибки в исполняющей среде Java. Программист имеет очень ограниченные возможности для обработки подобных ошибок.
+
+Ошибки представляют собой более серьёзные проблемы, которые, согласно спецификации Java, не следует пытаться обрабатывать в собственной программе, поскольку они связаны с проблемами уровня JVM. Например, исключения такого рода возникают, если закончилась память, доступная виртуальной машине. Программа дополнительную память всё равно не сможет обеспечить для JVM.
+
+### исключения наследуются от класса Exception. 
+Среди этих исключений следует выделить класс RuntimeException. RuntimeException является базовым классом для так называемой группы непроверяемых исключений (unchecked exceptions) - компилятор не проверяет факт обработки таких исключений и их можно не указывать вместе с оператором throws в объявлении метода. Такие исключения являются следствием ошибок разработчика, например, неверное преобразование типов или выход за пределы массива.
+
+## Иерархия классов исключений в Java
+
+В Java все исключения делятся на три типа: контролируемые исключения (checked) и неконтролируемые исключения (unchecked), к которым относятся ошибки (Errors) и исключения времени выполнения (RuntimeExceptions, потомок класса Exception).
+
+Контролируемые исключения представляют собой ошибки, которые можно и нужно обрабатывать в программе, к этому типу относятся все потомки класса Exception (но не RuntimeException).
+
+Неконтролируемые исключения не требуют обязательной обработки, однако, при желании, можно обрабатывать исключения класса RuntimeException.
+
+## Некоторые из классов непроверяемых исключений:
+- ArithmeticException: исключение, возникающее при делении на ноль
+- IndexOutOfBoundException: индекс вне границ массива
+- IllegalArgumentException: использование неверного аргумента при вызове метода
+- NullPointerException: использование пустой ссылки
+- NumberFormatException: ошибка преобразования строки в число
+
+Все остальные классы, образованные от класса Exception, называются проверяемыми исключениями (checked exceptions).
+
+## Некоторые из классов проверяемых исключений:
+- CloneNotSupportedException: класс, для объекта которого вызывается клонирование, не реализует интерфейс Cloneable
+- InterruptedException: поток прерван другим потоком
+- ClassNotFoundException: невозможно найти класс
+
+Подобные исключения обрабатываются с помощью конструкции try..catch. Либо можно передать обработку методу, который будет вызывать данный метод, указав исключения после оператора throws:
+```java
+
+public Person clone() throws CloneNotSupportedException{
+    
+    Person p = (Person) super.clone();
+    return p;
+}
+
+```
+
+## ArithmeticException:
+```java
+
+class Main { 
+     public static void main(String[] args) { 
+         int a = 4; 
+         System.out.println(a/0); 
+     } 
 }
  
-class Printer{
-     
-    public <T> void print(T[] items){
-        for(T item: items){
-            System.out.println(item);
-        }
-    }
-}
 
-```
-Особенностью обобщенного метода является использование универсального параметра в объявлении метода после всех модификаторов и перед типом возвращаемого значения.
-```java
-public <T> void print(T[] items)
-```
-Затем внутри метода все значения типа T будут представлять данный универсальный параметр.
+// В момент запуска на консоль будет выведено следующее сообщение:
 
-При вызове подобного метода перед его именем в угловых скобках указывается, какой тип будет передаваться на место универсального параметра:
-```java
-printer.<String>print(people);
-printer.<Integer>print(numbers);
+// Exception in thread "main" java.lang.ArithmeticException: / by zero 
+//         at Main.main(Main.java:4)
 
-```
-
-## Использование нескольких универсальных параметров
-Мы можем также задать сразу несколько универсальных параметров:
-
+``` 
+Из сообщения виден класс случившегося исключения — ArithmeticException. Это исключение можно обработать:
 ```java
 
-public class Program{
-      
-    public static void main(String[] args) {
-          
-        Account<String, Double> acc1 = new Account<String, Double>("354", 5000.87);
-        String id = acc1.getId();
-        Double sum = acc1.getSum();
-        System.out.printf("Id: %s  Sum: %f \n", id, sum);
-    }
-}
-class Account<T, S>{
-     
-    private T id;
-    private S sum;
-     
-    Account(T id, S sum){
-        this.id = id;
-        this.sum = sum;
-    }
-     
-    public T getId() { return id; }
-    public S getSum() { return sum; }
-    public void setSum(S sum) { this.sum = sum; }
-}
-
-```
-В данном случае тип String будет передаваться на место параметра T, а тип Double - на место параметра S.
-
-## Обобщенные конструкторы
-Конструкторы как и методы также могут быть обобщенными. В этом случае перед конструктором также указываются в угловых скобках универсальные параметры:
-```java
-
-
-public class Program{
-      
-    public static void main(String[] args) {
-          
-        Account acc1 = new Account("cid2373", 5000);
-        Account acc2 = new Account(53757, 4000);
-        System.out.println(acc1.getId());
-        System.out.println(acc2.getId());
-    }
+class Main { 
+     public static void main(String[] args) { 
+         int a = 4; 
+         try { 
+              System.out.println(a/0); 
+         } catch (ArithmeticException e) { 
+              System.out.println("Произошла недопустимая арифметическая операция"); 
+         } 
+     } 
 }
  
-class Account{
-     
-    private String id;
-    private int sum;
-     
-    <T>Account(T id, int sum){
-        this.id = id.toString();
-        this.sum = sum;
-    }
-     
-    public String getId() { return id; }
-    public int getSum() { return sum; }
-    public void setSum(int sum) { this.sum = sum; }
-}
 
 ```
-В данном случае конструктор принимает параметр id, который представляет тип T. В конструкторе его значение превращается в строку и сохраняется в локальную переменную.
+Теперь вместо стандартного сообщения об ошибке будет выполняться блок catch, параметром которого является объект eсоответствующего исключению класса (самому объекту можно давать любое имя, оно потребуется в том случае, если мы пожелаем снова принудительно выбросить это исключение, например, для того, чтобы оно было проверено каким-то ещё обработчиком).
 
+В блок try при этом помещается тот фрагмент программы, где потенциально может возникнуть исключение.
 
-## Ограничения обобщений
-   
-Когда мы указываем универсальный параметр у обобщений, то по умолчанию он может представлять любой тип. Однако иногда необходимо, чтобы параметр соответствовал только некоторому ограниченному набору типов. В этом случае применяются ограничения, которые позволяют указать базовый класс, которому должен соответствовать параметр.
-
-Для установки ограничения после универсального параметра ставится слово extends, после которого указывается базовый класс ограничения:
-```java
-
-class Account{ }
-class Transaction<T extends Account>{ }
-
-```
-в данном случае для параметра T в Transaction ограничением является класс Account. То есть на место параметра T мы можем передать либо класс Account, либо один из его классов-наследников.
-
-класс Transaction, который представляет операцию перевода средств между двумя счетами, типизирован параметром T, у которого в качестве ограничения установлен класс Account.:
+Поскольку все классы исключений наследуются от класса Exception, то все они наследуют ряд его методов, которые позволяют получить информацию о характере исключения. Среди этих методов отметим наиболее важные:
+- Метод getMessage() возвращает сообщение об исключении
+- Метод getStackTrace() возвращает массив, содержащий трассировку стека исключения
+- Метод printStackTrace() отображает трассировку стека
 
 ```java
 
-public class Program{
-      
-    public static void main(String[] args) {
-          
-        Account acc1 = new Account("1876", 4500);
-        Account acc2 = new Account("3476", 1500);
-              
-        Transaction<Account> tran1 = new Transaction<Account>(acc1,acc2, 4000);
-        tran1.execute();
-        tran1 = new Transaction<Account>(acc1,acc2, 4000);
-        tran1.execute();
-    }
+try{
+    int x = 6/0;
 }
-class Transaction<T extends Account>{
-     
-    private T from;     // с какого счета перевод
-    private T to;       // на какой счет перевод
-    private int sum;    // сумма перевода
-     
-    Transaction(T from, T to, int sum){
-        this.from = from;
-        this.to = to;
-        this.sum = sum;
-    }
-    public void execute(){
+catch(Exception ex){
          
-        if (from.getSum() > sum)
-        {
-            from.setSum(from.getSum() - sum);
-            to.setSum(to.getSum() + sum);
-            System.out.printf("Account %s: %d \nAccount %s: %d \n", 
-                from.getId(), from.getSum(),to.getId(), to.getSum());
-        }
-        else{
-            System.out.printf("Operation is invalid");
-        }
-    }
-}
-class Account{
-     
-    private String id;
-    private int sum;
-     
-    Account(String id, int sum){
-        this.id = id;
-        this.sum = sum;
-    }
-     
-    public String getId() { return id; }
-    public int getSum() { return sum; }
-    public void setSum(int sum) { this.sum = sum; }
+    ex.printStackTrace();
 }
 
 ```
-При создании объекта Transaction в его конструктор передаются два объекта Account - два счета, между которыми надо осуществить перевод, и сумма перевода.
 
-поскольку мы установили подобное ограничение, то компилятор будет распознавать объекты типа T как объекты типа Account. 
-в этом случае мы можем вызывать у объектов типа T методы класса Account. И мы бы не смогли бы это сделать, если бы мы не задали подобного ограничения:
-```java
+## Подклассы Exception
+Только подклассы класса Throwable могут быть возбуждены или перехвачены. Простые типы — int, char и т.п., а также классы, не являющиеся подклассами Throwable, например, String и Object, использоваться в качестве исключений не могут. Наиболее общий путь для использования исключений — создание своих собственных подклассов класса Exception. 
 
-class Transaction<T>{
-    // остальное содержимое
-}
-
-```
-В этом случае была бы ошибка.
-
-## Обобщенные типы в качестве ограничений
-В качестве ограничений могут выступать и другие обобщения, которые сами могут иметь ограничения:
-```java
-
-public class Program{
-      
-    public static void main(String[] args) {
-          
-        Account<String> acc1 = new Account<String>("1876", 4500);
-        Account<String> acc2 = new Account<String>("3476", 1500);
-              
-        Transaction<Account<String>> tran1 = new Transaction<Account<String>>(acc1,acc2, 4000);
-        tran1.execute();
-        tran1 = new Transaction<Account<String>>(acc1,acc2, 4000);
-        tran1.execute();
-    }
-}
-class Transaction<T extends Account<String>>{
-     
-    private T from;     // с какого счета перевод
-    private T to;       // на какой счет перевод
-    private int sum;    // сумма перевода
-     
-    Transaction(T from, T to, int sum){
-        this.from = from;
-        this.to = to;
-        this.sum = sum;
-    }
-    public void execute(){
-         
-        if (from.getSum() > sum)
-        {
-            from.setSum(from.getSum() - sum);
-            to.setSum(to.getSum() + sum);
-            System.out.printf("Account %s: %d \nAccount %s: %d \n", 
-                from.getId(), from.getSum(),to.getId(), to.getSum());
-        }
-        else{
-            System.out.printf("Operation is invalid");
-        }
-    }
-}
-class Account<T>{
-     
-    private T id;
-    private int sum;
-     
-    Account(T id, int sum){
-        this.id = id;
-        this.sum = sum;
-    }
-     
-    public T getId() { return id; }
-    public int getSum() { return sum; }
-    public void setSum(int sum) { this.sum = sum; }
-}
-
-```
-В данном случае ограничением для Transaction является тип Account, который типизирован типом String.
-
-## Интерфейсы в качестве оганичений
-В качестве ограничений могут выступать также интерфейсы. В этом случае передаваемый на место универсального параметра тип должен реализовать данный интерфейс:
-```java
-
-public class Program{
-      
-    public static void main(String[] args) {
-          
-        Account acc1 = new Account("1235rwr", 5000);
-        Account acc2 = new Account("2373", 4300);
-        Transaction<Account> tran1 = new Transaction<Account>(acc1, acc2, 1560);
-        tran1.execute();
-    }
-}
-interface Accountable{
-    String getId();
-    int getSum();
-    void setSum(int sum);
-}
-class Account implements Accountable{
-     
-    private String id;
-    private int sum;
-     
-    Account(String id, int sum){
-        this.id = id;
-        this.sum = sum;
-    }
-     
-    public String getId() { return id; }
-    public int getSum() { return sum; }
-    public void setSum(int sum) { this.sum = sum; }
-}
-class Transaction<T extends Accountable>{
-     
-    private T from;     // с какого счета перевод
-    private T to;       // на какой счет перевод
-    private int sum;    // сумма перевода
-     
-    Transaction(T from, T to, int sum){
-        this.from = from;
-        this.to = to;
-        this.sum = sum;
-    }
-    public void execute(){
-         
-        if (from.getSum() > sum)
-        {
-            from.setSum(from.getSum() - sum);
-            to.setSum(to.getSum() + sum);
-            System.out.printf("Account %s: %d \nAccount %s: %d \n", 
-                from.getId(), from.getSum(),to.getId(), to.getSum());
-        }
-        else{
-            System.out.printf("Operation is invalid");
-        }
-    }
-}
-
-```
-## Множественные ограничения
-Также можно установить сразу несколько ограничений. Например, пусть класс Transaction может работать только с объектами, которые одновременно реализуют интерфейс Accountable и являются наследниками класса Person:
-```java
-
-class Person{}
-interface Accountable{}
+## Создание своих классов исключений
  
-class Transaction<T extends Person & Accountable>{}
+Хотя имеющиеся в стандартной библиотеке классов Java классы исключений описывают большинство исключительных ситуаций, которые могут возникнуть при выполнении программы, все таки иногда требуется создать свои собственные классы исключений со своей логикой.
 
-```
-## Наследование и обобщения
- 
-Обобщенные классы могут участвовать в иерархии наследования: могут наследоваться от других, либо выполнять роль базовых классов. Рассмотрим различные ситуации.
+## Новый подкласс класса Exception.
+В нем сделано объявление подкласса MyException класса Exception. У этого подкласса есть специальный конструктор, который записывает в переменную объекта целочисленное значение, и совмещенный метод toString, выводящий значение, хранящееся в объекте-исключении. Класс ExceptionDemo определяет метод compute, который возбуждает исключение типа MyExcepton. Простая логика метода compute возбуждает исключение в том случае, когда значение пара-ветра метода больше 10. Метод main в защищенном блоке вызывает метод compute сначала с допустимым значением, а затем — с недопустимым (больше 10), что позволяет продемонстрировать работу при обоих путях выполнения кода. 
 
-## Базовый обобщенный класс
-При наследовании от обобщенного класса класс-наследник должен передавать данные о типе в конструкции базового класса:
 ```java
+package ua.mycom;
 
-class Account<T>
-{
-    private T _id;
-    T getId(){return _id;}
-    Account(T id)
+class MyException extends Exception {
+
+    private int detail;
+
+    MyException(int a) 
     {
-        _id = id;
+        detail = a;
     }
+    
+    public String toString() {
+        return "MyException[" + detail + "]";
+    }
+
 }
- 
-class DepositAccount<T> extends Account<T>{
- 
-    DepositAccount(T id){
-        super(id);
+
+public class Main {
+
+    static void compute(int a) throws MyException {
+        System.out.println("called computer a = " + a);
+            if (a > 10)
+                throw new MyException(a);
+            System.out.println("normal exit.");
+        }
+
+    
+    public static void main(String args[]) {
+
+        try {
+            compute(1);
+            compute(20);
+        }
+        catch (MyException e) {
+            System.out.println("caught" + e);
+        }
+
     }
 }
 
 ```
-В конструкторе DepositAccount идет обращение к конструктору базового класса, в который передаются данные о типе.
 
-### Варианты использования классов:
+Чтобы создать свой класс исключений, надо унаследовать его от класса Exception. Например, у нас есть класс, вычисляющий факториал, и нам надо выбрасывать специальное исключение, если число, передаваемое в метод, меньше 1:
 ```java
 
-DepositAccount dAccount1 = new DepositAccount(20);
-System.out.println(dAccount1.getId());
+class Factorial{
+ 
+    public static int getFactorial(int num) throws FactorialException{
+     
+        int result=1;
+        if(num<1) throw new FactorialException("The number is less than 1", num);
          
-DepositAccount dAccount2 = new DepositAccount("12345");
-System.out.println(dAccount2.getId());
-
-// При этом класс-наследник может добавлять и использовать какие-то свои параметры типов:
-
-
-class Account<T>
-{
-    private T _id;
-    T getId(){return _id;}
-    Account(T id)
-    {
-        _id = id;
+        for(int i=1; i<=num;i++){
+             
+            result*=i;
+        }
+        return result;
     }
 }
  
-class DepositAccount<T, S> extends Account<T>{
+class FactorialException extends Exception{
  
-    private S _name;
-    S getName(){return _name;}
-    DepositAccount(T id, S name){
-        super(id);
-        this._name=name;
+    private int number;
+    public int getNumber(){return number;}
+    public FactorialException(String message, int num){
+     
+        super(message);
+        number=num;
     }
 }
-// Варианты использования:
 
-DepositAccount<Integer, String> dAccount1 = new DepositAccount(20, "Tom");
-System.out.println(dAccount1.getId() + " : " + dAccount1.getName());
+```
+Здесь для определения ошибки, связанной с вычислением факториала, определен класс FactorialException, который наследуется от Exception и который содержит всю информацию о вычислении. В конструкторе FactorialException в конструктор базового класса Exception передается сообщение об ошибке: super(message). Кроме того, отдельное поле предназначено для хранения числа, факториал которого вычисляется.
+
+Для генерации исключения в методе вычисления факториала выбрасывается исключение с помощью оператора throw: throw new FactorialException("Число не может быть меньше 1", num). Кроме того, так как это исключение не обрабатывается с помощью try..catch, то мы передаем обработку вызывающему методу, используя оператор throws: public static int getFactorial(int num) throws FactorialException
+
+Теперь используем класс в методе main:
+```java
+
+public static void main(String[] args){
          
-DepositAccount<String, Integer> dAccount2 = new DepositAccount("12345", 23456);
-System.out.println(dAccount2.getId() + " : " + dAccount2.getName());
-
-// И еще одна ситуация - класс-наследник вообще может не быть обобщенным:
-
-class Account<T>
-{
-    private T _id;
-    T getId(){return _id;}
-    Account(T id)
-    {
-        _id = id;
+    try{
+        int result = Factorial.getFactorial(6);
+        System.out.println(result);
     }
-}
- 
-class DepositAccount extends Account<Integer>{
- 
-    DepositAccount(){
-        super(5);
+    catch(FactorialException ex){
+         
+        System.out.println(ex.getMessage());
+        System.out.println(ex.getNumber());
     }
-}
-// Здесь при наследовании явным образом указывается тип, который будет использоваться конструкциями базового класса, то есть тип Integer. Затем в конструктор базового класса передается значение именно этого типа - в данном случае число 5.
-
-// Вариант использования:
-
-DepositAccount dAccount1 = new DepositAccount();
-System.out.println(dAccount1.getId());
+} 
 
 ```
-## Обобщенный класс-наследник
-
-
-Также может быть ситуация, когда базовый класс является обычным необобщенным классом. Например:
-
-```java
-
-class Account
-{
-    private String _name;
-    String getName(){return _name;}
-    Account(String name)
-    {
-        _name=name;
-    }
-}
- 
-class DepositAccount<T> extends Account{
- 
-    private T _id;
-    T getId(){return _id;}
-    DepositAccount(String name, T id){
-        super(name);
-        _id = id;
-    }
-}
-// В этом случае использование конструкций базового класса в наследнике происходит как обычно.
-
-```
-
-## Преобразование обобщенных типов
-Объект одного обобщенного типа можно привести к другому типу, если они используют один и тот же тип. Рассмотрим преобразование типов на примере следующих двух обобщенных классов:
-
-```java
-
-class Account<T>
-{
-    private T _id;
-    T getId(){return _id;}
-    Account(T id)
-    {
-        _id = id;
-    }
-}
- 
-class DepositAccount<T> extends Account<T>{
- 
-    DepositAccount(T id){
-        super(id);
-    }
-}
-
-```
-Мы можем привести объект DepositAccount<Integer> к Account<Integer> или DepositAccount<String> к Account<String>:
-```java
-
-DepositAccount<Integer> depAccount = new DepositAccount(10);
-Account<Integer> account = (Account<Integer>)depAccount;
-System.out.println(account.getId());
-
-// Но сделать то же самое с разнотипными объектами мы не можем. 
-// Например, следующий код не будет работать:
-
-DepositAccount<Integer> depAccount = new DepositAccount(10);
-Account<String> account = (Account<String>)depAccount;
-
-```
-
