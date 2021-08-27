@@ -1,1261 +1,1306 @@
-# Сортировка
+# Потоки ввода-вывода. 
+ 
+В Java основной функционал работы с потоками сосредоточен в классах из пакета java.io.
 
-## Сортировка элементов
+Поток связан с реальным физическим устройством с помощью системы ввода-вывода Java. У нас может быть определен поток, который связан с файлом и через который мы можем вести чтение или запись файла. Это также может быть поток, связанный с сетевым сокетом, с помощью которого можно получить или отправить данные в сети.
 
-чтобы отсортировать коллекцию элементов, например, массив, нужно по этой коллекции как-то пройти:
+Объект, из которого можно считать данные, называется потоком ввода, а объект, в который можно записывать данные, - потоком вывода. Например, если надо считать содержание файла, то применяется поток ввода, а если надо записать в файл - то поток вывода.
+
+В основе всех классов, управляющих потоками байтов, находятся два абстрактных класса: InputStream (представляющий потоки ввода) и OutputStream (представляющий потоки вывода)
+
+Но поскольку работать с байтами не очень удобно, то для работы с потоками символов были добавлены абстрактные классы Reader (для чтения потоков символов) и Writer (для записи потоков символов).
+
+Все остальные классы, работающие с потоками, являются наследниками этих абстрактных классов. 
+
+## Класс InputStream
+
+Класс InputStream является базовым для всех классов, управляющих байтовыми потоками ввода. 
+
+### основные методы:
+
+- int available(): возвращает количество байтов, доступных для чтения в потоке
+- void close(): закрывает поток
+- int read(): возвращает целочисленное представление следующего байта в потоке. Когда в потоке не останется доступных для чтения байтов, данный метод возвратит число -1
+- int read(byte[] buffer): считывает байты из потока в массив buffer. После чтения возвращает число считанных байтов. Если ни одного байта не было считано, то возвращается число -1
+- int read(byte[] buffer, int offset, int length): считывает некоторое количество байтов, равное length, из потока в массив buffer. При этом считанные байты помещаются в массиве, начиная со смещения offset, то есть с элемента buffer[offset]. Метод возвращает число успешно прочитанных байтов.
+- long skip(long number): пропускает в потоке при чтении некоторое количество байт, которое равно number
+
+## Класс OutputStream
+Класс OutputStream является базовым классом для всех классов, которые работают с бинарными потоками записи. Свою функциональность он реализует через следующие методы:
+- void close(): закрывает поток
+- void flush(): очищает буфер вывода, записывая все его содержимое
+- void write(int b): записывает в выходной поток один байт, который представлен целочисленным параметром b
+- void write(byte[] buffer): записывает в выходной поток массив байтов buffer.
+- void write(byte[] buffer, int offset, int length): записывает в выходной поток некоторое число байтов, равное length, из массива buffer, начиная со смещения offset, то есть с элемента buffer[offset].
+
+## Абстрактный класс Reader
+Абстрактный класс Reader предоставляет функционал для чтения текстовой информации. 
+### основные методы:
+- absract void close(): закрывает поток ввода
+- int read(): возвращает целочисленное представление следующего символа в потоке. Если таких символов нет, и достигнут конец файла, то возвращается число -1
+- int read(char[] buffer): считывает в массив buffer из потока символы, количество которых равно длине массива buffer. Возвращает количество успешно считанных символов. При достижении конца файла возвращает -1
+- int read(CharBuffer buffer): считывает в объект CharBuffer из потока символы. Возвращает количество успешно считанных символов. При достижении конца файла возвращает -1
+- absract int read(char[] buffer, int offset, int count): считывает в массив buffer, начиная со смещения offset, из потока символы, количество которых равно count
+- long skip(long count): пропускает количество символов, равное count. Возвращает число успешно пропущенных символов
+
+## Класс Writer
+Класс Writer определяет функционал для всех символьных потоков вывода. Его основные методы:
+ -Writer append(char c): добавляет в конец выходного потока символ c. Возвращает объект Writer
+- Writer append(CharSequence chars): добавляет в конец выходного потока набор символов chars. Возвращает объект Writer
+- abstract void close(): закрывает поток
+- abstract void flush(): очищает буферы потока
+- void write(int c): записывает в поток один символ, который имеет целочисленное представление
+- void write(char[] buffer): записывает в поток массив символов
+- absract void write(char[] buffer, int off, int len) : записывает в поток только несколько символов из массива buffer. Причем количество символов равно len, а отбор символов из массива начинается с индекса off
+- void write(String str): записывает в поток строку
+- void write(String str, int off, int len): записывает в поток из строки некоторое количество символов, которое равно len, причем отбор символов из строки начинается с индекса off
+
+Функционал, описанный классами Reader и Writer, наследуется непосредственно классами символьных потоков, в частности классами FileReader и FileWriter соответственно, предназначенными для работы с текстовыми файлами.
+
+## Чтение и запись файлов.
+ 
+## Запись файлов и класс FileOutputStream
+Класс FileOutputStream предназначен для записи байтов в файл. Он является производным от класса OutputStream, поэтому наследует всю его функциональность.
+
+Через конструктор класса FileOutputStream задается файл, в который производится запись. Класс поддерживает несколько конструкторов:
 ```java
+FileOutputStream(String filePath)
+FileOutputStream(File fileObj)
+FileOutputStream(String filePath, boolean append)
+FileOutputStream(File fileObj, boolean append)
+```
+Файл задается либо через строковый путь, либо через объект File. Второй параметр - append задает способ записи: eсли он равен true, то данные дозаписываются в конец файла, а при false - файл полностью перезаписывается
 
-int[] array = {10, 2, 10, 3, 1, 2, 5};
-for (int i = 0; i < array.length; i++) {
-    System.out.println(array[i]);
+```java
+// запишем в файл строку:
+
+import java.io.*;
+ 
+public class Program {
+  
+    public static void main(String[] args) {
+
+        // Для создания объекта FileOutputStream используется конструктор, принимающий в качестве параметра путь к файлу для записи. Если такого файла нет, то он автоматически создается при записи. Так как здесь записываем строку, то ее надо сначала перевести в массив байтов. И с помощью метода write строка записывается в файл.
+
+        String text = "Hello world!"; // строка для записи
+
+        // Для автоматического закрытия файла и освобождения ресурса объект FileOutputStream создается с помощью конструктции try...catch.
+
+        try(FileOutputStream fos=new FileOutputStream("C://SomeDir//notes.txt"))
+        {
+            // перевод строки в байты
+            byte[] buffer = text.getBytes();
+            // При этом необязательно записывать весь массив байтов. Используя перегрузку метода write(), можно записать и одиночный байт:
+            // fos.write(buffer[0]); // запись первого байта
+
+            fos.write(buffer, 0, buffer.length);
+        }
+        catch(IOException ex){
+              
+            System.out.println(ex.getMessage());
+        }
+        System.out.println("The file has been written");            
+    }
 }
 ```
+## Чтение файлов и класс FileInputStream
+Для считывания данных из файла предназначен класс FileInputStream, который является наследником класса InputStream и поэтому реализует все его методы.
 
-## сложность алгоритма
-Мы имеем цикл, в котором меняем значение индекса (int i) с 0 до последнего элемента в массиве. 
-Фактически, мы просто берём каждый элемент в массиве и печатаем его содержимое. Чем больше элементов в массиве, тем дольше будет выполняться код.
+Для создания объекта FileInputStream мы можем использовать ряд конструкторов. Наиболее используемая версия конструктора в качестве параметра принимает путь к считываемому файлу:
 
-То есть, если n — количество элементов, при n=10 программа будет выполняться дольше, чем при n=5, в 2 раза. Когда в программе есть один цикл, время выполнения растёт линейно: чем больше элементов, тем дольше выполнение. В таких случаях говорят, что сложность алгоритма равна O(n). Это обозначение ещё называют большое О или асимптотическое поведение.
+FileInputStream(String fileName) throws FileNotFoundException
 
+Если файл не может быть открыт, например, по указанному пути такого файла не существует, то генерируется исключение FileNotFoundException.
 
-## Простейшая сортировка (Bubble Sort)
-Попробуем отсортировать массив по возрастанию. Это значит, что имея два элемента (например, a=6, b=5), мы должны переставить местами a и b, если a больше чем b (если a > b).
-Это значит, что если элемент с индексом а больше, чем элемент с индексом b, (array[a] > array[b]), такие элементы надо поменять местами.
-
-Перемену мест часто называют swap.
 ```java
-
-public class Main {
-
-    private static void swap(int[] array, int ind1, int ind2) {
-        int tmp = array[ind1];
-        array[ind1] = array[ind2];
-        array[ind2] = tmp;
+import java.io.*;
+// Считаем данные из ранее записанного файла и выведем на консоль:
+public class Program {
+  
+    public static void main(String[] args) {
+ 
+        try(FileInputStream fin=new FileInputStream("C://SomeDir//notes.txt"))
+        {
+            System.out.printf("File size: %d bytes \n", fin.available());
+              
+            int i=-1;
+            while((i=fin.read())!=-1){
+              
+                System.out.print((char)i);
+            }   
+        }
+        catch(IOException ex){
+              
+            System.out.println(ex.getMessage());
+        } 
     }
-    
-    public static void main(String args[]) {
+}
+```
+В данном случае мы считываем каждый отдельный байт в переменную i:
 
-        int[] array = {10, 2, 10, 3, 1, 2, 5};
-        System.out.println(Arrays.toString(array));
+```java
+while((i=fin.read())!=-1){
+```
+Когда в потоке больше нет данных для чтения, метод возвращает число -1.
+Затем каждый считанный байт конвертируется в объект типа char и выводится на консоль.
+Подобным образом можно считать данные в массив байтов и затем производить с ним манипуляции:
 
-        for (int i = 1; i < array.length; i++) {
-            if (array[i] < array[i - 1]) {
-                swap(array, i, i-1);
+```java
+byte[] buffer = new byte[fin.available()];
+// считаем файл в буфер
+fin.read(buffer, 0, fin.available());
+ 
+System.out.println("File data:");
+for(int i=0; i<buffer.length;i++){
+ 
+    System.out.print((char)buffer[i]);
+}
+```
+Совместим оба класса и выполним чтение из одного и запись в другой файл:
+
+```java
+import java.io.*;
+ 
+public class Program {
+ 
+    public static void main(String[] args) {
+         
+        try(FileInputStream fin=new FileInputStream("C://SomeDir//notes.txt");
+                FileOutputStream fos=new FileOutputStream("C://SomeDir//notes_new.txt"))
+        {
+            byte[] buffer = new byte[fin.available()];
+            // считываем буфер
+            fin.read(buffer, 0, buffer.length);
+            // записываем из буфера в файл
+            fos.write(buffer, 0, buffer.length);
+        }
+        catch(IOException ex){
+             
+            System.out.println(ex.getMessage());
+        } 
+    } 
+}
+```
+Классы FileInputStream и FileOutputStream предназначены прежде всего для записи двоичных файлов, то есть для записи и чтения байтов. И хотя они также могут использоваться для работы с текстовыми файлами, но все же для этой задачи больше подходят другие классы.
+
+## Закрытие потоков
+ 
+При завершении работы с потоком его надо закрыть с помощью метода close(), который определен в интерфейсе Closeable. Метод close имеет следующее определение:
+
+void close() throws IOException
+
+Этот интерфейс уже реализуется в классах InputStream и OutputStream, а через них и во всех классах потоков.
+
+При закрытии потока освобождаются все выделенные для него ресурсы, например, файл. В случае, если поток окажется не закрыт, может происходить утечка памяти.
+
+Есть два способа закрытия файла. Первый традиционный заключается в использовании блока try..catch..finally. Например, считаем данные из файла:
+
+```java
+import java.io.*;
+ 
+public class Program {
+ 
+    public static void main(String[] args) {
+         
+        FileInputStream fin=null;
+        try
+        {
+            fin = new FileInputStream("C://SomeDir//notes.txt");
+             
+            int i=-1;
+            while((i=fin.read())!=-1){
+             
+                System.out.print((char)i);
             }
         }
-        System.out.println(Arrays.toString(array));
-    
-    }
+        catch(IOException ex){
+             
+            System.out.println(ex.getMessage());
+        } 
+        finally{
+             
+            try{
+             
+                if(fin!=null)
+                    fin.close();
+            }
+            catch(IOException ex){
+             
+                System.out.println(ex.getMessage());
+            }
+        }  
+    } 
 }
+```
+Поскольку при открытии или считывании файла может произойти ошибка ввода-вывода, то код считывания помещается в блок try. И чтобы быть уверенным, что поток в любом случае закроется, даже если при работе с ним возникнет ошибка, вызов метода close() помещается в блок finally. И, так как метод close() также в случае ошибки может генерировать исключение IOException, то его вызов также помещается во вложенный блок try..catch
 
+Начиная с Java 7 можно использовать еще один способ, который автоматически вызывает метод close. Этот способ заключается в использовании конструкции try-with-resources (try-с-ресурсами). Данная конструкция работает с объектами, которые реализуют интерфейс AutiCloseable. Так как все классы потоков реализуют интерфейс Closeable, который в свою очередь наследуется от AutoCloseable, то их также можно использовать в данной конструкции
+
+перепишем предыдущий пример с использованием конструкции try-with-resources:
+```java
+import java.io.*;
+ 
+public class Program {
+ 
+    public static void main(String[] args) {
+         
+        try(FileInputStream fin=new FileInputStream("C://SomeDir//notes.txt"))
+        {
+            int i=-1;
+            while((i=fin.read())!=-1){
+             
+                System.out.print((char)i);
+            }   
+        }
+        catch(IOException ex){
+             
+            System.out.println(ex.getMessage());
+        } 
+    } 
+}
+```
+Синтаксис конструкции следующий: try(название_класса имя_переменной = конструктор_класса). Данная конструкция также не исключает использования блоков catch.
+
+После окончания работы в блоке try у ресурса (в данном случае у объекта FileInputStream) автоматически вызывается метод close().
+
+Если нам надо использовать несколько потоков, которые после выполнения надо закрыть, то мы можем указать объекты потоков через точку с запятой:
+```java
+try(FileInputStream fin=new FileInputStream("C://SomeDir//Hello.txt"); 
+        FileOutputStream fos = new FileOutputStream("C://SomeDir//Hello2.txt"))
+{
+    //..................
+}
+```
+## Классы ByteArrayInputStream и ByteArrayOutputStream
+
+Для работы с массивами байтов - их чтения и записи используются классы ByteArrayInputStream и ByteArrayOutputStream.
+
+Класс ByteArrayInputStream представляет входной поток, использующий в качестве источника данных массив байтов. Он имеет следующие конструкторы:
+
+ByteArrayInputStream(byte[] buf) 
+ByteArrayInputStream(byte[] buf, int offset, int length) 
+
+В качестве параметров конструкторы используют массив байтов buf, из которого производится считывание, смещение относительно начала массива offset и количество считываемых символов length.
+```java
+// Считаем массив байтов и выведем его на экран:
+
+import java.io.*;
+ 
+public class Program {
+ 
+    public static void main(String[] args) {
+         
+        byte[] array1 = new byte[]{1, 3, 5, 7};
+        ByteArrayInputStream byteStream1 = new ByteArrayInputStream(array1);
+        int b;
+        while((b=byteStream1.read())!=-1){
+         
+            System.out.println(b);
+        }
+         
+        String text = "Hello world!";
+        byte[] array2 = text.getBytes();
+        // считываем 5 символов
+        ByteArrayInputStream byteStream2 = new ByteArrayInputStream(array2, 0, 5);
+        int c;
+        while((c=byteStream2.read())!=-1){
+         
+            System.out.println((char)c);
+        }
+    } 
+}
+```
+В отличие от других классов потоков для закрытия объекта ByteArrayInputStream не требуется вызывать метод close.
+
+Запись массива байт и класс ByteArrayOutputStream
+Класс ByteArrayOutputStream представляет поток вывода, использующий массив байтов в качестве места вывода.
+
+Чтобы создать объект данного класса, мы можем использовать один из его конструкторов:
+```java
+ByteArrayOutputStream() 
+ByteArrayOutputStream(int size)
+```
+Первая версия создает массив для хранения байтов длиной в 32 байта, а вторая версия создает массив длиной size.
+
+```java
+import java.io.*;
+ 
+public class Program {
+ 
+    public static void main(String[] args) {
+         
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        String text = "Hello Wolrd!";
+        byte[] buffer = text.getBytes();
+        try{
+            baos.write(buffer);
+        }
+        catch(Exception ex){
+         
+            System.out.println(ex.getMessage());
+        }
+        // превращаем массив байтов в строку
+        System.out.println(baos.toString());
+         
+        // получаем массив байтов и выводим по символьно
+        byte[] array = baos.toByteArray();
+        for(byte b: array){
+         
+            System.out.print((char)b);
+        }
+        System.out.println();
+    } 
+}
+```
+Как и в других потоках вывода в классе ByteArrayOutputStream определен метод write, который записывает в поток некоторые данные. В данном случае мы записываем в поток массив байтов. Этот массив байтов записывается в объекте ByteArrayOutputStream в защищенное поле buf, которое представляет также массив байтов (protected byte[] buf).
+
+Так как метод write может сгенерировать исключение, то вызов этого метода помещается в блок try..catch.
+
+Используя методы toString() и toByteArray(), можно получить массив байтов buf в виде текста или непосредственно в виде массива байт.
+
+С помощью метода writeTo мы можем вывести массив байт в другой поток. Данный метод в качестве параметра принимает объект OutputStream, в который производится запись массива байт:
+```java
+ByteArrayOutputStream baos = new ByteArrayOutputStream();
+String text = "Hello Wolrd!";
+byte[] buffer = text.getBytes();
+try{
+    baos.write(buffer);
+}
+catch(Exception ex){
+         
+    System.out.println(ex.getMessage());
+}
+try(FileOutputStream fos = new FileOutputStream("hello.txt")){
+     
+    baos.writeTo(fos);
+}
+catch(IOException e){
+             
+    System.out.println(e.getMessage());
+}
+```
+После выполнения этой программы в папке с программой появится файл hello.txt, который будет содержать строку "Hello Wolrd!".
+
+И в заключении также надо сказать, что как и для объектов ByteArrayInputStream, для ByteArrayOutputStream не надо явным образом закрывать поток с помощью метода close.
+
+
+## Буферизованные потоки BufferedInputStream и BufferedOutputStream
+ 
+Для оптимизации операций ввода-вывода используются буферизуемые потоки. Эти потоки добавляют к стандартным специальный буфер в памяти, с помощью которого повышается производительность при чтении и записи потоков.
+
+## Класс BufferedInputStream
+Класс BufferedInputStream накапливает вводимые данные в специальном буфере без постоянного обращения к устройству ввода. Класс BufferedInputStream определяет два конструктора:
+
+BufferedInputStream(InputStream inputStream)
+BufferedInputStream(InputStream inputStream, int bufSize)
+
+Первый параметр - это поток ввода, с которого данные будут считываться в буфер. Второй параметр - размер буфера.
+
+Например, буферизируем считывание данных из потока ByteArrayInputStream:
+```java
+import java.io.*;
+ 
+public class Program {
+ 
+    public static void main(String[] args) {
+         
+         String text = "Hello world!";
+         byte[] buffer = text.getBytes();
+        ByteArrayInputStream in = new ByteArrayInputStream(buffer);
+         
+        try(BufferedInputStream bis = new BufferedInputStream(in)){
+             
+            int c;
+            while((c=bis.read())!=-1){
+         
+                System.out.print((char)c);
+            }
+        }
+        catch(Exception e){
+             
+            System.out.println(e.getMessage());
+        }
+        System.out.println();
+    } 
+}
+```
+Класс BufferedInputStream в конструкторе принимает объект InputStream. В данном случае таким объектом является экземпляр класса ByteArrayInputStream.
+
+Как и все потоки ввода BufferedInputStream обладает методом read(), который считывает данные. И здесь мы считываем с помощью метода read каждый байт из массива buffer.
+
+Фактические все то же самое можно было сделать и с помощью одного ByteArrayInputStream, не прибегая к буферизированному потоку. Класс BufferedInputStream просто оптимизирует производительность при работе с потоком ByteArrayInputStream. Естественно вместо ByteArrayInputStream может использоваться любой другой класс, который унаследован от InputStream.
+
+## Класс BufferedOutputStream
+Класс BufferedOutputStream аналогично создает буфер для потоков вывода. Этот буфер накапливает выводимые байты без постоянного обращения к устройству. И когда буфер заполнен, производится запись данных.
+
+BufferedOutputStream определяет два конструктора:
+
+BufferedOutputStream(OutputStream outputStream)
+BufferedOutputStream(OutputStream outputStream, int bufSize)
+Первый параметр - это поток вывода, который унаследован от OutputStream, а второй параметр - размер буфера.
+
+```java
+// пример записи в файл:
+import java.io.*;
+ 
+public class Program {
+ 
+    public static void main(String[] args) {
+         
+        String text = "Hello world!"; // строка для записи
+        try(FileOutputStream out=new FileOutputStream("notes.txt"); 
+                BufferedOutputStream bos = new BufferedOutputStream(out))
+        {
+            // перевод строки в байты
+            byte[] buffer = text.getBytes();
+            bos.write(buffer, 0, buffer.length);
+        }
+        catch(IOException ex){
+             
+            System.out.println(ex.getMessage());
+        } 
+    } 
+}
+```
+Класс BufferedOutputStream в конструкторе принимает в качестве параметра объект OutputStream - в данном случае это файловый поток вывода FileOutputStream. И также производится запись в файл. Опять же BufferedOutputStream не добавляет много новой функциональности, он просто оптимизирует действие потока вывода.
+
+## Форматируемый ввод и вывод. 
+
+## Класс PrintStream
+Класс PrintStream - это именно тот класс, который используется для вывода на консоль. Когда мы выводим на консоль некоторую информацию с помощью вызова System.out.println(), то тем самым мы задействует PrintStream, так как переменная out в классе System как раз и представляет объект класса PrintStream, а метод println() - это метод класса PrintStream.
+
+Но PrintStream полезен не только для вывода на консоль. Мы можем использовать данный класс для записи информации в поток вывода. Для этого PrintStream определяет ряд конструкторов:
+```java
+PrintStream(OutputStream outputStream)
+PrintStream(OutputStream outputStream, boolean autoFlushingOn)
+PrintStream(OutputStream outputStream, boolean autoFlushingOn, String charSet) throws UnsupportedEncodingException
+PrintStream(File outputFile) throws FileNotFoundException
+PrintStream(File outputFile, String charSet) throws FileNotFoundException, UnsupportedEncodingException
+PrintStream(String outputFileName) throws FileNotFoundException
+PrintStream(String outputFileName, String charSet) throws FileNotFoundException, UnsupportedEncodingException
+```
+Параметр outputStream - это объект OutputStream, в который производится запись. Параметр autoFlushingOn при значении true позволяет автоматически записывать данные в поток вывода. По умолчанию этот параметр равен false. Параметр charSet позволяет указать кодировку символов.
+
+В качестве источника для записи данных вместо OutputStream можно использовать объект File или строковый путь, по которому будет создаваться файл.
+
+Для вывода информации в выходной поток PrintStream использует следующие методы:
+- println(): вывод строковой информации с переводом строки
+- print(): вывод строковой информации без перевода строки
+- printf(): форматированный вывод
+
+Например, запишем информацию в файл:
+```java
+import java.io.*;
+ 
+public class Program {
+ 
+    public static void main(String[] args) {
+         
+        String text = "Привет мир!"; // строка для записи
+        try(FileOutputStream fos=new FileOutputStream("C://SomeDir//notes3.txt");
+                PrintStream printStream = new PrintStream(fos))
+        {
+            printStream.println(text);
+            System.out.println("Запись в файл произведена");
+        }
+        catch(IOException ex){
+             
+            System.out.println(ex.getMessage());
+        }  
+    } 
+}
+```
+В данном случае применяется форма конструктора PrintStream, которая в качестве параметра принимает поток вывода: PrintStream (OutputStream out). Кроме того, мы могли бы использовать ряд других форм конструктора, например, указывая названия файла для записи: PrintStream (string filename)
+
+В качестве потока вывода используется объект FileOutputStream. С помощью метода println() производится запись информации в выходной поток - то есть в объект FileOutputStream. (В случае с выводом на консоль с помощью System.out.println() в качестве потока вывода выступает консоль)
+
+Кроме того, как и любой поток вывода и наследник класса OutputStream он имеет метод write:
+```java
+import java.io.*;
+ 
+public class Program {
+  
+    public static void main(String[] args) {
+          
+        try(PrintStream printStream = new PrintStream("notes3.txt"))
+        {
+            printStream.print("Hello World!");
+            printStream.println("Welcome to Java!");
+             
+            printStream.printf("Name: %s Age: %d \n", "Tom", 34);
+             
+            String message = "PrintStream";
+            byte[] message_toBytes = message.getBytes();
+            printStream.write(message_toBytes);
+             
+            System.out.println("The file has been written");
+        }
+        catch(IOException ex){
+              
+            System.out.println(ex.getMessage());
+        }  
+    } 
+}
 ```
 
-Но наш итоговый массив не отсортирован, т.к. за один проход не удаётся все отсортировать. Придётся добавить ещё цикл, в котором мы будем выполнять проходы один за одним до тех пор, пока не получим отсортированный массив:
+## PrintWriter
+## PrintStream
+На PrintStream похож другой класс PrintWriter. Его можно использовать как для вывода информации на консоль, так и в файл или любой другой поток вывода. Данный класс имеет ряд конструкторов:
+- PrintWriter(File file): автоматически добавляет информацию в указанный файл
+- PrintWriter(File file, String csn): автоматически добавляет информацию в указанный файл с учетом кодировки csn
+- PrintWriter(OutputStream out): для вывода информации используется существующий объект OutputStream, автоматически сбрасывая в него данные
+- PrintWriter(OutputStream out, boolean autoFlush): для вывода информации используется существующий объект OutputStream, второй параметр указывает, надо ли автоматически добавлять в OutputStream данные
+- PrintWriter(String fileName): автоматически добавляет информацию в файл по указанному имени
+- PrintWriter(String fileName, String csn): автоматически добавляет информацию в файл по указанному имени, используя кодировку csn
+- PrintWriter(Writer out): для вывода информации используется существующий объект Writer, в который автоматически идет запись данных
+- PrintWriter(Writer out, boolean autoFlush): для вывода информации используется существующий объект Writer, второй параметр указывает, надо ли автоматически добавлять в Writer данные
+- PrintWriter реализует интерфейсы Appendable, Closable и Flushable, и поэтому после использования представляемый им поток надо закрывать.
+
+Для записи данных в поток он также используется методы printf() и println().
 ```java
+try(PrintWriter pw = new PrintWriter(System.out))
+{
+    pw.println("Hello world!");
+}
+```
+В качестве потока вывода здесь применяется System.out, а на консоль будет выведена строка "Hello world!"
+## Классы DataOutputStream и DataInputStream
 
-public class Main {
+Классы DataOutputStream и DataInputStream позволяют записывать и считывать данные примитивных типов.
 
-    private static void swap(int[] array, int ind1, int ind2) {
-        int tmp = array[ind1];
-        array[ind1] = array[ind2];
-        array[ind2] = tmp;
+Класс DataOutputStream представляет поток вывода и предназначен для записи данных примитивных типов, таких, как int, double и т.д. Для записи каждого из примитивных типов предназначен свой метод:
+- writeBoolean(boolean v) : записывает в поток булевое однобайтовое значение
+- writeByte(int v): записывает в поток 1 байт, которые представлен в виде целочисленного значения
+- writeChar(int v): записывает 2-байтовое значение char
+- writeDouble(double v): записывает в поток 8-байтовое значение double
+- writeFloat(float v): записывает в поток 4-байтовое значение float
+- writeInt(int v): записывает в поток целочисленное значение int
+- writeLong(long v): записывает в поток значение long
+- writeShort(int v): записывает в поток значение short
+- writeUTF(String str): записывает в поток строку в кодировке UTF-8
+
+## Считывание данных и DataInputStream
+Класс DataInputStream действует противоположным образом - он считывает из потока данные примитивных типов. Соответственно для каждого примитивного типа определен свой метод для считывания:
+- boolean readBoolean(): считывает из потока булевое однобайтовое значение
+- byte readByte(): считывает из потока 1 байт
+- char readChar(): считывает из потока значение char
+- double readDouble(): считывает из потока 8-байтовое значение double
+- float readFloat(): считывает из потока 4-байтовое значение float
+- int readInt(): считывает из потока целочисленное значение int
+- long readLong(): считывает из потока значение long
+- short readShort(): считывает значение short
+- String readUTF(): считывает из потока строку в кодировке UTF-8
+- int skipBytes(int n): пропускает при чтении из потока n байтов
+
+```java
+import java.io.*;
+ 
+public class Program {
+  
+    public static void main(String[] args) {
+          
+        Person tom = new Person("Tom", 34, 1.68, false);
+        // запись в файл
+        try(DataOutputStream dos = new DataOutputStream(new FileOutputStream("data.bin")))
+        {
+           // записываем значения
+            dos.writeUTF(tom.name);
+            dos.writeInt(tom.age);
+            dos.writeDouble(tom.height);
+            dos.writeBoolean(tom.married);
+            System.out.println("File has been written");
+        }
+        catch(IOException ex){
+              
+            System.out.println(ex.getMessage());
+        }  
+          
+        // обратное считывание из файла
+        try(DataInputStream dos = new DataInputStream(new FileInputStream("data.bin")))
+        {
+           // записываем значения
+            String name = dos.readUTF();
+            int age = dos.readInt();
+            double height = dos.readDouble();
+            boolean married = dos.readBoolean();
+            System.out.printf("Name: %s  Age: %d  Height: %f  Married: %b", 
+                    name, age, height, married);
+        }
+        catch(IOException ex){
+              
+            System.out.println(ex.getMessage());
+        }  
+    } 
+}
+  
+class Person
+{
+    public String name;
+    public int age;
+    public double height;
+    public boolean married;
+      
+    public Person(String n, int a, double h, boolean m)
+    {
+        this.name=n;
+        this.height=h;
+        this.age=a;
+        this.married=m;
     }
-    
-    public static void main(String args[]) {
+}
+```
+Здесь мы последовательно записываем в файл данные объекта Person.
 
-        int[] array = {10, 2, 10, 3, 1, 2, 5};
-        System.out.println(Arrays.toString(array));
-        boolean needIteration = true;
-        while (needIteration) {
-            needIteration = false;
-            for (int i = 1; i < array.length; i++) {
-                if (array[i] < array[i - 1]) {
-                    swap(array, i, i-1);
-                    needIteration = true;
+Объект DataOutputStream в конструкторе принимает поток вывода: DataOutputStream (OutputStream out). В данном случае в качестве потока вывода используется объект FileOutputStream, поэтому вывод будет происходить в файл. И с помощью выше рассмотренных методов типа writeUTF() производится запись значений в бинарный файл.
+
+Затем происходит чтение ранее записанных данных. Объект DataInputStream в конструкторе принимает поток для чтения: DataInputStream(InputStream in). Здесь таким потоком выступает объект FileInputStream
+
+## Чтение и запись текстовых файлов
+
+для полноценной работы с текстовыми файлами служат классы, которые являются наследниками абстрактных классов Reader и Writer.
+
+## Запись файлов. Класс FileWriter
+Класс FileWriter является производным от класса Writer. Он используется для записи текстовых файлов.
+
+Чтобы создать объект FileWriter, можно использовать один из следующих конструкторов:
+```java
+FileWriter(File file)
+FileWriter(File file, boolean append)
+FileWriter(FileDescriptor fd)
+FileWriter(String fileName)
+FileWriter(String fileName, boolean append) 
+```
+Так, в конструктор передается либо путь к файлу в виде строки, либо объект File, который ссылается на конкретный текстовый файл. Параметр append указывает, должны ли данные дозаписываться в конец файла (если параметр равен true), либо файл должен перезаписываться.
+
+```java
+import java.io.*;
+ 
+public class Program {
+ 
+    public static void main(String[] args) {
+        
+        try(FileWriter writer = new FileWriter("notes3.txt", false))
+        {
+           // запись всей строки
+            String text = "Hello Gold!";
+            writer.write(text);
+            // запись по символам
+            writer.append('\n');
+            writer.append('E');
+             
+            writer.flush();
+        }
+        catch(IOException ex){
+             
+            System.out.println(ex.getMessage());
+        } 
+    } 
+}
+```
+В конструкторе использовался параметр append со значением false - то есть файл будет перезаписываться. Затем с помощью методов, определенных в базовом классе Writer производится запись данных.
+
+## Чтение файлов. Класс FileReader
+Класс FileReader наследуется от абстрактного класса Reader и предоставляет функциональность для чтения текстовых файлов.
+Для создания объекта FileReader мы можем использовать один из его конструкторов:
+- FileReader(String fileName) 
+- FileReader(File file)
+- FileReader(FileDescriptor fd) 
+
+А используя методы, определенные в базом классе Reader, произвести чтение файла:
+```java
+import java.io.*;
+ 
+public class Program {
+ 
+    public static void main(String[] args) {
+        
+        try(FileReader reader = new FileReader("notes3.txt"))
+        {
+           // читаем посимвольно
+            int c;
+            while((c=reader.read())!=-1){
+                 
+                System.out.print((char)c);
+            } 
+        }
+        catch(IOException ex){
+             
+            System.out.println(ex.getMessage());
+        }   
+    } 
+}
+```
+Также мы можем считывать в промежуточный буфер из массива символов:
+```java
+import java.io.*;
+import java.util.Arrays;
+ 
+public class Program {
+  
+    public static void main(String[] args) {
+          
+        try(FileReader reader = new FileReader("notes3.txt"))
+        {
+            char[] buf = new char[256];
+            int c;
+            while((c = reader.read(buf))>0){
+                 
+                if(c < 256){
+                    buf = Arrays.copyOf(buf, c);
                 }
-            }
+                System.out.print(buf);
+            } 
         }
-        System.out.println(Arrays.toString(array));
-    
-    }
-    
-}
-
-```
-Мы итерируемся во внешнем цикле (while) до тех пор, пока не решим, что итераций больше не нужно. По умолчанию перед каждой новой итерацией мы допускаем, что наш массив отсортирован, и больше итерироваться не хотим. Поэтому, мы проходим элементы последовательно и проверяем это допущение. Но если элементы не по порядку, мы выполняем swap элементов и понимаем, что нет уверенности, что теперь элементы в правильном порядке. Следовательно, хотим выполнить ещё одну итерацию. Например, [3, 5, 2]. 5 больше трёх, всё хорошо. Но 2 меньше 5. Однако [3, 2, 5] требует ещё одного прохода, т.к. 3 > 2 и их нужно поменять местами.
-
-При n элементах сложность алгоритма становится n * n, то есть O(n^2). Такая сложность называется квадратичной. 
-
-Сортировка пузырьком — одна из самых простых и неэффективных сортировок. Её ещё иногда называют "глупой сортировкой".
-
-
-## Сортировка выбором (Selection Sort)
-Сортировка выбором имеет квадратичную сложность.
-
-Каждый проход выбирать самый минимальный элемент и смещать его в начало. При этом каждый новый проход начинать сдвигаясь вправо, то есть первый проход — с первого элемента, второй проход — со второго. 
-```java
-public class Main {
-
-    private static void swap(int[] array, int ind1, int ind2) {
-        int tmp = array[ind1];
-        array[ind1] = array[ind2];
-        array[ind2] = tmp;
-    }
-    
-    public static void main(String args[]) {
-
-        int[] array = {10, 2, 10, 3, 1, 2, 5};
-        System.out.println(Arrays.toString(array));
-        for (int left = 0; left < array.length; left++) {
-            int minInd = left;
-            for (int i = left; i < array.length; i++) {
-                if (array[i] < array[minInd]) {
-                    minInd = i;
-                }
-            }
-            swap(array, left, minInd);
-        }
-        System.out.println(Arrays.toString(array));
-
-    
-    }
-    
+        catch(IOException ex){
+             
+            System.out.println(ex.getMessage());
+        }       
+    }     
 }
 ```
-Данная сортировка неустойчива, т.к. одинаковые элементы могут изменить своё положение.
+В данном случае считываем последовательно символы из файла в массив из 256 символов, пока не дойдем до конца файла в этом случае метод read возвратит число -1.
 
+Поскольку считанная порция файла может быть меньше 256 символов (например, в файле всего 73 символа), и если количество считанных данных меньше размера буфера (256), то выполняем копирование массива с помощью метода Arrays.copy. То есть фактически обрезаем массив buf, оставляя в нем только те символы, которые считаны из файла.
 
-## Сортировка вставками (Insertion Sort)
-Сортировка вставками тоже имеет квадратичную сложность, так как у нас опять цикл в цикле. Данная сортировка является устойчивой. Это значит, что одинаковые элементы не изменят свой порядок.
+## Буферизация символьных потоков. BufferedReader и BufferedWriter
+Класс BufferedWriter записывает текст в поток, предварительно буферизируя записываемые символы, тем самым снижая количество обращений к физическому носителю для записи данных.
+
+Класс BufferedWriter имеет следующие конструкторы:
+- BufferedWriter(Writer out) 
+- BufferedWriter(Writer out, int sz)
+В качестве параметра он принимает поток вывода, в который надо осуществить запись. Второй параметр указывает на размер буфера.
+
 ```java
-public class Main {
-
-    private static void swap(int[] array, int ind1, int ind2) {
-        int tmp = array[ind1];
-        array[ind1] = array[ind2];
-        array[ind2] = tmp;
-    }
-    
-    public static void main(String args[]) {
-
-        int[] array = {10, 2, 10, 3, 1, 2, 5};
-        System.out.println(Arrays.toString(array));
-        for (int left = 0; left < array.length; left++) {
-            // Вытаскиваем значение элемента
-            int value = array[left];
-            // Перемещаемся по элементам, которые перед вытащенным элементом
-            int i = left - 1;
-            for (; i >= 0; i--) {
-                // Если вытащили значение меньшее — передвигаем больший элемент дальше
-                if (value < array[i]) {
-                    array[i + 1] = array[i];
-                } else {
-                    // Если вытащенный элемент больше — останавливаемся
-                    break;
-                }
-            }
-            // В освободившееся место вставляем вытащенное значение
-            array[i + 1] = value;
+import java.io.*;
+ 
+public class Program {
+  
+    public static void main(String[] args) {
+          
+        try(BufferedWriter bw = new BufferedWriter(new FileWriter("notes4.txt")))
+        {
+            String text = "Hello  World!\nHey! Teachers! Leave them kids alone.";
+            bw.write(text);
         }
-        System.out.println(Arrays.toString(array));
-    
-    }
-    
+        catch(IOException ex){
+              
+            System.out.println(ex.getMessage());
+        } 
+    } 
 }
-
 ```
+## Чтение текста и BufferedReader
+Класс BufferedReader считывает текст из символьного потока ввода, буферизируя прочитанные символы. Использование буфера призвано увеличить производительность чтения данных из потока.
 
-## Челночная сортировка (Shuttle Sort)
+Класс BufferedReader имеет следующие конструкторы:
+- BufferedReader(Reader in) 
+- BufferedReader(Reader in, int sz) 
+Второй конструктор, кроме потока ввода, из которого производится чтение, также определяет размер буфера, в который будут считываться символы.
 
-Суть алгоритма в том, что мы итерируемся слева направо, при этом при выполнении swap элементов мы выполняем проверку всех остальных элементов, которые остались позади, не нужно ли повторить swap.
+Так как BufferedReader наследуется от класса Reader, то он может использовать все те методы для чтения из потока, которые определены в Reader. И также BufferedReader определяет свой собственный метод readLine(), который позволяет считывать из потока построчно.
+
 ```java
-
-public class Main {
-
-    private static void swap(int[] array, int ind1, int ind2) {
-        int tmp = array[ind1];
-        array[ind1] = array[ind2];
-        array[ind2] = tmp;
-    }
-    
-    public static void main(String args[]) {
-
-        int[] array = {10, 2, 10, 3, 1, 2, 5};
-        System.out.println(Arrays.toString(array));
-        for (int i = 1; i < array.length; i++) {
-            if (array[i] < array[i - 1]) {
-                swap(array, i, i - 1);
-                for (int z = i - 1; (z - 1) >= 0; z--) {
-                    if (array[z] < array[z - 1]) {
-                        swap(array, z, z - 1);
-                    } else {
-                        break;
-                    }
-                }
+import java.io.*;
+ 
+public class Program {
+ 
+    public static void main(String[] args) {
+        
+        try(BufferedReader br = new BufferedReader (new FileReader("notes4.txt")))
+        {
+           // чтение посимвольно
+            int c;
+            while((c=br.read())!=-1){
+                 
+                System.out.print((char)c);
             }
         }
-        System.out.println(Arrays.toString(array));
-    
-    }
-    
+        catch(IOException ex){
+             
+            System.out.println(ex.getMessage());
+        } 
+    } 
 }
-
 ```
-
-## Сортировка Шелла
-Суть её похожа на сортировку пузырьком, но каждую итерацию мы имеем разный промежуток между сравниваемыми элементами. Каждую итерацию он уменьшается вдвое. 
+Также можно считать текст построчно:
 ```java
-
-public class Main {
-
-    private static void swap(int[] array, int ind1, int ind2) {
-        int tmp = array[ind1];
-        array[ind1] = array[ind2];
-        array[ind2] = tmp;
+try(BufferedReader br = new BufferedReader(new FileReader("notes4.txt")))
+{
+    //чтение построчно
+    String s;
+    while((s=br.readLine())!=null){
+                 
+        System.out.println(s);
     }
-    
-    public static void main(String args[]) {
-
-        int[] array = {10, 2, 10, 3, 1, 2, 5};
-        System.out.println(Arrays.toString(array));
-        // Высчитываем промежуток между проверяемыми элементами
-        int gap = array.length / 2;
-        // Пока разница между элементами есть
-        while (gap >= 1) {
-            for (int right = 0; right < array.length; right++) {
-                // Смещаем правый указатель, пока не сможем найти такой, что
-                // между ним и элементом до него не будет нужного промежутка
-               for (int c = right - gap; c >= 0; c -= gap) {
-                   if (array[c] > array[c + gap]) {
-                       swap(array, c, c + gap);
-                   }
-                }
-            }
-            // Пересчитываем разрыв
-            gap = gap / 2;
-        }
-        System.out.println(Arrays.toString(array));
-    
-    }
-    
 }
-
-```    
-## Cортировка слиянием (merge sort)
-Сложность данного алгоритма — логарифмическая. Записывается как O(n log n).
-
-Сначала, напишем рекурсивный вызов метода сортировки:
-```java
-
-public class Main {
-   
-    public static void mergeSort(int[] source, int left, int right) {
-        // Выберем разделитель, т.е. разделим пополам входной массив
-        int delimiter = left + ((right - left) / 2) + 1;
-        // вычисляем delimiter — положение делителя. Если делитель может разделить на 2 части, значит вызываем рекурсивно сортировку для участков, на которые делитель разбил массив. 
-
-        // Выполним рекурсивно данную функцию для двух половинок (если сможем разбить(
-        if (delimiter > 0 && right > (left + 1)) {
-            mergeSort(source, left, delimiter - 1);
-            mergeSort(source, delimiter, right);
-        }
-        // Создаём временный массив с нужным размером
-        // Подготавливаем дополнительный буферный массив, в котором выделяем отсортированный участок. 
-        int[] buffer = new int[right - left + 1];
-        // Начиная от указанной левой границы идём по каждому элементу
-        // устанавливаем курсор в начало сортируемого участка и начинаем идти по каждому элементу пустого массива и заполняем его наименьшими элементами. 
-        // Если элемент, на который указывает курсор меньше, чем элемент, на который указывает делитель — помещаем в буферный массив этот элемент и сдвигаем курсор. В противном случае помещаем в буферный массив элемент, на который указывает разделитель и сдвигаем разделитель. 
-
-
-        int cursor = left;
-        for (int i = 0; i < buffer.length; i++) {
-            // Мы используем delimeter чтобы указывать на элемент из правой части
-            // Если delimeter > right, значит в правой части не осталось недобавленных элементов
-            if (delimiter > right || source[cursor] > source[delimiter]) {
-                buffer[i] = source[cursor];
-                cursor++;
-            } else {
-                buffer[i] = source[delimiter];
-                delimiter++;
-            }
-        }
-        // Как только разделитель уйдёт за границы сортируемого участка или мы заполним весь массив, указанный диапазон считается отсортированным.
-        System.arraycopy(buffer, 0, source, left, buffer.length);
-    }
-
-    
-    public static void main(String args[]) {
-
-        int[] array = {10, 2, 10, 3, 1, 2, 5};
-        // Принимаем на вход массив с указанием начала и конца участка для сортировки. При начале сортировки — это начало и конец массива. 
-        mergeSort(array, 0, array.length-1);
-    
-        System.out.println(Arrays.toString(array));
-    
-    }
-    
-}
-
+ catch(IOException ex){
+             
+    System.out.println(ex.getMessage());
+} 
 ```
-
-## Сортировка подсчётом (Counting Sort) 
-Алгоритмическая сложность Counting Sort будет O(n+k), где n — количество элементов, а k — максимальное значение элемента. нам нужно знать минимальное и максимальное значение в массиве.
+## Считывание с консоли в файл
+Соединим оба класса BufferedReader и BufferedWriter для считывания с консоли в файл:
 ```java
-
-public class Main {
-
-    public static int[] countingSort(int[] theArray, int maxValue) {
-        // Массив со "счётчиками" размером от 0 до максимального значения
-        int numCounts[] = new int[maxValue + 1];
-        // В соответствующей ячейке (индекс = значение) увеличиваем счётчик
-        for (int num : theArray) {
-            numCounts[num]++;
-        }
-        // Подготавливаем массив для отсортированного результата
-        int[] sortedArray = new int[theArray.length];
-        int currentSortedIndex = 0;
-        // идём по массиву со "счётчиками"
-        for (int n = 0; n < numCounts.length; n++) {
-            int count = numCounts[n];
-            // идём по количеству значений
-            for (int k = 0; k < count; k++) {
-                sortedArray[currentSortedIndex] = n;
-                currentSortedIndex++;
+import java.io.*;
+ 
+public class Program {
+ 
+    public static void main(String[] args) {
+         
+        try(BufferedReader br = new BufferedReader (new InputStreamReader(System.in)); 
+                BufferedWriter bw = new BufferedWriter(new FileWriter("notes5.txt")))
+        {
+           // чтение построчно
+            String text;
+            while(!(text=br.readLine()).equals("ESC")){
+                  
+                bw.write(text + "\n");
+                bw.flush();
             }
         }
-        return sortedArray;
-    }
-    
-    public static void main(String args[]) {
-
-        int[] array = {10, 2, 10, 3, 1, 2, 5};
-    
-        System.out.println(Arrays.toString(countingSort(array, 10)));
-    
-    }
-    
-}
-
-```
-
-## Быстрая сортировка (Quick Sort)
-Она имеет алгоритмическую сложность, то есть мы имеем O(n log n).
-Данную сортировку ещё называют сортировкой Хоара. 
-```java
-
-public class Main {
-
-public static void quickSort(int[] source, int leftBorder, int rightBorder) {
-        int leftMarker = leftBorder;
-        int rightMarker = rightBorder;
-        int pivot = source[(leftMarker + rightMarker) / 2];
-        do {
-            // Двигаем левый маркер слева направо пока элемент меньше, чем pivot
-            while (source[leftMarker] < pivot) {
-                leftMarker++;
-            }
-            // Двигаем правый маркер, пока элемент больше, чем pivot
-            while (source[rightMarker] > pivot) {
-                rightMarker--;
-            }
-            // Проверим, не нужно обменять местами элементы, на которые указывают маркеры
-            if (leftMarker <= rightMarker) {
-                // Левый маркер будет меньше правого только если мы должны выполнить swap
-                if (leftMarker < rightMarker) {
-                    int tmp = source[leftMarker];
-                    source[leftMarker] = source[rightMarker];
-                    source[rightMarker] = tmp;
-                }
-                // Сдвигаем маркеры, чтобы получить новые границы
-                leftMarker++;
-                rightMarker--;
-            }
-        } while (leftMarker <= rightMarker);
-
-        // Выполняем рекурсивно для частей
-        if (leftMarker < rightBorder) {
-            quickSort(source, leftMarker, rightBorder);
-        }
-        if (leftBorder < rightMarker) {
-            quickSort(source, leftBorder, rightMarker);
-        }
+        catch(IOException ex){
+              
+            System.out.println(ex.getMessage());
+        } 
     }   
-    public static void main(String args[]) {
-
-        int[] array = {10, 2, 10, 3, 1, 2, 5};
-        quickSort(array, 0, 6);
-        System.out.println(Arrays.toString(array));
-    
-    }
-    
 }
-
 ```
-Для входного массива int[] source выставляем два маркера, левый (L) и правый (R). При первом вызове они соответствуют началу и концу массива.
+Здесь объект BufferedReader устанавливается для чтения с консоли с помощью объекта new InputStreamReader(System.in). В цикле while считывается введенный текст. И пока пользователь не введет строку "ESC", объект BufferedWriter будет записывать текст файл.
 
-Далее определяется опорный элемент, он же pivot. После этого наша задача — переместить значения, меньшие чем pivot, в левую от pivot часть, а большие — в правую. 
+## Сериализация
+Сериализация представляет процесс записи состояния объекта в поток, соответственно процесс извлечения или восстановления состояния объекта из потока называется десериализацией. Сериализация очень удобна, когда идет работа со сложными объектами.
 
-Для этого сначала двигаем указатель L, пока не найдём значение, большее чем pivot. Если меньше значения не нашли, то L совпадёт с pivot. 
+### Интерфейс Serializable
+Сериализовать можно только те объекты, которые реализуют интерфейс Serializable. Этот интерфейс не определяет никаких методов, просто он служит указателем системе, что объект, реализующий его, может быть сериализован.
 
-Потом двигаем указатель R пока не найдём меньшее, чем pivot значение. Если меньшее значение не нашли, то R совпадёт с pivot.
- 
-Далее, если указатель L находится до указателя R или совпадает с ним, то пытаемся выполнить обмен элементов, если элемент L меньше, чем R.
- 
-Далее L сдвигаем вправо на 1 позицию, R сдвигаем влево на одну позицию. 
+## Сериализация. Класс ObjectOutputStream
+Для сериализации объектов в поток используется класс ObjectOutputStream. Он записывает данные в поток.
+Для создания объекта ObjectOutputStream в конструктор передается поток, в который производится запись:
 
-Когда левый маркер L окажется за правым маркером R это будет означать, что обмен закончен, слева от pivot меньшие значения, справа от pivot — большие значения.
+Для записи данных ObjectOutputStream использует ряд методов, среди которых можно выделить следующие:
+- void close(): закрывает поток
+- void flush(): очищает буфер и сбрасывает его содержимое в выходной поток
+- void write(byte[] buf): записывает в поток массив байтов
+- void write(int val): записывает в поток один младший байт из val
+- void writeBoolean(boolean val): записывает в поток значение boolean
+- void writeByte(int val): записывает в поток один младший байт из val
+- void writeChar(int val): записывает в поток значение типа char, представленное целочисленным значением
+- void writeDouble(double val): записывает в поток значение типа double
+- void writeFloat(float val): записывает в поток значение типа float
+- void writeInt(int val): записывает целочисленное значение int
+- void writeLong(long val): записывает значение типа long
+- void writeShort(int val): записывает значение типа short
+- void writeUTF(String str): записывает в поток строку в кодировке UTF-8
+- void writeObject(Object obj): записывает в поток отдельный объект
 
-После этого рекурсивно вызываем такую же сортировку для участков массива от начала сортируемого участка до правого маркера и от левого маркера до конца сортируемого участка.
-
-Почему от начала до правого? Потому что в конце итерации так и получится, что правый маркер сдвинется настолько, что станет границей части слева.
-
-Этот алгоритм более сложный, чем простая сортировка, поэтому его лучше зарисовать. Возьмём белый лист бумаги, запишем: 4 2 6 7 3 , а Pivot по центру, т.е. число 6. Обведём его в круг. 
-
-Под 4 напишем L, под 3 напишем R. 4 меньше чем 6, 2 меньше чем 6. Итого, L переместился на положение pivot, т.к. по условию L не может уйти дальше, чем pivot. 
-
-Напишем снова 4 2 6 7 3 , обведём 6 вкруг (pivot) и поставим под ним L. Теперь двигаем указатель R. 
-
-3 меньше чем 6, поэтому ставим маркер R на цифру 3. Так как 3 меньше, чем pivot 6 выполняем swap, т.е. обмен. 
-
-Запишем результат: 4 2 3 7 6 , обводим 6 вкруг, т.к. он по прежнему pivot.
-
-Указатель L на цифре 3, указатель R на цифре 6. Мы помним, что двигаем указатели до тех пор, пока L не зайдём за R. L двигаем на следующую цифру.
-
-Тут хочется разобрать два варианта: если бы предпоследняя цифра была 7 и если бы она была не 7, а 1. 
-
-Предпоследня цифра 1: Сдвинули указатель L на цифру 1, т.к. мы можем двигать L до тех пор, пока указатель L указывает на цифру, меньшую чем pivot. А вот R мы не можем сдвинуть с 6, т.к. R не мы можем двигать только если указатель R указывает на цифру, которая больше чем pivot. swap не делаем, т.к. 1 меньше 6. Записываем положение: 4 2 3 1 6, обводим pivot 6. L сдвигается на pivot и больше не двигается. R тоже не двигается. Обмен не производим. Сдвигаем L и R на одну позицию и подписываем цифру 1 маркером R, а L получается вне числа. Т.к. L вне числа — ничего не делаем, а вот часть 4 2 3 1 выписываем снова, т.к. это наша левая часть, меньшая, чем pivot 6. Выделяем новый pivot и начинаем всё снова )
-
-Предпоследняя цифра 7: Сдвинули указать L на цифру 7, правый указатель не можем двигать, т.к. он уже указывает на pivot. т.к. 7 больше, чем pivot, то делаем swap. Запишем результат: 4 2 3 6 7, обводим 6 кружком, т.к. он pivot. Указатель L теперь сдвигается на цифру 7, а указатель R сдвигается на цифру 3. Часть от L до конца нет смысла сортировать, т.к. там всего 1 элемент, а вот часть от 4 до указателя R отправляем на сортировку. Выбираем pivot и начинаем всё снова )
-
-Единственный минус — такая сортировка не является стабильной. Т.к. при выполнении обмена одинаковые элементы могут поменять свой порядок, если один из них встретился до pivot до того, как другой элемент попал в часть до pivot при помощи обмена.
-
-## Интерфейс Set
-
-Интерфейс Set расширяет интерфейс Collection и представляет набор уникальных элементов. Set не добавляет новых методов, только вносит изменения унаследованные. В частности, метод add() добавляет элемент в коллекцию и возвращает true, если в коллекции еще нет такого элемента.
- 
-Интерфейс Set — это Collection, который не может содержать повторяющиеся элементы. Он моделирует математическую установку абстракции.
-
-Методы
-- add() Добавляет объект к коллекции.
-- clear() Удаляет все объекты из коллекции.
-- contains() Возвращает true, если указанный объект является элементом в коллекции.
-- isEmpty() Возвращает true, если в коллекции нет элементов.
-- iterator() Возвращает объект Iterator, который может быть использован для извлечения объекта
-- remove( ) Удаляет указанный объект из коллекции.
-- size( ) Возвращает число элементов в коллекции.
-
-В Java интерфейс Set имеет свою реализацию в различных классах как HashSet, TreeSet, LinkedHashSet. 
-
-### Set:
-
+сохраним в файл один объект класса Person:
 ```java
-package ua.mycom;
-
-import java.util.*;
-import java.util.ArrayList;
-
-import ua.mycom.*;
-
-public class Main {
-    
-    public static void main(String args[]) {
-        int count[] = {34, 22,10,60,30,22};
-
-        Set set = new HashSet();
-        try {
-            for(int i = 0; i < 5; i++) {
-                set.add(count[i]);
-            }
-
-            System.out.println(set);
-            TreeSet sortedSet = new TreeSet(set);
-            System.out.println("Отсортированный список:");
-            System.out.println(sortedSet);
-            System.out.println("Первый элемент набора: "+ (Integer)sortedSet.first());
-            System.out.println("Последний элемент набора: "+ (Integer)sortedSet.last());
-        }
-        catch(Exception e) {}
-    }
-
-}
-
-```
-## Обобщенный класс HashSet
+import java.io.*;
  
-Обобщенный класс HashSet представляет хеш-таблицу. Он наследует свой функционал от класса AbstractSet, а также реализует интерфейс Set.
-
-Хеш-таблица представляет такую структуру данных, в которой все объекты имеют уникальный ключ или хеш-код. Данный ключ позволяет уникально идентифицировать объект в таблице.
-
-Для создания объекта HashSet можно воспользоваться одним из следующих конструкторов:
-- HashSet(): создает пустой список
-- HashSet(Collection<? extends E> col): создает хеш-таблицу, в которую добавляет все элементы коллекции col
-- HashSet(int capacity): параметр capacity указывает начальную емкость таблицы, которая по умолчанию равна 16
-- HashSet(int capacity, float koef): параметр koef или коэффициент заполнения, значение которого должно быть в пределах от 0.0 до 1.0, указывает, насколько должна быть заполнена емкость объектами прежде чем произойдет ее расширение. Например, коэффициент 0.75 указывает, что при заполнении емкости на 3/4 произойдет ее расширение.
-
-Класс HashSet не добавляет новых методов, реализуя лишь те, что объявлены в родительских классах и применяемых интерфейсах:
-```java
-package ua.mycom;
-
-import java.util.*;
-
-import ua.mycom.*;
-
-public class Main {
-    
-    public static void main(String args[]) {
-        HashSet<String> states = new HashSet<String>();
-        
-        // добавим в список ряд элементов
-        states.add("Germany");
-        states.add("France");
-        states.add("Italy");
-        states.add("Кот-Д'Ивуар"); // любимая страна всех котов
-
-        // пытаемся добавить элемент, который уже есть в коллекции
-        states.add("Кот-Д'Ивуар"); // любимая страна всех котов
-        
-        boolean isAdded = states.add("Germany");
-        System.out.println(isAdded);    // false
-        
-        // Получим размер HashSet
-        System.out.printf("Set contains %d elements \n", states.size());    // 3
-          
-        for(String state : states){
-          
-            System.out.println(state);
-        }
-        // удаление элемента
-        states.remove("Germany");
-
-        // Конвертируем HashSet в массив
-        String[] myArray = {};
-        myArray = states.toArray(new String[states.size()]);
-
-        for(String p : myArray){
-            System.out.println(p);
-        }   
-
-        
-        // метод iterator() позволяет получить всё множество элементов:
-        Iterator<String> iterator = states.iterator();
-        
-        // порядок добавления стран во множество будет непредсказуемым. HashSet использует хэширование для ускорения выборки. Если вам нужно, чтобы результат был отсортирован, то пользуйтесь TreeSet.
-
-        while (iterator.hasNext()) {
-            System.out.println(iterator.next());
-        }
-
-
-        Random random = new Random(30);
-        Set<Integer> numberSet = new HashSet<>();
-
-        for(int i = 0; i < 1000; i++)
-            numberSet.add(random.nextInt(10));
-        
-        System.out.println(numberSet.toString());
-
-        // хеш-таблица объектов Person
-        HashSet<Person> people = new HashSet<Person>();
-        people.add(new Person("Mike"));
-        people.add(new Person("Tom"));
-        people.add(new Person("Nick"));
-        
-        for(Person p : people){
-            System.out.println(p.getName());
-        }   
-
-        // Конвертируем HashSet в массив
-        String[] myArray = {};
-        myArray = people.toArray(new String[people.size()]);
-
-        for(String p : myArray){
-            System.out.println(p.getName());
-        }   
-
-    }
-}
-
-class Person{
-    
-    private String name;
-    public Person(String value){
-          
-        name=value;
-    }
-    String getName(){return name;}
-}
-
-```
-## Интерфейс SortedSet
-
-Интерфейс SortedSet предназначен для создания коллекций, который хранят элементы в отсортированном виде (сортировка по возрастанию). SortedSet расширяет интерфейс Set, поэтому такая коллекция хранит только уникальные значения. SortedSet предоставляет следующие методы:
-- E first(): возвращает первый элемент набора
-- E last(): возвращает последний элемент набора
-- SortedSet<E> headSet(E end): возвращает объект SortedSet, который содержит все элементы первичного набора до элемента end
-- SortedSet<E> subSet(E start, E end): возвращает объект SortedSet, который содержит все элементы первичного набора между элементами start и end
-- SortedSet<E> tailSet(E start): возвращает объект SortedSet, который содержит все элементы первичного набора, начиная с элемента start
-
-Несколько методов вызывают исключение NoSuchElementException, если в вызывающем наборе не содержится элементов. ClassCastException вызывается, когда объект несовместим с элементами в наборе.
-
-Исключение NullPointerException выдается, если совершается попытка использовать нулевой объект и null не допускается в наборе.
-
-SortedSet имеет свою реализацию в различных классах, таких как TreeSet. 
-
-### пример класса TreeSet:
-
-```java
-package ua.mycom;
-
-import java.util.*;
-import java.util.ArrayList;
-
-import ua.mycom.*;
-
-public class Main {
-    
-    public static void main(String args[]) {
-          // Создаем отсортированный набор
-          SortedSet set = new TreeSet(); 
-
-          // Добавляем элементы к наборы
-          set.add("b");
-          set.add("c");
-          set.add("a");
-
-          // Итерация по элементам в наборе
-          Iterator it = set.iterator();
-
-          while (it.hasNext()) {
-             // Получаем элемент
-             Object element = it.next();
-             System.out.println(element.toString());
-          } 
-    }
-}
-
-```
-## NavigableSet
-Интерфейс NavigableSet расширяет интерфейс SortedSet и позволяет извлекать элементы на основании их значений. NavigableSet определяет следующие методы:
-
-- E ceiling(E obj): ищет в наборе наименьший элемент e, который больше obj (e >=obj). Если такой элемент найден, то он возвращается в качестве результата. Иначе возвращается null.
-- E floor(E obj): ищет в наборе наибольший элемент e, который меньше элемента obj (e <=obj). Если такой элемент найден, то он возвращается в качестве результата. Иначе возвращается null.
-- E higher(E obj): ищет в наборе наименьший элемент e, который больше элемента obj (e >obj). Если такой элемент найден, то он возвращается в качестве результата. Иначе возвращается null.
-- E lower(E obj): ищет в наборе наибольший элемент e, который меньше элемента obj (e < obj). Если такой элемент найден, то он возвращается в качестве результата. Иначе возвращается null.
-- E pollFirst(): возвращает первый элемент и удаляет его из набора
-- E pollLast(): возвращает последний элемент и удаляет его из набора
-- NavigableSet<E> descendingSet(): возвращает объект NavigableSet, который содержит все элементы первичного набора NavigableSet в обратном порядке
-- NavigableSet<E> headSet(E upperBound, boolean incl): возвращает объект NavigableSet, который содержит все элементы первичного набора NavigableSet до upperBound. Параметр incl при значении true, позволяет включить в выходной набор элемент upperBound
-- NavigableSet<E> tailSet(E lowerBound, boolean incl): возвращает объект NavigableSet, который содержит все элементы первичного набора NavigableSet, начиная с lowerBound. Параметр incl при значении true, позволяет включить в выходной набор элемент lowerBound
-- NavigableSet<E> subSet(E lowerBound, boolean lowerIncl, E upperBound, boolean highIncl): возвращает объект NavigableSet, который содержит все элементы первичного набора NavigableSet от lowerBound до upperBound.
-
-
-## TreeSet
-Обобщенный класс TreeSet<E> представляет структуру данных в виде дерева, в котором все объекты хранятся в отсортированном виде по возрастанию. TreeSet является наследником класса AbstractSet и реализует интерфейс NavigableSet, а следовательно, и интерфейс SortedSet.
-
-В классе TreeSet определены следующие конструкторы:
-- TreeSet(): создает пустое дерево
-- TreeSet(Collection<? extends E> col): создает дерево, в которое добавляет все элементы коллекции col
-- TreeSet(SortedSet <E> set): создает дерево, в которое добавляет все элементы сортированного набора set
-- TreeSet(Comparator<? super E> comparator): создает пустое дерево, где все добавляемые элементы впоследствии будут отсортированы компаратором.
-
-TreeSet поддерживает все стандартные методы для вставки и удаления элементов:
-
-```java
-package ua.mycom;
-
-import java.util.*;
-import java.util.ArrayList;
-
-import ua.mycom.*;
-
-public class Main {
-    
-    public static void main(String args[]) {
-        TreeSet<String> states = new TreeSet<String>();
-        
-        // добавим в список ряд элементов
-        states.add("Germany");
-        states.add("France");
-        states.add("Italy");
-        states.add("Great Britain");
-        
-        System.out.printf("TreeSet contains %d elements \n", states.size());
+public class Program {
+ 
+    public static void main(String[] args) {
          
-        // удаление элемента
-        states.remove("Germany");
-        for(String state : states){
-          
-            System.out.println(state);
-        }   
-    }
+        try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("person.dat")))
+        {
+            Person p = new Person("Sam", 33, 178, true);
+            oos.writeObject(p);
+        }
+        catch(Exception ex){
+             
+            System.out.println(ex.getMessage());
+        } 
+    } 
 }
-// поскольку при вставке объекты сразу же сортируются по возрастанию, 
-// то при выводе в цикле for мы получим отсортированный набор:
-
-// TreeSet contains 4 elements
-// France
-// Great Britain
-// Italy
-
-```
-
-Так как TreeSet реализует интерфейс NavigableSet, а через него и SortedSet, то мы можем применить к структуре дерева различные методы:
-
-
-```java
-package ua.mycom;
-
-import java.util.*;
-import java.util.ArrayList;
-
-import ua.mycom.*;
-
-public class Main {
-    
-    public static void main(String args[]) {
-        TreeSet<String> states = new TreeSet<String>();
-        
-        // добавим в список ряд элементов
-        states.add("Germany");
-        states.add("France");
-        states.add("Italy");
-        states.add("Spain");
-        states.add("Great Britain");
-        
-        System.out.println(states.first()); // получим первый - самый меньший элемент
-        System.out.println(states.last()); // получим последний - самый больший элемент
-        // получим поднабор от одного элемента до другого
-        SortedSet<String> set = states.subSet("Germany", "Italy");
-        System.out.println(set);
-        // элемент из набора, который больше текущего
-        String greater = states.higher("Germany");
-        // элемент из набора, который меньше текущего
-        String lower = states.lower("Germany");
-        // возвращаем набор в обратном порядке
-        NavigableSet<String> navSet = states.descendingSet();
-        // возвращаем набор в котором все элементы меньше текущего
-        SortedSet<String> setLower=states.headSet("Germany");
-        // возвращаем набор в котором все элементы больше текущего
-        SortedSet<String> setGreater=states.tailSet("Germany");  
-        System.out.println(navSet);
-        System.out.println(setLower);
-        System.out.println(setGreater);
-    }
-}
-
-```
-
-## Интерфейсы Comparable и Comparator. 
- 
-При добавлении новых элементов объект TreeSet автоматически проводит сортировку, помещая новый объект на правильное для него место. 
-
-А что если бы мы использовали не строки, а свои классы, например, следующий класс Person:
-
-```java
-class Person{
-    
-    private String name;
-    Person(String name){
-          
-        this.name=name;
-    }
-    String getName(){return name;}
-}
-
-// Объект TreeSet мы не сможем типизировать данным классом, поскольку в случае добавления объектов TreeSet не будет знать, как их сравнивать, и следующий кусок кода не будет работать:
-
-TreeSet<Person> people = new TreeSet<Person>();
-people.add(new Person("Tom"));
-
-// При выполнении этого кода мы столкнемся с ошибкой, которая скажет, что объект Person не может быть преобразован к типу java.lang.Comparable.
-
-```
-## Интерфейс Comparable
-Для того, чтобы объекты Person можно было сравнить и сортировать, они должны применять интерфейс Comparable<E>. При применении интерфейса он типизируется текущим классом. Применим его к классу Person:
-
-```java
-class Person implements Comparable<Person>{
-    
-    private String name;
-    Person(String name){
-         
-        this.name = name;
-    }
-    String getName(){return name;}
-     
-    public int compareTo(Person p){
-     
-        return name.compareTo(p.getName());
-    }
-}
-
-```
-Интерфейс Comparable содержит один единственный метод int compareTo(E item), который сравнивает текущий объект с объектом, переданным в качестве параметра. Если этот метод возвращает отрицательное число, то текущий объект будет располагаться перед тем, который передается через параметр. Если метод вернет положительное число, то, наоборот, после второго объекта. Если метод возвратит ноль, значит, оба объекта равны.
-
-В данном случае мы не возвращаем явным образом никакое число, а полагаемся на встроенный механизм сравнения, который есть у класса String. Но мы также можем определить и свою логику, например, сравнивать по длине имени:
-```java
-
-public int compareTo(Person p){
-     
-    return name.length()-p.getName().length();
-}
-
-```
-Теперь мы можем типизировать TreeSet типом Person и добавлять в дерево соответствующие объекты:
-```java
-
-TreeSet<Person> people = new TreeSet<Person>();
-people.add(new Person("Tom"));
-
-```
-## Интерфейс Comparator
-Однако перед нами может возникнуть проблема, что если разработчик не реализовал в своем классе, который мы хотим использовать, интерфейс Comparable, либо реализовал, но нас не устраивает его функциональность, и мы хотим ее переопределить? На этот случай есть еще более гибкий способ, предполагающий применение интерфейса Comparator<E>.
-
-Интерфейс Comparator содержит ряд методов, ключевым из которых является метод compare():
-```java
-
-public interface Comparator<E> {
- 
-    int compare(T a, T b);
-    // остальные методы
-}
-
-```
-Метод compare также возвращает числовое значение - если оно отрицательное, то объект a предшествует объекту b, иначе - наоборот. А если метод возвращает ноль, то объекты равны. Для применения интерфейса нам вначале надо создать класс компаратора, который реализует этот интерфейс:
-```java
-
-class PersonComparator implements Comparator<Person>{
- 
-    public int compare(Person a, Person b){
-     
-        return a.getName().compareTo(b.getName());
-    }
-}
-
-```
-### проводим сравнение по строкам. 
-
-Теперь используем класс компаратора для создания объекта TreeSet:
-
-```java
-package ua.mycom;
-
-import java.util.*;
-import java.util.ArrayList;
-
-import ua.mycom.*;
-
-public class Main {
-    
-    public static void main(String args[]) {
-        PersonComparator pcomp = new PersonComparator();
-
-        TreeSet<Person> people = new TreeSet<Person>(pcomp);
-        people.add(new Person("Tom"));
-        people.add(new Person("Nick"));
-        people.add(new Person("Alice"));
-        people.add(new Person("Bill"));
-        for(Person  p : people){
-            System.out.println(p.getName());
-        }    
-    }
-}
-
-class PersonComparator implements Comparator<Person>{
-     
-    public int compare(Person a, Person b){
-     
-        return a.getName().compareTo(b.getName());
-    }
-}
-
-
-```
-Для создания TreeSet здесь используется одна из версий конструктора, которая в качестве параметра принимает компаратор. Теперь вне зависимости от того, реализован ли в классе Person интерфейс Comparable, логика сравнения и сортировки будет использоваться та, которая определена в классе компаратора.
-
-## Сортировка по нескольким критериям
-Начиная с JDK 8 в механизм работы компараторов были внесены некоторые дополнения. В частности, теперь мы можем применять сразу несколько компараторов по принципу приоритета. Например, изменим класс Person следующим образом:
-
-```java
-package ua.mycom;
-
-class Person{
-    
+class Person implements Serializable{
+      
     private String name;
     private int age;
-    public Person(String n, int a){
+    private double height;
+    private boolean married;
+      
+    Person(String n, int a, double h, boolean m){
           
         name=n;
         age=a;
+        height=h;
+        married=m;
     }
-    String getName(){return name;}
-    int getAge(){return age;}
+    String getName() {return name;}
+    int getAge(){ return age;}
+    double getHeight(){return height;}
+    boolean getMarried(){return married;}
 }
-
 ```
-Здесь добавлено поле для хранения возраста пользователя. И, допустим, нам надо отсортировать пользователей по имени и по возрасту. Для этого определим два компаратора:
+## Десериализация. Класс ObjectInputStream
+Класс ObjectInputStream отвечает за обратный процесс - чтение ранее сериализованных данных из потока. В конструкторе он принимает ссылку на поток ввода:
 
+Функционал ObjectInputStream сосредоточен в методах, предназначенных для чтения различных типов данных. основные методы этого класса:
+- void close(): закрывает поток
+- int skipBytes(int len): пропускает при чтении несколько байт, количество которых равно len
+- int available(): возвращает количество байт, доступных для чтения
+- int read(): считывает из потока один байт и возвращает его целочисленное представление
+- boolean readBoolean(): считывает из потока одно значение boolean
+- byte readByte(): считывает из потока один байт
+- char readChar(): считывает из потока один символ char
+- double readDouble(): считывает значение типа double
+- float readFloat(): считывает из потока значение типа float
+- int readInt(): считывает целочисленное значение int
+- long readLong(): считывает значение типа long
+- short readShort(): считывает значение типа short
+- String readUTF(): считывает строку в кодировке UTF-8
+- Object readObject(): считывает из потока объект
+
+извлечем сохраненный объект Person из файла:
 ```java
-package ua.mycom;
-import java.util.*;
-
-public class Main {
-    
-    public static void main(String args[]) {
+import java.io.*;
+ 
+public class Program {
+ 
+    public static void main(String[] args) {
         
-        // Интерфейс компаратора определяет специальный метод по умолчанию thenComparing, 
-        // который позволяет использовать цепочки компараторов для сортировки набора:
-
-        Comparator<Person> pcomp = new PersonNameComparator().thenComparing(new PersonAgeComparator());
-        TreeSet<Person> people = new TreeSet(pcomp);
-
-        people.add(new Person("Tom", 23));
-        people.add(new Person("Nick",34));
-        people.add(new Person("Tom",10));
-        people.add(new Person("Bill",14));
-         
-        for(Person  p : people){
-         
-            System.out.println(p.getName() + " " + p.getAge());
+        try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream("person.dat")))
+        {
+            Person p=(Person)ois.readObject();
+            System.out.printf("Name: %s \t Age: %d \n", p.getName(), p.getAge());
         }
-    
-    }
+        catch(Exception ex){
+             
+            System.out.println(ex.getMessage());
+        }
+    } 
 }
-
-class PersonNameComparator implements Comparator<Person>{
-      
-    public int compare(Person a, Person b){
-      
-        return a.getName().compareTo(b.getName());
-    }
-}
-class PersonAgeComparator implements Comparator<Person>{
+```
+совместим сохранение и восстановление из файла на примере списка объектов:
+```java
+import java.io.*;
+import java.util.ArrayList;
   
-    public int compare(Person a, Person b){
-      
-        if(a.getAge()> b.getAge())
-            return 1;
-        else if(a.getAge()< b.getAge())
-            return -1;
-        else
-            return 0;
-    }
-}
-
-// Консольный вывод:
-
-// Bill 14
-// Nick 34
-// Tom 10
-// Tom 23
-// В данном случае сначала применяется сортировка по имени, а потом по возрасту.
-
-```
-
-## Интерфейс Map и класс HashMap
- 
-Интерфейс Map<K, V> представляет отображение или иначе говоря словарь, где каждый элемент представляет пару "ключ-значение". При этом все ключи уникальные в рамках объекта Map. Такие коллекции облегчают поиск элемента, если нам известен ключ - уникальный идентификатор объекта.
-
-в отличие от других интерфейсов, которые представляют коллекции, интерфейс Map НЕ расширяет интерфейс Collection.
-
-Среди методов интерфейса Map можно выделить следующие:
-- void clear(): очищает коллекцию
-- boolean containsKey(Object k): возвращает true, если коллекция содержит ключ k
-- boolean containsValue(Object v): возвращает true, если коллекция содержит значение v
-- Set<Map.Entry<K, V>> entrySet(): возвращает набор элементов коллекции. Все элементы представляют объект Map.Entry
-- boolean equals(Object obj): возвращает true, если коллекция идентична коллекции, передаваемой через параметр obj
-- boolean isEmpty: возвращает true, если коллекция пуста
-- V get(Object k): возвращает значение объекта, ключ которого равен k. Если такого элемента не окажется, то возвращается значение null
-- V getOrDefault(Object k, V defaultValue): возвращает значение объекта, ключ которого равен k. Если такого элемента не окажется, то возвращается значение defaultVlue
-- V put(K k, V v): помещает в коллекцию новый объект с ключом k и значением v. Если в коллекции уже есть объект с подобным ключом, то он перезаписывается. После добавления возвращает предыдущее значение для ключа k, если он уже был в коллекции. Если же ключа еще не было в коллекции, то возвращается значение null
-- V putIfAbsent(K k, V v): помещает в коллекцию новый объект с ключом k и значением v, если в коллекции еще нет элемента с подобным ключом.
-- Set<K> keySet(): возвращает набор всех ключей отображения
-- Collection<V> values(): возвращает набор всех значений отображения
-- void putAll(Map<? extends K, ? extends V> map): добавляет в коллекцию все объекты из отображения map
-- V remove(Object k): удаляет объект с ключом k
-- int size(): возвращает количество элементов коллекции
-
-Чтобы положить объект в коллекцию, используется метод put, а чтобы получить по ключу - метод get. Реализация интерфейса Map также позволяет получить наборы как ключей, так и значений. А метод entrySet() возвращает набор всех элементов в виде объектов Map.Entry<K, V>.
-
-
-Map имеет своё реализацию в различных классах, таких как HashMap. 
-
-```java
-package ua.mycom;
-import java.util.*;
-
-public class Main {
-    
-    public static void main(String args[]) {
-          Map m1 = new HashMap(); 
-          m1.put("Маша", "8");
-          m1.put("Михаил", "31");
-          m1.put("Олег", "12");
-          m1.put("Денис", "14");
-
-          System.out.println();
-          System.out.println("Элементы карты");
-          System.out.print("\t" + m1);    
-    }
-}
-
-```
-
-## Интерфейс Map.Entry
-
-Обобщенный интерфейс Map.Entry<K, V> представляет объект с ключом типа K и значением типа V и определяет следующие методы:
-
-- boolean equals(Object obj): возвращает true, если объект obj, представляющий интерфейс Map.Entry, идентичен текущему
-- K getKey(): возвращает ключ объекта отображения
-- V getValue(): возвращает значение объекта отображения
-- V setValue(V v): устанавливает для текущего объекта значение v
-- int hashCode(): возвращает хеш-код данного объекта
-
-Интерфейс Map.Entry позволяет работать с записями Map.
-
-Метод entrySet(), объявленный интерфейсом Map, возвращает Set, содержащий записи Map. Каждый из этих элементов является объектом Map.Entry.
-
-### как можно использовать Map.Entry:
-
-```java
-package ua.mycom;
-import java.util.*;
-
-public class Main {
-    
-    public static void main(String args[]) {
-          // Создаём хэш-карту
-          HashMap hm = new HashMap();
-
-          // Кладём элементы в Map
-          hm.put("Зоя", new Double(3434.34));
-          hm.put("Марк", new Double(123.22));
-          hm.put("Аня", new Double(1378.00));
-          hm.put("Маргарита", new Double(99.22));
-          hm.put("Михаил", new Double(-19.08));
-          
-          // Получаем набор элементов
-          Set set = hm.entrySet();
-          
-          // Получаем итератор
-          Iterator i = set.iterator();
+public class Program {
+     
+    //@SuppressWarnings("unchecked")
+    public static void main(String[] args) {
          
-          // Отображение элементов
-          while(i.hasNext()) {
-             Map.Entry me = (Map.Entry)i.next();
-             System.out.print(me.getKey() + ": ");
-             System.out.println(me.getValue());
-          }
-          System.out.println();
-         
-          // Вносим 1000 на счёт Зои
-          double balance = ((Double)hm.get("Зоя")).doubleValue();
-          hm.put("Зоя", new Double(balance + 1000));
-          System.out.println("Новый баланс Зои: " + hm.get("Зоя"));    
-    }
-}
-
-```
-
-## Классы отображений. HashMap
-Базовым классом для всех отображений является абстрактный класс AbstractMap, который реализует большую часть методов интерфейса Map. Наиболее распространенным классом отображений является HashMap, который реализует интерфейс Map и наследуется от класса AbstractMap.
-
-```java
-
-package ua.mycom;
-import java.util.*;
-
-public class Main {
-    
-    public static void main(String args[]) {
-        Map<Integer, String> states = new HashMap<Integer, String>();
-       states.put(1, "Germany");
-       states.put(2, "Spain");
-       states.put(4, "France");
-       states.put(3, "Italy");
-         
-       // получим объект по ключу 2
-       String first = states.get(2);
-       System.out.println(first);
-       // получим весь набор ключей
-       Set<Integer> keys = states.keySet();
-       // получить набор всех значений
-       Collection<String> values = states.values();
-       //заменить элемент
-       states.replace(1, "Poland");
-       // удаление элемента по ключу 2
-       states.remove(2);
-       // перебор элементов
-       for(Map.Entry<Integer, String> item : states.entrySet()){
-         
-           System.out.printf("Key: %d  Value: %s \n", item.getKey(), item.getValue());
-       }
+        String filename = "people.dat";
+        // создадим список объектов, которые будем записывать
+        ArrayList<Person> people = new ArrayList<Person>();
+        people.add(new Person("Tom", 30, 175, false));
+        people.add(new Person("Sam", 33, 178, true));
           
-       Map<String, Person> people = new HashMap<String, Person>();
-       people.put("1240i54", new Person("Tom"));
-       people.put("1564i55", new Person("Bill"));
-       people.put("4540i56", new Person("Nick"));
-         
-       for(Map.Entry<String, Person> item : people.entrySet()){
-         
-           System.out.printf("Key: %s  Value: %s \n", item.getKey(), item.getValue().getName());
-       }    
-    }
-}
-
-public class Person {
-
-    private String name;
-    public Person(String value){
-          
-        name=value;
-    }
-    String getName(){return name;}
-}
-
-```
-Чтобы добавить или заменить элемент, используется метод put, либо replace, а чтобы получить его значение по ключу - метод get. С помощью других методов интерфейса Map также производятся другие манипуляции над элементами: перебор, получение ключей, значений, удаление.
- 
-Для создания отображений Java также предоставляет ряд дополнительных интерфейсов: SortedMap и NavigableMap
-
-## SortedMap
-Интерфейс SortedMap расширяет Map и создает отображение, в котором все элементы отсортированы в порядке возрастания их ключей. SortedMap добавляет ряд методов:
-- K firstKey(): возвращает ключ первого элемента отображения
-- K lastKey(): возвращает ключ последнего элемента отображения
-- SortedMap<K, V> headMap(K end): возвращает отображение SortedMap, которые содержит все элементы оригинального SortedMap вплоть до элемента с ключом end
-- SortedMap<K, V> tailMap(K start): возвращает отображение SortedMap, которые содержит все элементы оригинального SortedMap, начиная с элемента с ключом start
-- SortedMap<K, V> subMap(K start, K end): возвращает отображение SortedMap, которые содержит все элементы оригинального SortedMap вплоть от элемента с ключом start до элемента с ключом end
-- SortedMap имеет свою реализацию в различных классах, например TreeMap. Ниже приведен пример объяснения функциональности SortedMap:
-
-```java
-package ua.mycom;
-import java.util.*;
-
-public class Main {
-    
-    public static void main(String args[]) {
-          // Создаём хэш-карту
-          TreeMap tm = new TreeMap();
-          
-          // Кладём элементы в Map
-          tm.put("Зоя", new Double(3434.34));
-          tm.put("Марк", new Double(123.22));
-          tm.put("Аня", new Double(1378.00));
-          tm.put("Маргарита", new Double(99.22));
-          tm.put("Михаил", new Double(-19.08));
-          
-          // Получаем набор элементов
-          Set set = tm.entrySet();
-          
-          // Получаем итератор
-          Iterator i = set.iterator();
-          
-          // Отображение элементов
-          while(i.hasNext()) {
-             Map.Entry me = (Map.Entry)i.next();
-             System.out.print(me.getKey() + ": ");
-             System.out.println(me.getValue());
-          }
-          System.out.println();
-          
-          // Вносим 1000 на счёт Зои
-          double balance = ((Double)tm.get("Зоя")).doubleValue();
-          tm.put("Зоя", new Double(balance + 1000));
-          System.out.println("Новый баланс Зои: " + tm.get("Зоя"));    
-    }
-}
-
-```
-
-## NavigableMap
-Интерфейс NavigableMap расширяет интерфейс SortedMap и обеспечивает возможность получения элементов отображения относительно других элементов. Его основные методы:
-
-- Map.Entry<K, V> ceilingEntry(K obj): возвращает элемент с наименьшим ключом k, который больше или равен ключу obj (k >=obj). Если такого ключа нет, то возвращается null.
-- Map.Entry<K, V> floorEntry(K obj): возвращает элемент с наибольшим ключом k, который меньше или равен ключу obj (k <=obj). Если такого ключа нет, то возвращается null.
-- Map.Entry<K, V> higherEntry(): возвращает элемент с наименьшим ключом k, который больше ключа obj (k >obj). Если такого ключа нет, то возвращается null.
-- Map.Entry<K, V> lowerEntry(): возвращает элемент с наибольшим ключом k, который меньше ключа obj (k < obj). Если такого ключа нет, то возвращается null.
-- Map.Entry < K, V> firstEntry(): возвращает первый элемент отображения
-- Map.Entry<K, V> lastEntry(): возвращает последний элемент отображения
-- Map.Entry<K, V> pollFirstEntry(): возвращает и одновременно удаляет первый элемент из отображения
-- Map.Entry<K, V> pollLastEntry(): возвращает и одновременно удаляет последний элемент из отображения
-- K ceilingKey(K obj): возвращает наименьший ключ k, который больше или равен ключу obj (k >=obj). Если такого ключа нет, то возвращается null.
-- K floorKey(K obj): возвращает наибольший ключ k, который меньше или равен ключу obj (k <=obj). Если такого ключа нет, то возвращается null.
-- K lowerKey(K obj): возвращает наибольший ключ k, который меньше ключа obj (k < obj). Если такого ключа нет, то возвращается null.
-- K higherKey(K obj): возвращает наименьший ключ k, который больше ключа obj (k >obj). Если такого ключа нет, то возвращается null.
-- NavigableSet<K> descendingKeySet(): возвращает объект NavigableSet, который содержит все ключи отображения в обратном порядке
-- NavigableMap<K, V> descendingMap(): возвращает отображение NavigableMap, которое содержит все элементы в обратном порядке
-- NavigableSet<K> navigableKeySet(): возвращает объект NavigableSet, который содержит все ключи отображения
-- NavigableMap<K, V> headMap(K upperBound, boolean incl): возвращает отображение NavigableMap, которое содержит все элементы оригинального NavigableMap вплоть от элемента с ключом upperBound. Параметр incl при значении true указывает, что элемент с ключом upperBound также включается в выходной набор.
-- NavigableMap<K, V> tailMap(K lowerBound, boolean incl): возвращает отображение NavigableMap, которое содержит все элементы оригинального NavigableMap, начиная с элемента с ключом lowerBound. Параметр incl при значении true указывает, что элемент с ключом lowerBound также включается в выходной набор.
-- NavigableMap<K, V> subMap(K lowerBound, boolean lowIncl, K upperBound, boolean highIncl): возвращает отображение NavigableMap, которое содержит все элементы оригинального NavigableMap от элемента с ключом lowerBound до элемента с ключом upperBound. Параметры lowIncl и highIncl при значении true включают в выходной набор элементы с ключами lowerBound и upperBound соответственно.
-
-## TreeMap
-Класс TreeMap<K, V> представляет отображение в виде дерева. Он наследуется от класса AbstractMap и реализует интерфейс NavigableMap, а следовательно, также и интерфейс SortedMap. Поэтому в отличие от коллекции HashMap в TreeMap все объекты автоматически сортируются по возрастанию их ключей.
-
-Класс TreeMap имеет следующие конструкторы:
-- TreeMap(): создает пустое отображение в виде дерева
-- TreeMap(Map<? extends K,? extends V> map): создает дерево, в которое добавляет все элементы из отображения map
-- TreeMap(SortedMap<K, ? extends V> smap): создает дерево, в которое добавляет все элементы из отображения smap
-- TreeMap(Comparator<? super K> comparator): создает пустое дерево, где все добавляемые элементы впоследствии будут отсортированы компаратором.
-
-```java
-
-package ua.mycom;
-import java.util.*;
-
-public class Main {
-    
-    public static void main(String args[]) {
-        TreeMap<Integer, String> states = new TreeMap<Integer, String>();
-           states.put(10, "Germany");
-           states.put(2, "Spain");
-           states.put(14, "France");
-           states.put(3, "Italy");
-             
-           // получим объект по ключу 2
-           String first = states.get(2);
-           // перебор элементов
-           for(Map.Entry<Integer, String> item : states.entrySet()){
-             
-               System.out.printf("Key: %d  Value: %s \n", item.getKey(), item.getValue());
-           }
-           // получим весь набор ключей
-           Set<Integer> keys = states.keySet();
-           // получить набор всех значений
-           Collection<String> values = states.values();
-             
-           // получаем все объекты, которые стоят после объекта с ключом 4
-           Map<Integer, String> afterMap = states.tailMap(4);
-             
-           // получаем все объекты, которые стоят до объекта с ключом 10
-           Map<Integer, String> beforeMap = states.headMap(10);
-             
-           // получим последний элемент дерева
-           Map.Entry<Integer, String> lastItem = states.lastEntry();
-             
-           System.out.printf("Last item has key %d value %s \n",lastItem.getKey(), lastItem.getValue());
+        try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename)))
+        {
+            oos.writeObject(people);
+            System.out.println("File has been written");
+        }
+        catch(Exception ex){
               
-           Map<String, Person> people = new TreeMap<String, Person>();
-           people.put("1240i54", new Person("Tom"));
-           people.put("1564i55", new Person("Bill"));
-           people.put("4540i56", new Person("Nick"));
+            System.out.println(ex.getMessage());
+        } 
+          
+        // десериализация в новый список
+        ArrayList<Person> newPeople= new ArrayList<Person>();
+        try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename)))
+        {
              
-           for(Map.Entry<String, Person> item : people.entrySet()){
-             
-               System.out.printf("Key: %s  Value: %s \n", item.getKey(), item.getValue().getName());
-           }    
-    }
+            newPeople=((ArrayList<Person>)ois.readObject());
+        }
+        catch(Exception ex){
+              
+            System.out.println(ex.getMessage());
+        } 
+          
+        for(Person p : newPeople)
+            System.out.printf("Name: %s \t Age: %d \n", p.getName(), p.getAge());
+    } 
 }
-
-class Person{
+class Person implements Serializable{
       
     private String name;
-    public Person(String name){
+    private int age;
+    private double height;
+    private boolean married;
+      
+    Person(String n, int a, double h, boolean m){
           
-        this.name = name;
+        name=n;
+        age=a;
+        height=h;
+        married=m;
     }
-    String getName(){return name;}
+    String getName() {return name;}
+    int getAge(){ return age;}
+    double getHeight(){return height;}
+    boolean getMarried(){return married;}
+}
+```
+## Исключение данных из сериализации
+По умолчанию сериализуются все переменные объекта. Однако, возможно, мы хотим, чтобы некоторые поля были исключены из сериализации. Для этого они должны быть объявлены с модификатором transient. Например, исключим из сериализации объекта Person переменные height и married:
+```java
+class Person implements Serializable{
+      
+    private String name;
+    private int age;
+    private transient double height;
+    private transient boolean married;
+      
+    Person(String n, int a, double h, boolean m){
+          
+        name=n;
+        age=a;
+        height=h;
+        married=m;
+    }
+    String getName() {return name;}
+    int getAge(){ return age;}
+    double getHeight(){return height;}
+    boolean getMarried(){return married;}
 }
 
 ```
-Кроме методов интерфейса Map класс TreeMap реализует методы интерфейса NavigableMap. Например, мы можем получить все объекты до или после определенного ключа с помощью методов headMap и tailMap. Также мы можем получить первый и последний элементы и провести ряд дополнительных манипуляций с объектами.
+## Класс File. Работа с файлами и каталогами
+Класс File, определенный в пакете java.io, не работает напрямую с потоками. Его задачей является управление информацией о файлах и каталогах. Хотя на уровне операционной системы файлы и каталоги отличаются, но в Java они описываются одним классом File.
+
+В зависимости от того, что должен представлять объект File - файл или каталог, мы можем использовать один из конструкторов для создания объекта:
+```java
+File(String путь_к_каталогу)
+File(String путь_к_каталогу, String имя_файла)
+File(File каталог, String имя_файла)
+// Например:
+// создаем объект File для каталога
+File dir1 = new File("C://SomeDir");
+// создаем объекты для файлов, которые находятся в каталоге
+File file1 = new File("C://SomeDir", "Hello.txt");
+File file2 = new File(dir1, "Hello2.txt");
+```
+Класс File имеет ряд методов, которые позволяют управлять файлами и каталогами. Рассмотрим некоторые из них:
+- boolean createNewFile(): создает новый файл по пути, который передан в конструктор. В случае удачного создания возвращает true, иначе false
+- boolean delete(): удаляет каталог или файл по пути, который передан в конструктор. При удачном удалении возвращает true.
+- boolean exists(): проверяет, существует ли по указанному в конструкторе пути файл или каталог. И если файл или каталог существует, то возвращает true, иначе возвращает false
+- String getAbsolutePath(): возвращает абсолютный путь для пути, переданного в конструктор объекта
+- String getName(): возвращает краткое имя файла или каталога
+- String getParent(): возвращает имя родительского каталога
+- boolean isDirectory(): возвращает значение true, если по указанному пути располагается каталог
+- boolean isFile(): возвращает значение true, если по указанному пути находится файл
+- boolean isHidden(): возвращает значение true, если каталог или файл являются скрытыми
+- long length(): возвращает размер файла в байтах
+- long lastModified(): возвращает время последнего изменения файла или каталога. Значение представляет количество миллисекунд, прошедших с начала эпохи Unix
+- String[] list(): возвращает массив файлов и подкаталогов, которые находятся в определенном каталоге
+- File[] listFiles(): возвращает массив файлов и подкаталогов, которые находятся в определенном каталоге
+- boolean mkdir(): создает новый каталог и при удачном создании возвращает значение true
+- boolean renameTo(File dest): переименовывает файл или каталог
+
+## Работа с каталогами
+Если объект File представляет каталог, то его метод isDirectory() возвращает true. И поэтому мы можем получить его содержимое - вложенные подкаталоги и файлы с помощью методов list() и listFiles(). Получим все подкаталоги и файлы в определенном каталоге:
+```java
+import java.io.File;
+ 
+public class Program {
+ 
+    public static void main(String[] args) {
+         
+        // определяем объект для каталога
+        File dir = new File("C://SomeDir");
+        // если объект представляет каталог
+        if(dir.isDirectory())
+        {
+            // получаем все вложенные объекты в каталоге
+            for(File item : dir.listFiles()){
+              
+                 if(item.isDirectory()){
+                      
+                     System.out.println(item.getName() + "  \t folder");
+                 }
+                 else{
+                      
+                     System.out.println(item.getName() + "\t file");
+                 }
+             }
+        }
+    }
+}
+```
+выполним ряд операций с каталогами, как удаление, переименование и создание:
+```java
+import java.io.File;
+ 
+public class Program {
+ 
+    public static void main(String[] args) {
+         
+        // определяем объект для каталога
+        File dir = new File("C://SomeDir//NewDir");
+        boolean created = dir.mkdir();
+        if(created)
+            System.out.println("Folder has been created");
+        // переименуем каталог
+        File newDir = new File("C://SomeDir//NewDirRenamed");
+        dir.renameTo(newDir);
+        // удалим каталог
+        boolean deleted = newDir.delete();
+        if(deleted)
+            System.out.println("Folder has been deleted");
+    } 
+}
+```
+## Работа с файлами
+Работа с файлами аналогична работе с каталога. Например, получим данные по одному из файлов и создадим еще один файл:
+```java
+import java.io.File;
+import java.io.IOException;
+ 
+public class Program {
+ 
+    public static void main(String[] args) {
+         
+        // определяем объект для каталога
+        File myFile = new File("C://SomeDir//notes.txt");
+        System.out.println("File name: " + myFile.getName());
+        System.out.println("Parent folder: " + myFile.getParent());
+        if(myFile.exists())
+            System.out.println("File exists");
+        else
+            System.out.println("File not found");
+         
+        System.out.println("File size: " + myFile.length());
+        if(myFile.canRead())
+            System.out.println("File can be read");
+        else
+            System.out.println("File can not be read");
+         
+        if(myFile.canWrite())
+            System.out.println("File can be written");
+        else
+            System.out.println("File can not be written");
+         
+        // создадим новый файл
+        File newFile = new File("C://SomeDir//MyFile");
+        try
+        {
+            boolean created = newFile.createNewFile();
+            if(created)
+                System.out.println("File has been created");
+        }
+        catch(IOException ex){
+             
+            System.out.println(ex.getMessage());
+        }  
+    } 
+}
+```
+При создании нового файла метод createNewFile() в случае неудачи выбрасывает исключение IOException, поэтому нам надо его отлавливать, например, в блоке try...catch, как делается в примере выше.
+
+## Работа с ZIP-архивами
+в пакете java.util.zip определены два класса - ZipInputStream и ZipOutputStream
+
+### ZipOutputStream. Запись архивов
+Для создания архива используется класс ZipOutputStream. Для создания объекта ZipOutputStream в его конструктор передается поток вывода: ZipOutputStream(OutputStream out)
+Для записи файлов в архив для каждого файла создается объект ZipEntry, в конструктор которого передается имя архивируемого файла. А чтобы добавить каждый объект ZipEntry в архив, применяется метод putNextEntry().
+
+```java
+import java.io.*;
+import java.util.zip.*;
+  
+public class Program {
+  
+    public static void main(String[] args) {
+         
+        String filename = "C:\\SomeDir\\notes.txt";
+        try(ZipOutputStream zout = new ZipOutputStream(new FileOutputStream("C:\\SomeDir\\output.zip"));
+                FileInputStream fis= new FileInputStream(filename);)
+        {
+            ZipEntry entry1=new ZipEntry("notes.txt");
+            zout.putNextEntry(entry1);
+            // считываем содержимое файла в массив byte
+            byte[] buffer = new byte[fis.available()];
+            fis.read(buffer);
+            // добавляем содержимое к архиву
+            zout.write(buffer);
+            // закрываем текущую запись для новой записи
+            zout.closeEntry();
+        }
+        catch(Exception ex){
+              
+            System.out.println(ex.getMessage());
+        } 
+    } 
+}
+```
+После добавления объекта ZipEntry в поток нам также надо добавить в него и содержимое файла. Для этого используется метод write, записывающий в поток массив байтов: zout.write(buffer);. В конце надо закрыть ZipEntry с помощью метода closeEntry(). После этого можно добавлять в архив новые файлы - в этом случае все вышеописанные действия для каждого нового файла повторяются.
+
+## Чтение архивов. ZipInputStream
+Для чтения архивов применяется класс ZipInputStream. В конструкторе он принимает поток, указывающий на zip-архив: ZipInputStream(InputStream in)
+Для считывания файлов из архива ZipInputStream использует метод getNextEntry(), который возвращает объект ZipEntry. Объект ZipEntry представляет отдельную запись в zip-архиве. Например, считаем какой-нибудь архив:
+```java
+import java.io.*;
+import java.util.zip.*;
+  
+public class Program {
+  
+    public static void main(String[] args) {
+         
+        try(ZipInputStream zin = new ZipInputStream(new FileInputStream("C:\\SomeDir\\output.zip")))
+        {
+            ZipEntry entry;
+            String name;
+            long size;
+            while((entry=zin.getNextEntry())!=null){
+                  
+                name = entry.getName(); // получим название файла
+                size=entry.getSize();  // получим его размер в байтах
+                System.out.printf("File name: %s \t File size: %d \n", name, size);
+                 
+                // распаковка
+                FileOutputStream fout = new FileOutputStream("C:\\somedir\\new" + name);
+                for (int c = zin.read(); c != -1; c = zin.read()) {
+                    fout.write(c);
+                }
+                fout.flush();
+                zin.closeEntry();
+                fout.close();
+            }
+        }
+        catch(Exception ex){
+              
+            System.out.println(ex.getMessage());
+        } 
+    } 
+}
+```
+ZipInputStream в конструкторе получает ссылку на поток ввода. И затем в цикле выводятся все файлы и их размер в байтах, которые находятся в данном архиве.
+
+Затем данные извлекаются из архива и сохраняются в новые файлы, которые находятся в той же папке и которые начинаются с "new".
+
+## Класс Console
+Специально для работы с консолью в Java определен класс Console, который хранится в пакете java.io. Он не получает консольный ввод-вывод сам по себе, а использует уже имеющиеся потоки System.in и System.out. 
+Для получения объекта консоли надо вызвать статический метод System.console():
+
+```java
+Console console = System.console();
+```
+Основные методы класса Console:
+- flush(): выводит на консоль все данные из буфера
+- format(): выводит на консоль строку с использованием форматирования
+- printf(): выводит на консоль строку с использованием форматирования (фактически то же самое, что и предыдущий метод)
+- String readLine(): считывает с консоли введенную пользователем строку
+- char[] readPassword(): считывает с консоли введенную пользователем строку, при этом символы строки не отображаются на консоли
+
+```java
+import java.io.Console;
+ 
+public class Program {
+ 
+    public static void main(String[] args) {
+         
+        // получаем консоль
+        Console console = System.console();
+        if(console!=null){
+            // считываем данные с консоли
+            String login = console.readLine("Введите логин:");
+            char[] password = console.readPassword("Введите пароль:");
+             
+            console.printf("Введенный логин: %s \n", login);
+            console.printf("Введенный пароль: %s \n", new String(password));
+        }
+    }
+}
+```
